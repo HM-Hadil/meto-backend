@@ -21,6 +21,5 @@ public interface UserApi {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Created", response = User.class)
     })
-    @PostMapping(path = {"", "/"}, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createUser(@RequestBody CreateUserRequest request);
 }

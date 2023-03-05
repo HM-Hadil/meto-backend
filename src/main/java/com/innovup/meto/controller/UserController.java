@@ -21,7 +21,7 @@ public class UserController implements UserApi {
     private final UserService userService;
 
     @Override
-
+    @PostMapping(path = {"", "/"}, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createUser(CreateUserRequest request) {
         log.info("Endpoint '/.../' (POST) called - request = {}", request);
         var response = userService.createNewUser(request);
