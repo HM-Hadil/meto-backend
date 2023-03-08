@@ -1,6 +1,5 @@
 package com.innovup.meto.request;
 
-import com.innovup.meto.entity.UserRole;
 import com.innovup.meto.enums.Role;
 import lombok.Builder;
 import lombok.Getter;
