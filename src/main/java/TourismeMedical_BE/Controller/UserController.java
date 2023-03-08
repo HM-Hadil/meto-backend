@@ -4,6 +4,7 @@ import TourismeMedical_BE.Entity.Users;
 import TourismeMedical_BE.Service.UserService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,17 +27,21 @@ public class UserController {
 
     }
 
+
     @GetMapping({"forAdmin"})
+    @PreAuthorize("hasRole('Admin')")
     public String forAdmin(){
         return "this Url is only for admin";
     }
 
     @GetMapping({"forUser"})
-    public String forUser(){
+    @PreAuthorize("hasRole('Users')")
+    public String forUsers(){
         return "this Url is only for users";
     }
 
     @GetMapping({"forMedecin"})
+    @PreAuthorize("hasRole('Medecin')")
     public String forMedecin(){
         return "this Url is only for medecin";
     }
