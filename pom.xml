@@ -138,6 +138,13 @@
                 <spring.jpa.show.sql>true</spring.jpa.show.sql>
             </properties>
         </profile>
+        <profile>
+            <id>db-create-drop</id>
+            <properties>
+                <spring.jpa.hibernate.ddl.auto>create-drop</spring.jpa.hibernate.ddl.auto>
+                <spring.jpa.show.sql>true</spring.jpa.show.sql>
+            </properties>
+        </profile>
     </profiles>
 
 </project>
