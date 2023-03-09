@@ -1,9 +1,9 @@
 package com.innovup.meto.service;
 
 import com.innovup.meto.entity.User;
+import com.innovup.meto.enums.Role;
 import com.innovup.meto.repository.UserRepository;
-import com.innovup.meto.request.CreateUserRequest;
-import com.innovup.meto.result.CreateUserResult;
+import com.innovup.meto.request.CreateAdminRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,13 +20,16 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User createNewUser(CreateUserRequest request) {
+    public User createNewAdmin(CreateAdminRequest request) {
         var user = User.builder()
                 .withId(UUID.randomUUID())
                 .withFirstname(request.getFirstname())
-                .withRole(request.getRole())
+                .withRole(Role.ADMIN)
                 .withCreatedOn(LocalDate.now())
                 .build();
+        /*
+        ObjectMapper.map(user, createUserResult)
+         */
         user = userRepository.save(user);
         return user;
     }

@@ -1,12 +1,13 @@
 package com.innovup.meto.controller;
 
-import com.innovup.meto.request.CreateUserRequest;
+import com.innovup.meto.request.CreateAdminRequest;
 import com.innovup.meto.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,10 +22,11 @@ public class UserController implements UserApi {
     private final UserService userService;
 
     @Override
-    @PostMapping(path = "", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createUser(CreateUserRequest request) {
+    @PostMapping(path = "/admin", produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createAdmin(@RequestBody CreateAdminRequest request) {
         log.info("Endpoint '/.../' (POST) called - request = {}", request);
-        var response = userService.createNewUser(request);
+        var response = userService.createNewAdmin(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
 }
