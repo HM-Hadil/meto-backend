@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class WebSecurityConfiguration {
+public  class WebSecurityConfiguration  {
     @Autowired
    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @Autowired
@@ -35,23 +35,22 @@ public class WebSecurityConfiguration {
     }
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-         http
-                .cors().disable()
-                .csrf()
-                .disable()
-                .authorizeRequests()
-                 .requestMatchers("").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .and()
-                 .sessionManagement()
-                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)//how to crete our session//
-                 .and()
+             http
+                    .cors();
+             http   .csrf()
+                    .disable()
+                    .authorizeHttpRequests()
+                    .requestMatchers("").permitAll()
+                    .anyRequest().authenticated()
+                    .and()
+                    .sessionManagement()
+                    .and()
+                    .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                    .and()
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS);//how to crete our session//
 
-
-                 .addFilterBefore( jwtRequestFilter, (Class<? extends Filter>) UsernamePasswordAuthenticationFilter.class);
-
+      http.addFilterBefore((Filter) jwtRequestFilter, (Class<? extends Filter>) UsernamePasswordAuthenticationFilter.class);
             return http.build();
     }
 
@@ -60,7 +59,11 @@ public class WebSecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-   @Autowired
+
+
+
+
+    @Autowired
     public void configurationGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
             authenticationManagerBuilder.userDetailsService(jwtService).passwordEncoder(passwordencoder());
 

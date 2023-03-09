@@ -3,9 +3,12 @@ package TourismeMedical_BE.Util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,9 +37,17 @@ public class JwtUtil {
     //return me claims
 
     private Claims getAllClaimsFromToken(String token){
-        return Jwts.parser().setSigningKey(secret_Key).parseClaimsJws(token).getBody();
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignInKey()).build()
+                .parseClaimsJws(token).getBody();
     }
 
+
+    private Key getSignInKey() {
+        byte[] KeyBytes = Decoders.BASE64.decode(secret_Key);
+        return Keys.hmacShaKeyFor(KeyBytes);
+    }
     //validate token
 
     public Boolean validateToken(String  token , UserDetails userDetails){
@@ -61,7 +72,7 @@ public class JwtUtil {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000))
-                .signWith(SignatureAlgorithm.HS512, secret_Key)
+                .signWith(getSignInKey(), SignatureAlgorithm.HS512)
                 .compact();
 
     }
