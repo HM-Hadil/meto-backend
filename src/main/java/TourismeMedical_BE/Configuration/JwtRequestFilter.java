@@ -3,8 +3,6 @@ package TourismeMedical_BE.Configuration;
 import TourismeMedical_BE.Service.JwtService;
 import TourismeMedical_BE.Util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.servlet.*;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +12,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.servlet.Filter;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Component
@@ -76,9 +76,4 @@ public class JwtRequestFilter extends OncePerRequestFilter implements Filter {
 
 }
 
-
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-
-    }
 }

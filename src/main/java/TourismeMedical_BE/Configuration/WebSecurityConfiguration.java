@@ -1,6 +1,5 @@
 package TourismeMedical_BE.Configuration;
 
-import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,9 +37,9 @@ public  class WebSecurityConfiguration  {
              http
                     .cors();
              http   .csrf()
-                    .disable()
-                    .authorizeHttpRequests()
-                    .requestMatchers("").permitAll()
+                    .disable();
+                   http.authorizeHttpRequests()
+                    .antMatchers("/registerNewAdmin").permitAll()
                     .anyRequest().authenticated()
                     .and()
                     .sessionManagement()
@@ -50,7 +49,7 @@ public  class WebSecurityConfiguration  {
                     .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS);//how to crete our session//
 
-      http.addFilterBefore((Filter) jwtRequestFilter, (Class<? extends Filter>) UsernamePasswordAuthenticationFilter.class);
+      http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
             return http.build();
     }
 
