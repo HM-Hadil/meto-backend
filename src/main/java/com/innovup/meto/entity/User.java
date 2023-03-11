@@ -6,9 +6,14 @@ import com.innovup.meto.core.schema.ComSchemaConstantSize;
 import com.innovup.meto.enums.Role;
 import com.innovup.meto.enums.RoleConverter;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -19,13 +24,11 @@ import java.util.UUID;
 @Builder(setterPrefix = "with")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends EntityWithSelfAssignedId<UUID> {
+public class User extends EntityWithSelfAssignedId<UUID> implements UserDetails {
 
     @Id
     @Column(name = ComSchemaColumnConstantName.C_ID, nullable = false)
     private UUID id;
-
-
 
     @Column(name = ComSchemaColumnConstantName.C_FIRST_NAME,  nullable = false,length = ComSchemaConstantSize.XL_VALUE)
     private String firstname;
@@ -62,12 +65,6 @@ public class User extends EntityWithSelfAssignedId<UUID> {
 
 
 
-
-
-
-
-
-
     @Column(name = ComSchemaColumnConstantName.C_ROLE, nullable = false, length = 1)
     @Convert(converter = RoleConverter.class)
     private Role role;
@@ -75,4 +72,39 @@ public class User extends EntityWithSelfAssignedId<UUID> {
     @Column(name = ComSchemaColumnConstantName.C_CREATED_ON, nullable = false, updatable = false)
     private LocalDate createdOn;
 
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 }

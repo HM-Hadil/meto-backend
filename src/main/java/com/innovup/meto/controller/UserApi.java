@@ -4,6 +4,8 @@ import com.innovup.meto.entity.User;
 import com.innovup.meto.request.CreateAdminRequest;
 import com.innovup.meto.request.CreateDoctorRequest;
 import com.innovup.meto.request.CreatePatientRequest;
+import com.innovup.meto.security.auth.AuthenticationRequest;
+import com.innovup.meto.security.auth.AuthenticationResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -24,7 +26,7 @@ public interface UserApi {
             //@ApiResponse(code = 404, message = "Resource not found", response = User.class)
     })
     @PostMapping(path = "/admin", produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<?> createAdmin(@RequestBody CreateAdminRequest request);
+    ResponseEntity<AuthenticationResponse> createAdmin(@RequestBody CreateAdminRequest request);
 
 
     @ApiOperation(value = "create User", notes = "This operation will create a new Patient", response = User.class, tags = {"User API"})
@@ -33,7 +35,7 @@ public interface UserApi {
             //@ApiResponse(code = 404, message = "Resource not found", response = User.class)
     })
     @PostMapping(path = "/patient", produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<?> createPatient(@RequestBody CreatePatientRequest request);
+    ResponseEntity<AuthenticationResponse> createPatient(@RequestBody CreatePatientRequest request);
 
 
 
@@ -43,5 +45,10 @@ public interface UserApi {
             //@ApiResponse(code = 404, message = "Resource not found", response = User.class)
     })
     @PostMapping(path = "/doctor", produces = APPLICATION_JSON_VALUE)
-    ResponseEntity<?> createDoctor(@RequestBody CreateDoctorRequest request);
+    ResponseEntity<AuthenticationResponse> createDoctor(@RequestBody CreateDoctorRequest request);
+
+    @PostMapping ("/authenticate")
+    ResponseEntity<AuthenticationResponse> authenticate(
+            @RequestBody AuthenticationRequest request
+    );
 }

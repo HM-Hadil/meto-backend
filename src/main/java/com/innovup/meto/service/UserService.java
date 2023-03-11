@@ -6,8 +6,14 @@ import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.CreateAdminRequest;
 import com.innovup.meto.request.CreateDoctorRequest;
 import com.innovup.meto.request.CreatePatientRequest;
+import com.innovup.meto.security.auth.AuthenticationRequest;
+import com.innovup.meto.security.auth.AuthenticationResponse;
+import com.innovup.meto.security.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -21,43 +27,57 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final  JwtTokenUtil jwtTokenUtil;
+    private final AuthenticationManager authenticationManager;
 
-    public User createNewAdmin(CreateAdminRequest request) {
+
+    public AuthenticationResponse createNewAdmin(CreateAdminRequest request) {
         var user = User.builder()
                 .withId(UUID.randomUUID())
                 .withFirstname(request.getFirstname())
+                .withEmail(request.getEmail())
+                .withPassword(passwordEncoder.encode(request.getPassword()))
+                .withLastname(request.getLastname())
                 .withRole(Role.ADMIN)
                 .withCreatedOn(LocalDate.now())
                 .build();
         /*
         ObjectMapper.map(user, createUserResult)
          */
-        user = userRepository.save(user);
-        return user;
+         userRepository.save(user);
+        var jwtToken = jwtTokenUtil.generateToken(user);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
+
     }
 
-    public User createNewPatient(CreatePatientRequest request) {
+    public AuthenticationResponse createNewPatient(CreatePatientRequest request) {
         var user = User.builder()
                 .withId(UUID.randomUUID())
                 .withFirstname(request.getFirstname())
                 .withLastname(request.getLastname())
                 .withEmail(request.getEmail())
-                .withPassword(request.getPassword())
+                .withPassword(passwordEncoder.encode(request.getPassword()))
                 .withRole(Role.PATIENT)
                 .withCreatedOn(LocalDate.now())
                 .build();
-        user = userRepository.save(user);
-        return user;
+        userRepository.save(user);
+        var jwtToken = jwtTokenUtil.generateToken(user);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
     }
 
-    public User createNewDoctor(CreateDoctorRequest request) {
+    public AuthenticationResponse createNewDoctor(CreateDoctorRequest request) {
 
         var user = User.builder()
                 .withId(UUID.randomUUID())
                 .withFirstname(request.getFirstname())
                 .withLastname(request.getLastname())
                 .withEmail(request.getEmail())
-                .withPassword(request.getPassword())
+                .withPassword(passwordEncoder.encode(request.getPassword()))
                 .withVille(request.getVille())
                 .withSpecialite(request.getSpecialite())
                 .withSexe(request.getSexe())
@@ -68,7 +88,28 @@ public class UserService {
                 .withRole(Role.DOCTOR)
                 .withCreatedOn(LocalDate.now())
                 .build();
-        user = userRepository.save(user);
-        return user;
+        userRepository.save(user);
+        var jwtToken = jwtTokenUtil.generateToken(user);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
     }
+
+
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+        var user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow();
+        var jwtToken = jwtTokenUtil.generateToken(user);
+        return  AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
+
+    }
+
 }
