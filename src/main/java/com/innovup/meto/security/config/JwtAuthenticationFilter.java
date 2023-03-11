@@ -1,9 +1,10 @@
-package com.innovup.meto.security.SecurityConfig;
+package com.innovup.meto.security.config;
 
-import com.innovup.meto.security.util.JwtTokenUtil;
+import com.innovup.meto.security.providers.JwtTokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,12 +19,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtRequestFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService userDetailsService;
 
     @Override
@@ -43,18 +45,18 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             jwtToken = header.substring(7);
 
             try { //retrieve the username from the Jwt token
-                userEmail = jwtTokenUtil.getUserNameFromToken(jwtToken);
+                userEmail = jwtTokenProvider.getUserNameFromToken(jwtToken);
 
             }
             //error jwt
             catch (IllegalArgumentException e){
-                System.out.println("unable to get the jwt token");
+                log.info("unable to get the jwt token");
             }
             catch (ExpiredJwtException e) {
-                System.out.println("JWT Token has expired");
+                log.info("JWT Token has expired");
             }
         } else {
-            System.out.println("JWT Token does not begin with Bearer String");
+            log.info("JWT Token does not begin with Bearer String");
         }
 
 
@@ -62,7 +64,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
             //validate token
 
-            if (jwtTokenUtil.isTokenValid(jwtToken , userDetails)){
+            if (jwtTokenProvider.isTokenValid(jwtToken , userDetails)){
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
                         =  new UsernamePasswordAuthenticationToken (userDetails , null ,
                         userDetails.getAuthorities());

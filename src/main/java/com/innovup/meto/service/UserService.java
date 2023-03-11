@@ -6,33 +6,24 @@ import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.CreateAdminRequest;
 import com.innovup.meto.request.CreateDoctorRequest;
 import com.innovup.meto.request.CreatePatientRequest;
-import com.innovup.meto.security.auth.AuthenticationRequest;
-import com.innovup.meto.security.auth.AuthenticationResponse;
-import com.innovup.meto.security.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Slf4j
 @Service
-@Validated
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final  JwtTokenUtil jwtTokenUtil;
-    private final AuthenticationManager authenticationManager;
 
 
-    public AuthenticationResponse createNewAdmin(CreateAdminRequest request) {
+    public User createNewAdmin(CreateAdminRequest request) {
         var user = User.builder()
                 .withId(UUID.randomUUID())
                 .withFirstname(request.getFirstname())
@@ -42,18 +33,13 @@ public class UserService {
                 .withRole(Role.ADMIN)
                 .withCreatedOn(LocalDate.now())
                 .build();
-        /*
-        ObjectMapper.map(user, createUserResult)
-         */
-         userRepository.save(user);
-        var jwtToken = jwtTokenUtil.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
 
+        // ObjectMapper.map(user, createUserResult)
+
+         return userRepository.save(user);
     }
 
-    public AuthenticationResponse createNewPatient(CreatePatientRequest request) {
+    public User createNewPatient(CreatePatientRequest request) {
         var user = User.builder()
                 .withId(UUID.randomUUID())
                 .withFirstname(request.getFirstname())
@@ -63,14 +49,10 @@ public class UserService {
                 .withRole(Role.PATIENT)
                 .withCreatedOn(LocalDate.now())
                 .build();
-        userRepository.save(user);
-        var jwtToken = jwtTokenUtil.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        return userRepository.save(user);
     }
 
-    public AuthenticationResponse createNewDoctor(CreateDoctorRequest request) {
+    public User createNewDoctor(CreateDoctorRequest request) {
 
         var user = User.builder()
                 .withId(UUID.randomUUID())
@@ -88,28 +70,6 @@ public class UserService {
                 .withRole(Role.DOCTOR)
                 .withCreatedOn(LocalDate.now())
                 .build();
-        userRepository.save(user);
-        var jwtToken = jwtTokenUtil.generateToken(user);
-        return AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
+        return userRepository.save(user);
     }
-
-
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow();
-        var jwtToken = jwtTokenUtil.generateToken(user);
-        return  AuthenticationResponse.builder()
-                .token(jwtToken)
-                .build();
-
-    }
-
 }

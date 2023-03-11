@@ -1,4 +1,4 @@
-package com.innovup.meto.security.util;
+package com.innovup.meto.security.providers;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
-public class JwtTokenUtil {
+public class JwtTokenProvider {
     private static final String SECRET_KEY = "556A586E327235753878214125442A472D4B6150645367566B59703373367639";
 
 
@@ -64,18 +64,13 @@ public class JwtTokenUtil {
 
     }
 
-
     private Date getExpirationDateFromToken(String token){
         return getClaimFromToken(token , Claims::getExpiration);
     }
 
-
-
-
     private Key getSignInKey() {
-        byte[] KeyBytes = Decoders.BASE64.decode(SECRET_KEY);
-        return Keys.hmacShaKeyFor(KeyBytes);
+        var bytes = Decoders.BASE64.decode(SECRET_KEY);
+        return Keys.hmacShaKeyFor(bytes);
     }
-
 
 }
