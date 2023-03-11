@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user", schema = "public")
+@Table(name = "users", schema = "public")
 @Getter
 @Setter
 @ToString
