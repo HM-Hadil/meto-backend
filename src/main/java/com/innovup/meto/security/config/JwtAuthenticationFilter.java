@@ -1,6 +1,5 @@
 package com.innovup.meto.security.config;
 
-import com.innovup.meto.security.providers.JwtTokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

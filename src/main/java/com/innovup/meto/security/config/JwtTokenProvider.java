@@ -1,4 +1,4 @@
-package com.innovup.meto.security.providers;
+package com.innovup.meto.security.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
