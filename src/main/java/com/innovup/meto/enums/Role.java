@@ -27,4 +27,5 @@ public enum Role {
 
         throw new IllegalArgumentException("Invalid dbCode '" + dbCode + "'for UserRole");
     }
+
 }

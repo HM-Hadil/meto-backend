@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Jacksonized
 @Validated
 @ToString
-public class CreateAdminRequest {
+public class CreatePatientRequest {
     @NotNull
     private String firstname;
     @NotNull
