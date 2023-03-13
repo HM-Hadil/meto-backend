@@ -1,38 +1,33 @@
 package com.innovup.meto.request;
 
+import com.innovup.meto.enums.Gender;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
-import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
+
 @SuperBuilder
 @Data
 @Jacksonized
-@Validated
 @ToString
-public class CreateDoctorRequest {
+public class CreateDoctorRequest extends CreateUserRequest {
+
     @NotNull
-    private String firstname;
+    private final Gender gender;
+
     @NotNull
-    private String lastname;
+    private final String address;
+
     @NotNull
-    private String email;
+    private final String city;
+
     @NotNull
-    private String password;
+    private final List<AcademicLevelRequest> academicLevels;
+
     @NotNull
-    private String sexe;
-    @NotNull
-    private String parcours;
-    @NotNull
-    private String experience;
-    @NotNull
-    private String ville;
-    @NotNull
-    private String adresse;
-    @NotNull
-    private String specialite;
-    @NotNull
-    private String image;
+    private final List<ExperienceRequest> experiences;
+
 }

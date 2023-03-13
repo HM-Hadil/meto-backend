@@ -1,6 +1,11 @@
 package com.innovup.meto.core.schema;
 
-public interface ComSchemaConstantSize {
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ComSchemaConstantSize {
+
     public static final int LOGIN = 32;
     public static final int PASSWORD = 128;
     public static final int EMAIL = 320;    //64 + 1(@) + 255 = 320
