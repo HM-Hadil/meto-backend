@@ -1,4 +1,4 @@
-package com.innovup.meto.controller;
+package com.innovup.meto.controller.api;
 
 import com.innovup.meto.entity.User;
 import com.innovup.meto.request.CreateAdminRequest;

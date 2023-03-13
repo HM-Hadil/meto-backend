@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -71,5 +72,13 @@ public class UserService {
                 .withCreatedOn(LocalDate.now())
                 .build();
         return userRepository.save(user);
+    }
+
+    public User findById(UUID uuid) {
+        Optional<User> optional = userRepository.findById(uuid);
+        if (optional.isPresent()) {
+            return optional.get();
+        }
+        throw new RuntimeException("User with id {} not found" + uuid);
     }
 }

@@ -1,4 +1,4 @@
-package com.innovup.meto.security.auth;
+package com.innovup.meto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

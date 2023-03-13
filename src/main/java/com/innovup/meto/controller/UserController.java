@@ -1,5 +1,6 @@
 package com.innovup.meto.controller;
 
+import com.innovup.meto.controller.api.UserApi;
 import com.innovup.meto.entity.User;
 import com.innovup.meto.request.CreateAdminRequest;
 import com.innovup.meto.request.CreateDoctorRequest;
