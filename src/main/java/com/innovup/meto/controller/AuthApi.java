@@ -2,7 +2,6 @@ package com.innovup.meto.controller;
 
 import com.innovup.meto.entity.User;
 import com.innovup.meto.security.auth.AuthenticationRequest;
-import com.innovup.meto.security.auth.AuthenticationResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -17,5 +16,5 @@ public interface AuthApi {
             @ApiResponse(code = 201, message = "Created", response = User.class),
             //@ApiResponse(code = 404, message = "Resource not found", response = User.class)
     })
-    ResponseEntity<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest);
+    ResponseEntity<?> authenticate(AuthenticationRequest authenticationRequest);
 }

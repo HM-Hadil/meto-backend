@@ -21,6 +21,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Collections;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] auth_tec_files = {"/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**"};
     private static final String[] auth_ext_files = {"/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html", "/**/*.css", "/**/*.js"};
-    private static final String[] auth_public_url = {"/", "/**/public/**", "/**/loginForm/**", "/**/VAADIN/**", "/**/vaadinServlet/**"};
+    private static final String[] auth_public_url = {"/","/auth/authenticate","/api/**","/users/**", "/**/public/**", "/**/loginForm/**", "/**/VAADIN/**", "/**/vaadinServlet/**"};
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -48,7 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors().and().csrf().disable()
+                .csrf().disable()
                 .headers().frameOptions().disable()
                 .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 // Token based authentication instead of session based
@@ -62,11 +64,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
+    private CorsConfiguration buildConfig() {
+
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        //corsConfiguration.addAllowedOrigin("*");
+        //  Cross domain configuration error , take .allowedOrigins Replace with .allowedOriginPatterns that will do .
+        //  Set the domain name that allows cross domain requests
+        corsConfiguration.addAllowedOriginPattern("*");
+        corsConfiguration.addAllowedHeader("*");
+        //  Set allowed methods
+        corsConfiguration.addAllowedMethod("*");
+        //  Whether to allow certificates
+        corsConfiguration.setAllowCredentials(true);
+        //  Cross domain allow time
+        //corsConfiguration.setMaxAge(3600L);
+        return corsConfiguration;
+    }
+
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(true);
+        source.registerCorsConfiguration("/**", buildConfig());
+        //configuration.setAllowCredentials(true);
+        configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:4200"));
+      //  configuration.setAllowedOrigins(List.of("));
         configuration.addAllowedOrigin("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod(HttpMethod.OPTIONS);
@@ -77,13 +99,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.addAllowedMethod(HttpMethod.DELETE);
         configuration.setAllowedHeaders(
                 Lists.newArrayList(
-                        "Access-Control-Allow-Origin", "Access-Control-allow-Credentials", "Authorization",
+                        "Origin","Accept", "responseType","Access-Control-Allow-Origin"
+                        , "Access-Control-allow-Credentials", "Authorization",
                         "content-type", "Accept-Language"
                 )
         );
         source.registerCorsConfiguration("/**", configuration);
         return new CorsFilter(source);
     }
+
+
+
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
