@@ -47,9 +47,9 @@ public class JwtTokenProvider {
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
-    public Boolean isTokenValid(String  token , UserDetails userDetails){
+    public Boolean isTokenValid(String  token , UserPrincipal userPrincipal){
         String username = getUserNameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (username.equals(userPrincipal.getUsername()) && !isTokenExpired(token));
     }
 
     public  Boolean isTokenExpired(String token){

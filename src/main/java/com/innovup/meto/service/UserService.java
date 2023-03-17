@@ -32,6 +32,7 @@ public class UserService {
                 .withPassword(passwordEncoder.encode(request.getPassword()))
                 .withLastname(request.getLastname())
                 .withRole(Role.ADMIN)
+                .withIsEnabled(true)
                 .withCreatedOn(LocalDate.now())
                 .build();
 

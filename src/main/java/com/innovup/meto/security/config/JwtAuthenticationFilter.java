@@ -1,5 +1,7 @@
 package com.innovup.meto.security.config;
 
+import com.innovup.meto.security.UserPrincipal;
+import com.innovup.meto.security.service.CustomUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -25,57 +27,33 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-
-
-        //take the header from the request
         final String header =request.getHeader("Authorization");
-
-        String jwtToken = null;
-        String userEmail = null;
-
         if (header != null && header.startsWith("Bearer ")){
-            //retrieve the JWT token after the  7 position
-            jwtToken = header.substring(7);
+            var jwtToken = header.substring(7);
+            try {
+                var userEmail = jwtTokenProvider.getUserNameFromToken(jwtToken);
+                var userPrincipal = (UserPrincipal) customUserDetailsService.loadUserByUsername(userEmail);
 
-            try { //retrieve the username from the Jwt token
-                userEmail = jwtTokenProvider.getUserNameFromToken(jwtToken);
-
-            }
-            //error jwt
-            catch (IllegalArgumentException e){
+                if (Boolean.TRUE.equals(jwtTokenProvider.isTokenValid(jwtToken , userPrincipal))){
+                    var authentication =  new UsernamePasswordAuthenticationToken (userPrincipal ,null , userPrincipal.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+                filterChain.doFilter(request, response);
+            } catch (IllegalArgumentException e){
                 log.info("unable to get the jwt token");
-            }
-            catch (ExpiredJwtException e) {
+            } catch (ExpiredJwtException e) {
                 log.info("JWT Token has expired");
             }
         } else {
             log.info("JWT Token does not begin with Bearer String");
+            filterChain.doFilter(request, response);
         }
-
-
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-            //validate token
-
-            if (jwtTokenProvider.isTokenValid(jwtToken , userDetails)){
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
-                        =  new UsernamePasswordAuthenticationToken (userDetails , null ,
-                        userDetails.getAuthorities());
-                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-            }
-        }
-
-        //dofilter : check the username and jwt token
-        filterChain.doFilter(request, response);
-
-
-
     }
 }
