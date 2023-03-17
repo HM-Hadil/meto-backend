@@ -19,30 +19,18 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public interface UserApi {
 
     @ApiOperation(value = "create User", notes = "This operation will create a new administrator", response = User.class, tags = {"User API"})
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created", response = User.class),
-            //@ApiResponse(code = 404, message = "Resource not found", response = User.class)
-    })
-    @PostMapping(path = "/admin", produces = APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Created", response = User.class),})
     ResponseEntity<User> createAdmin(@RequestBody CreateAdminRequest request);
 
 
     @ApiOperation(value = "create User", notes = "This operation will create a new Patient", response = User.class, tags = {"User API"})
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created", response = User.class),
-            //@ApiResponse(code = 404, message = "Resource not found", response = User.class)
-    })
-    @PostMapping(path = "/patient", produces = APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Created", response = User.class),})
     ResponseEntity<User> createPatient(@RequestBody CreatePatientRequest request);
 
 
 
     @ApiOperation(value = "create User", notes = "This operation will create a new Doctor", response = User.class, tags = {"User API"})
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created", response = User.class),
-            //@ApiResponse(code = 404, message = "Resource not found", response = User.class)
-    })
-    @PostMapping(path = "/doctor", produces = APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Created", response = User.class),})
     ResponseEntity<User> createDoctor(@RequestBody CreateDoctorRequest request);
 
 

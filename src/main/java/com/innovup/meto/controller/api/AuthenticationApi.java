@@ -12,9 +12,7 @@ import org.springframework.http.ResponseEntity;
 @Api(value = "Authentication API Controller", tags = "Auth API")
 public interface AuthenticationApi {
 
-    @ApiOperation(value = "Authenticate user", notes = "Authentication operation", response = User.class, tags = {"Authentication API"})
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Authenticated", response = AuthenticationResult.class),
-    })
+    @ApiOperation(value = "Authenticate user", notes = "Authentication operation", response = AuthenticationResult.class, tags = {"Auth API"})
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Authenticated", response = AuthenticationResult.class) })
     ResponseEntity<AuthenticationResult> authenticate(AuthenticationRequest authenticationRequest);
 }
