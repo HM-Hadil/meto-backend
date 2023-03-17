@@ -9,27 +9,24 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@Api(value = "Registration API Controller", tags = "Registration API")
+public interface RegistrationApi {
 
-@Api(value = "User API Controller", tags = "User API")
-public interface UserApi {
-
-    @ApiOperation(value = "create User", notes = "This operation will create a new administrator", response = User.class, tags = {"User API"})
+    @ApiOperation(value = "create User", notes = "This operation will create a new administrator", response = User.class, tags = {"Registration API"})
     @ApiResponses(value = {@ApiResponse(code = 201, message = "Created", response = User.class),})
     ResponseEntity<User> createAdmin(@RequestBody CreateAdminRequest request);
 
 
-    @ApiOperation(value = "create User", notes = "This operation will create a new Patient", response = User.class, tags = {"User API"})
+    @ApiOperation(value = "create User", notes = "This operation will create a new Patient", response = User.class, tags = {"Registration API"})
     @ApiResponses(value = {@ApiResponse(code = 201, message = "Created", response = User.class),})
     ResponseEntity<User> createPatient(@RequestBody CreatePatientRequest request);
 
 
 
-    @ApiOperation(value = "create User", notes = "This operation will create a new Doctor", response = User.class, tags = {"User API"})
+    @ApiOperation(value = "create User", notes = "This operation will create a new Doctor", response = User.class, tags = {"Registration API"})
     @ApiResponses(value = {@ApiResponse(code = 201, message = "Created", response = User.class),})
     ResponseEntity<User> createDoctor(@RequestBody CreateDoctorRequest request);
 
