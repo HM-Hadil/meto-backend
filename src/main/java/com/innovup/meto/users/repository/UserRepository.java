@@ -1,7 +1,7 @@
-package com.innovup.meto.repository;
+package com.innovup.meto.users.repository;
 
-import com.innovup.meto.entity.User;
-import com.innovup.meto.enums.Role;
+import com.innovup.meto.users.enums.Role;
+import com.innovup.meto.users.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -15,4 +15,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByEmail(String email);
 
 
+    boolean existsByEmail(String email);
 }

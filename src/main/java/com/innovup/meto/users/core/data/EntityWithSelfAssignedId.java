@@ -1,4 +1,4 @@
-package com.innovup.meto.core.data;
+package com.innovup.meto.users.core.data;
 
 import org.springframework.data.domain.Persistable;
 

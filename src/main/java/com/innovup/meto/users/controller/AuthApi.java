@@ -1,6 +1,6 @@
-package com.innovup.meto.controller;
+package com.innovup.meto.users.controller;
 
-import com.innovup.meto.entity.User;
+import com.innovup.meto.users.entity.User;
 import com.innovup.meto.security.auth.AuthenticationRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

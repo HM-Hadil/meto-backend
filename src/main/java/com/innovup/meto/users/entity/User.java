@@ -1,10 +1,10 @@
-package com.innovup.meto.entity;
+package com.innovup.meto.users.entity;
 
-import com.innovup.meto.core.data.EntityWithSelfAssignedId;
-import com.innovup.meto.core.schema.ComSchemaColumnConstantName;
-import com.innovup.meto.core.schema.ComSchemaConstantSize;
-import com.innovup.meto.enums.Role;
-import com.innovup.meto.enums.RoleConverter;
+import com.innovup.meto.users.core.data.EntityWithSelfAssignedId;
+import com.innovup.meto.users.core.schema.ComSchemaColumnConstantName;
+import com.innovup.meto.users.core.schema.ComSchemaConstantSize;
+import com.innovup.meto.users.enums.Role;
+import com.innovup.meto.users.enums.RoleConverter;
 import lombok.*;
 
 import javax.persistence.*;

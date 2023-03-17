@@ -1,4 +1,4 @@
-package com.innovup.meto.enums;
+package com.innovup.meto.users.enums;
 
 import lombok.AccessLevel;
 import lombok.NonNull;

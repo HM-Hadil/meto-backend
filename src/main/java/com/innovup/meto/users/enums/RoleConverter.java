@@ -1,4 +1,4 @@
-package com.innovup.meto.enums;
+package com.innovup.meto.users.enums;
 
 import javax.persistence.AttributeConverter;
 

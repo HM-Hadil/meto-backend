@@ -1,11 +1,11 @@
-package com.innovup.meto.service;
+package com.innovup.meto.users.service;
 
-import com.innovup.meto.entity.User;
-import com.innovup.meto.enums.Role;
-import com.innovup.meto.repository.UserRepository;
-import com.innovup.meto.request.CreateAdminRequest;
-import com.innovup.meto.request.CreateDoctorRequest;
-import com.innovup.meto.request.CreatePatientRequest;
+import com.innovup.meto.users.enums.Role;
+import com.innovup.meto.users.entity.User;
+import com.innovup.meto.users.repository.UserRepository;
+import com.innovup.meto.users.request.CreateAdminRequest;
+import com.innovup.meto.users.request.CreateDoctorRequest;
+import com.innovup.meto.users.request.CreatePatientRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,6 +34,8 @@ public class UserService {
                 .withCreatedOn(LocalDate.now())
                 .build();
 
+
+
         // ObjectMapper.map(user, createUserResult)
 
          return userRepository.save(user);
@@ -49,6 +51,7 @@ public class UserService {
                 .withRole(Role.PATIENT)
                 .withCreatedOn(LocalDate.now())
                 .build();
+
         return userRepository.save(user);
     }
 
@@ -70,6 +73,7 @@ public class UserService {
                 .withRole(Role.DOCTOR)
                 .withCreatedOn(LocalDate.now())
                 .build();
+
         return userRepository.save(user);
     }
 

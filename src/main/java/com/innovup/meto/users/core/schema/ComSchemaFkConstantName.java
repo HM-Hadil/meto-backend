@@ -1,4 +1,4 @@
-package com.innovup.meto.core.schema;
+package com.innovup.meto.users.core.schema;
 
 public interface ComSchemaFkConstantName {
 

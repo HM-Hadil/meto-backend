@@ -1,4 +1,4 @@
-package com.innovup.meto.request;
+package com.innovup.meto.users.request;
 
 import lombok.Data;
 import lombok.ToString;
@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Jacksonized
 @Validated
 @ToString
-public class CreateAdminRequest {
+public class CreatePatientRequest {
     @NotNull
     private String firstname;
     @NotNull

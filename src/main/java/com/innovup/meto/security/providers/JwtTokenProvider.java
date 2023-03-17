@@ -26,7 +26,6 @@ public class JwtTokenProvider {
     private <T> T getClaimFromToken(String token , Function<Claims , T> claimResolver){
         final Claims claims = getAllClaimsFromToken(token);
         return claimResolver.apply(claims);
-
     }
     private Claims getAllClaimsFromToken(String token){
         return Jwts
@@ -43,7 +42,8 @@ public class JwtTokenProvider {
     public String generateToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails
-    ){
+    )
+    {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)

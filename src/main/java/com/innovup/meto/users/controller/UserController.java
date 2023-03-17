@@ -1,10 +1,10 @@
-package com.innovup.meto.controller;
+package com.innovup.meto.users.controller;
 
-import com.innovup.meto.entity.User;
-import com.innovup.meto.request.CreateAdminRequest;
-import com.innovup.meto.request.CreateDoctorRequest;
-import com.innovup.meto.request.CreatePatientRequest;
-import com.innovup.meto.service.UserService;
+import com.innovup.meto.users.entity.User;
+import com.innovup.meto.users.request.CreateAdminRequest;
+import com.innovup.meto.users.request.CreateDoctorRequest;
+import com.innovup.meto.users.request.CreatePatientRequest;
+import com.innovup.meto.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/register")
 public class UserController implements UserApi {
 
     private final UserService userService;
