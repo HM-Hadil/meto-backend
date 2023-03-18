@@ -1,4 +1,4 @@
-package com.innovup.meto.users.controller;
+package com.innovup.meto.users.controller.Api;
 
 import com.innovup.meto.users.entity.User;
 import com.innovup.meto.users.request.CreateAdminRequest;
@@ -11,6 +11,9 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.UUID;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -19,31 +22,28 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public interface UserApi {
 
     @ApiOperation(value = "create User", notes = "This operation will create a new administrator", response = User.class, tags = {"User API"})
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created", response = User.class),
-            //@ApiResponse(code = 404, message = "Resource not found", response = User.class)
-    })
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Created", response = User.class),})          //@ApiResponse(code = 404, message = "Resource not found", response = User.class)
+
     @PostMapping(path = "/admin", produces = APPLICATION_JSON_VALUE)
     ResponseEntity<User> createAdmin(@RequestBody CreateAdminRequest request);
+    //@ApiResponse(code = 404, message = "Resource not found", response = User.class)
+
+
 
 
     @ApiOperation(value = "create User", notes = "This operation will create a new Patient", response = User.class, tags = {"User API"})
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created", response = User.class),
-            //@ApiResponse(code = 404, message = "Resource not found", response = User.class)
-    })
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Created", response = User.class),})
     @PostMapping(path = "/patient", produces = APPLICATION_JSON_VALUE)
     ResponseEntity<User> createPatient(@RequestBody CreatePatientRequest request);
 
 
 
     @ApiOperation(value = "create User", notes = "This operation will create a new Doctor", response = User.class, tags = {"User API"})
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Created", response = User.class),
-            //@ApiResponse(code = 404, message = "Resource not found", response = User.class)
-    })
+    @ApiResponses(value = {@ApiResponse(code = 201, message = "Created", response = User.class),})
     @PostMapping(path = "/doctor", produces = APPLICATION_JSON_VALUE)
     ResponseEntity<User> createDoctor(@RequestBody CreateDoctorRequest request);
 
 
+    @PostMapping(path = "/updateDoctor" , produces = APPLICATION_JSON_VALUE)
+    ResponseEntity<User> updateProfileDoctor(@RequestParam UUID userId, @RequestBody CreateDoctorRequest request);
 }

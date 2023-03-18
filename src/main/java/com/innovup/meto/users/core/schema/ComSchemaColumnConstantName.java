@@ -24,4 +24,5 @@ public interface ComSchemaColumnConstantName {
 
     public static final String C_DESCRIPTION = "description";
 
+    public static final String C_TELEPHONE ="telephone" ;
 }

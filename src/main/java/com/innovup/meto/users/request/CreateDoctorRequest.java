@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @Validated
 @ToString
 public class CreateDoctorRequest {
+
     @NotNull
     private String firstname;
     @NotNull
@@ -35,4 +36,7 @@ public class CreateDoctorRequest {
     private String specialite;
     @NotNull
     private String image;
+    @NotNull
+    private String telephone;
+
 }

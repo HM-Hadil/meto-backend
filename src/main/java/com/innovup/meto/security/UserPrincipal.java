@@ -11,11 +11,13 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.UUID;
 
+
 @SuperBuilder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserPrincipal implements UserDetails {
+
 
     private UUID id;
 

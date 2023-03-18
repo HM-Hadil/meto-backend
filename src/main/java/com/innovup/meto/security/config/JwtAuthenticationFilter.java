@@ -1,16 +1,16 @@
 package com.innovup.meto.security.config;
 
+import com.innovup.meto.security.UserPrincipal;
 import com.innovup.meto.security.providers.JwtTokenProvider;
+import com.innovup.meto.security.service.CustomUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -26,14 +26,14 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserDetailsService userDetailsService;
+    private final CustomUserDetailsService customUserDetailsService;
+
 
     @Override
-    protected void doFilterInternal( HttpServletRequest request,
-                                     HttpServletResponse response,
-                                     FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal( @NonNull HttpServletRequest request,
+                                     @NonNull HttpServletResponse response,
+                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
 
           // response.setHeader("Access-Control-Allow-Origin", "*");
@@ -48,50 +48,36 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         //take the header from the request
-        String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        final String header =request.getHeader("Authorization");
 
-        if (header == null || !header.startsWith("Bearer ")) {
-            log.debug("JWT token is invalid or not begin with Bearer string!");
-            filterChain.doFilter(request, response);
-            return;
-        }
+        if (header != null && header.startsWith("Bearer ")){
+            var jwtToken = header.substring(7);
+            try {
+                var userEmail = jwtTokenProvider.getUserNameFromToken(jwtToken);
+                var userPrincipal = (UserPrincipal) customUserDetailsService.loadUserByUsername(userEmail);
 
-            //retrieve the JWT token after the  7 position
-        String jwtToken = header.substring(7);
-        String userEmail;
-
-                //retrieve the username from the Jwt token
-        try {
-            userEmail = jwtTokenProvider.getUserNameFromToken(jwtToken);
-        } catch (IllegalArgumentException e) {
-            log.debug("Unable to get JWT token");
-            filterChain.doFilter(request, response);
-            return;
-        } catch (ExpiredJwtException e) {
-            log.debug("JWT token has expired");
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-
-            if (jwtTokenProvider.isTokenValid(jwtToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                if (Boolean.TRUE.equals(jwtTokenProvider.isTokenValid(jwtToken , userPrincipal))){
+                    var authentication =  new UsernamePasswordAuthenticationToken(userPrincipal ,null , userPrincipal.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+                filterChain.doFilter(request, response);
+            } catch (IllegalArgumentException e){
+                log.info("unable to get the jwt token");
+            } catch (ExpiredJwtException e) {
+                log.info("JWT Token has expired");
             }
+        } else {
+            log.info("JWT Token does not begin with Bearer String");
+            filterChain.doFilter(request, response);
         }
-        //dofilter : check the username and jwt token
+    }
 
-        filterChain.doFilter(request, response);
+
+
     }
 
 
 
 
 
-
-
-
-}
