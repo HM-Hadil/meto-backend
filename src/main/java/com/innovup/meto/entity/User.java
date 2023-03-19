@@ -3,12 +3,15 @@ package com.innovup.meto.entity;
 import com.innovup.meto.core.data.EntityWithSelfAssignedId;
 import com.innovup.meto.core.schema.ComSchemaColumnConstantName;
 import com.innovup.meto.core.schema.ComSchemaConstantSize;
+import com.innovup.meto.enums.Gender;
+import com.innovup.meto.enums.GenderConverter;
 import com.innovup.meto.enums.Role;
 import com.innovup.meto.enums.RoleConverter;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -37,35 +40,32 @@ public class User extends EntityWithSelfAssignedId<UUID> {
     @Column(name = ComSchemaColumnConstantName.C_PASSWORD, nullable = false, length = ComSchemaConstantSize.XL_VALUE)
     private String password;
 
-    @Column(name = ComSchemaColumnConstantName.C_PARCOURS, length = ComSchemaConstantSize.XL_VALUE)
-    private String parcours;
+    @Column(name = ComSchemaColumnConstantName.C_GENDER)
+    @Convert(converter = GenderConverter.class)
+    private Gender gender;
 
-    @Column(name = ComSchemaColumnConstantName.C_EXPERIENCE, length = ComSchemaConstantSize.XL_VALUE)
-    private String experience;
+    @Column(name = ComSchemaColumnConstantName.C_ADDRESS, length = ComSchemaConstantSize.XL_VALUE)
+    private String address;
 
-    @Column(name = ComSchemaColumnConstantName.C_ADRESSE, length = ComSchemaConstantSize.XL_VALUE)
-    private String adresse;
+    @Column(name = ComSchemaColumnConstantName.C_CITY, length = ComSchemaConstantSize.XL_VALUE)
+    private String city;
 
-    @Column(name = ComSchemaColumnConstantName.C_VILLE, length = ComSchemaConstantSize.XL_VALUE)
-    private String ville;
-
-    @Column(name = ComSchemaColumnConstantName.C_IMAGE, length = ComSchemaConstantSize.XL_VALUE)
-    private String image;
-
-    @Column(name = ComSchemaColumnConstantName.C_SPECIALITE, length = ComSchemaConstantSize.XL_VALUE)
-    private String specialite;
-
-    @Column(name = ComSchemaColumnConstantName.C_SEXE, length = ComSchemaConstantSize.XL_VALUE)
-    private String sexe;
-
-    // @Column(name = ComSchemaColumnConstantName.C_IS_ENABLED)
+    @Column(name = ComSchemaColumnConstantName.C_IS_ENABLED)
     private boolean isEnabled;
+
+    @Column(name = ComSchemaColumnConstantName.C_CREATED_ON, nullable = false, updatable = false)
+    private LocalDate createdOn;
 
     @Column(name = ComSchemaColumnConstantName.C_ROLE, nullable = false, length = 1)
     @Convert(converter = RoleConverter.class)
     private Role role;
 
-    @Column(name = ComSchemaColumnConstantName.C_CREATED_ON, nullable = false, updatable = false)
-    private LocalDate createdOn;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<AcademicLevel> academicLevels;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<Experience> experiences;
 
 }

@@ -28,7 +28,6 @@ public class AuthenticationService {
             var user = userService.findById(userPrincipal.getId());
             var accessToken = jwtTokenProvider.generateToken(userPrincipal);
             return AuthenticationResult.builder()
-                    .withId(userPrincipal.getId())
                     .withEmail(userPrincipal.getEmail())
                     .withRole(user.getRole())
                     .withToken(accessToken)

@@ -1,5 +1,8 @@
 package com.innovup.meto.request;
 
+import com.innovup.meto.entity.AcademicLevel;
+import com.innovup.meto.entity.Experience;
+import com.innovup.meto.enums.Gender;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -7,6 +10,8 @@ import lombok.extern.jackson.Jacksonized;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
+
 @SuperBuilder
 @Data
 @Jacksonized
@@ -22,17 +27,14 @@ public class CreateDoctorRequest {
     @NotNull
     private String password;
     @NotNull
-    private String sexe;
+    private Gender gender;
     @NotNull
-    private String parcours;
+    private String address;
     @NotNull
-    private String experience;
+    private String city;
     @NotNull
-    private String ville;
+    private List<AcademicLevel> academicLevels;
     @NotNull
-    private String adresse;
-    @NotNull
-    private String specialite;
-    @NotNull
-    private String image;
+    private List<Experience> experiences;
+
 }

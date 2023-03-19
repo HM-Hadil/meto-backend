@@ -4,13 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-    @Data
-    @Builder
-    @AllArgsConstructor
-    @NoArgsConstructor
 
-    public class AuthenticationRequest {
-        private String email;
-        private String password;
+import javax.validation.constraints.NotNull;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class AuthenticationRequest {
+
+    @NotNull
+    private String email;
+
+    @NotNull
+    private String password;
 
 }

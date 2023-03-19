@@ -13,7 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationResult {
-    private UUID id;
     private String email;
     private Role role;
     private String token;
