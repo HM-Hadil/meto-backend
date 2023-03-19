@@ -25,33 +25,40 @@ public class SurgeryController implements SurgeryApi {
     @Override
     @GetMapping("")
     public ResponseEntity<List<Surgery>> findAllSurgeries() {
-        return new ResponseEntity<>(surgeryService.findAllSurgeries(), HttpStatus.OK);
+        log.info("Endpoint '/surgeries' (GET) called");
+        var response = surgeryService.findAllSurgeries();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
     @GetMapping("/{id}")
     public ResponseEntity<Surgery> findSurgeryById(@PathVariable UUID id) throws Exception {
-        return new ResponseEntity<>(
-                surgeryService.findSurgeryById(id).orElseThrow(Exception::new), // @ControllerExceptionHandler will need to be implemented, Exceptions need to be handled
-                HttpStatus.OK
-        );
+        log.info("Endpoint '/surgeries/{id}' (GET) called - id = {}", id);
+        // @ControllerExceptionHandler will need to be implemented, Exceptions need to be handled
+        var response = surgeryService.findSurgeryById(id).orElseThrow(Exception::new);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
     @PostMapping("")
     public ResponseEntity<Surgery> addSurgery(@RequestBody SurgeryRequest request) {
-        return new ResponseEntity<>(surgeryService.addSurgery(request), HttpStatus.CREATED);
+        log.info("Endpoint '/surgeries' (POST) called - request = {}", request);
+        var response = surgeryService.addSurgery(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<Surgery> updateSurgery(@PathVariable UUID id, @RequestBody SurgeryRequest request) {
-        return new ResponseEntity<>(surgeryService.updateSurgery(id, request), HttpStatus.OK);
+        log.info("Endpoint '/surgeries/{id}' (PUT) called - id = {} - request = {}", id, request);
+        var response = surgeryService.updateSurgery(id, request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
     @DeleteMapping("/{id}")
     public ResponseEntity<Surgery> deleteSurgery(@PathVariable UUID id) {
+        log.info("Endpoint '/surgeries/{id}' (DELETE) called - id = {}", id);
         surgeryService.deleteSurgery(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
