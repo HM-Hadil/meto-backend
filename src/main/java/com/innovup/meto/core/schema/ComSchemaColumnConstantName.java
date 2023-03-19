@@ -1,9 +1,12 @@
 package com.innovup.meto.core.schema;
 
-public interface ComSchemaColumnConstantName {
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ComSchemaColumnConstantName {
 
     public static final String C_ID = "id";
-
     public static final String C_FIRST_NAME = "first_name";
     public static final String C_LAST_NAME = "last_name";
     public static final String C_EMAIL = "email";
@@ -22,5 +25,9 @@ public interface ComSchemaColumnConstantName {
     public static final String C_DESCRIPTION = "description";
     public static final String C_NAME = "name";
     public static final String C_DURATION = "duration";
+    public static final String C_DURATION_DAYS = "duration_in_days";
+    public static final String C_DURATION_HOURS = "duration_in_hours";
+    public static final String C_DURATION_MINUTES = "duration_in_minutes";
+    public static final String C_DURATION_SECONDS = "duration_in_seconds";
 
 }

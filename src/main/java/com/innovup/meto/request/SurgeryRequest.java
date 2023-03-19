@@ -6,7 +6,6 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotNull;
 
 @SuperBuilder
 @Data
@@ -15,13 +14,11 @@ import javax.validation.constraints.NotNull;
 @ToString
 public class SurgeryRequest {
 
-    @NotNull
     private final String name;
 
-    @NotNull
     private final String description;
 
     private final String image;
 
-    private SurgeryDuration duration;
+    private SurgeryDurationRequest duration;
 }

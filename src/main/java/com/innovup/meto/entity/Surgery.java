@@ -28,9 +28,17 @@ public class Surgery extends EntityWithSelfAssignedId<UUID> {
     @Column(name = ComSchemaColumnConstantName.C_DESCRIPTION)
     private String description;
 
+    @Embedded
     @Column(name = ComSchemaColumnConstantName.C_DURATION)
-    @Convert(converter = SurgeryDurationConverter.class)
-    private Duration duration;
+    private SurgeryDuration duration;
+
+    /*
+        - Better to make SurgeryDuration transient and persist only the duration in seconds to gain more DB space
+        - used @Embedded for Learning purposes
+        - TODO change SurgeryDuration to @Transient
+     */
+    @Transient
+    private Long durationInSeconds;
 
     @Column(name = ComSchemaColumnConstantName.C_IMAGE)
     private String image;

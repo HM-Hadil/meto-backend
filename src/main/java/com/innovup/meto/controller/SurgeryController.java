@@ -3,6 +3,7 @@ package com.innovup.meto.controller;
 import com.innovup.meto.controller.api.SurgeryApi;
 import com.innovup.meto.entity.Surgery;
 import com.innovup.meto.request.SurgeryRequest;
+import com.innovup.meto.result.SurgeryResult;
 import com.innovup.meto.service.SurgeryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ public class SurgeryController implements SurgeryApi {
 
     @Override
     @GetMapping("")
-    public ResponseEntity<List<Surgery>> findAllSurgeries() {
+    public ResponseEntity<List<SurgeryResult>> findAllSurgeries() {
         log.info("Endpoint '/surgeries' (GET) called");
         var response = surgeryService.findAllSurgeries();
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -32,7 +33,7 @@ public class SurgeryController implements SurgeryApi {
 
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity<Surgery> findSurgeryById(@PathVariable UUID id) throws Exception {
+    public ResponseEntity<SurgeryResult> findSurgeryById(@PathVariable UUID id) throws Exception {
         log.info("Endpoint '/surgeries/{id}' (GET) called - id = {}", id);
         // @ControllerExceptionHandler will need to be implemented, Exceptions need to be handled
         var response = surgeryService.findSurgeryById(id).orElseThrow(Exception::new);
@@ -41,7 +42,7 @@ public class SurgeryController implements SurgeryApi {
 
     @Override
     @PostMapping("")
-    public ResponseEntity<Surgery> addSurgery(@RequestBody SurgeryRequest request) {
+    public ResponseEntity<SurgeryResult> addSurgery(@RequestBody SurgeryRequest request) {
         log.info("Endpoint '/surgeries' (POST) called - request = {}", request);
         var response = surgeryService.addSurgery(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -49,7 +50,7 @@ public class SurgeryController implements SurgeryApi {
 
     @Override
     @PutMapping("/{id}")
-    public ResponseEntity<Surgery> updateSurgery(@PathVariable UUID id, @RequestBody SurgeryRequest request) {
+    public ResponseEntity<SurgeryResult> updateSurgery(@PathVariable UUID id, @RequestBody SurgeryRequest request) {
         log.info("Endpoint '/surgeries/{id}' (PUT) called - id = {} - request = {}", id, request);
         var response = surgeryService.updateSurgery(id, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
