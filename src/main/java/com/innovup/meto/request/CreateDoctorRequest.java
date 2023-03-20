@@ -33,8 +33,8 @@ public class CreateDoctorRequest {
     @NotNull
     private String city;
     @NotNull
-    private List<AcademicLevel> academicLevels;
+    private List<AcademicLevelRequest> academicLevels;
     @NotNull
-    private List<Experience> experiences;
+    private List<ExperienceRequest> experiences;
 
 }

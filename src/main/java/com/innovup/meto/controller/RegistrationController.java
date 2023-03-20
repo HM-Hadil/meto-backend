@@ -5,7 +5,7 @@ import com.innovup.meto.entity.User;
 import com.innovup.meto.request.CreateAdminRequest;
 import com.innovup.meto.request.CreateDoctorRequest;
 import com.innovup.meto.request.CreatePatientRequest;
-import com.innovup.meto.service.UserService;
+import com.innovup.meto.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,13 +23,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping("/register")
 public class RegistrationController implements RegistrationApi {
 
-    private final UserService userService;
+    private final RegistrationService registrationService;
 
     @Override
     @PostMapping(path = "/admin", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createAdmin(@RequestBody CreateAdminRequest request) {
         log.info("Endpoint '/register/admin' (POST) called - request = {}", request);
-        var response = userService.createNewAdmin(request);
+        var response = registrationService.createNewAdmin(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -37,7 +37,7 @@ public class RegistrationController implements RegistrationApi {
     @PostMapping(path = "/patient", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createPatient(@RequestBody CreatePatientRequest request) {
         log.info("Endpoint '/register/patient' (POST) called - request = {}", request);
-        var response = userService.createNewPatient(request);
+        var response = registrationService.createNewPatient(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -45,7 +45,7 @@ public class RegistrationController implements RegistrationApi {
     @PostMapping(path = "/doctor", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createDoctor(@RequestBody CreateDoctorRequest request) {
         log.info("Endpoint '/register/doctor' (POST) called - request = {}", request);
-        var response = userService.createNewDoctor(request);
+        var response = registrationService.createNewDoctor(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
-    private final UserService userService;
+    private final RegistrationService registrationService;
     private final JwtTokenProvider jwtTokenProvider;
 
     public AuthenticationResult authenticate(AuthenticationRequest request) {
@@ -25,7 +25,7 @@ public class AuthenticationService {
             var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             var userPrincipal = (UserPrincipal) authentication.getPrincipal();
-            var user = userService.findById(userPrincipal.getId());
+            var user = registrationService.findById(userPrincipal.getId());
             var accessToken = jwtTokenProvider.generateToken(userPrincipal);
             return AuthenticationResult.builder()
                     .withEmail(userPrincipal.getEmail())
