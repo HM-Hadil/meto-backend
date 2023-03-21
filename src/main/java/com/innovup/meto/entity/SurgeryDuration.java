@@ -8,8 +8,7 @@ import javax.persistence.Embeddable;
 
 
 @Embeddable
-@Getter
-@Setter
+@Data
 @Builder(setterPrefix = "with")
 @NoArgsConstructor
 @AllArgsConstructor

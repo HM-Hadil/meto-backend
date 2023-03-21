@@ -1,11 +1,13 @@
 package com.innovup.meto.controller;
 
-import com.innovup.meto.controller.api.RegistrationApi;
+import com.innovup.meto.core.web.RestResponse;
 import com.innovup.meto.entity.User;
 import com.innovup.meto.request.CreateAdminRequest;
 import com.innovup.meto.request.CreateDoctorRequest;
 import com.innovup.meto.request.CreatePatientRequest;
 import com.innovup.meto.service.RegistrationService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,32 +23,42 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/register")
-public class RegistrationController implements RegistrationApi {
+@Api(value = "Registration API Controller", tags = "Registration API")
+public class RegistrationController {
 
     private final RegistrationService registrationService;
 
-    @Override
     @PostMapping(path = "/admin", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createAdmin(@RequestBody CreateAdminRequest request) {
+    @ApiOperation(value = "create User", response = User.class, tags = {"Registration API"})
+    public ResponseEntity<RestResponse<User>> createAdmin(@RequestBody CreateAdminRequest request) {
+
         log.info("Endpoint '/register/admin' (POST) called - request = {}", request);
-        var response = registrationService.createNewAdmin(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        var data = registrationService.createNewAdmin(request);
+
+        return new ResponseEntity<>(RestResponse.of(data, 201), HttpStatus.CREATED);
     }
 
-    @Override
     @PostMapping(path = "/patient", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createPatient(@RequestBody CreatePatientRequest request) {
+    @ApiOperation(value = "create User", response = User.class, tags = {"Registration API"})
+    public ResponseEntity<RestResponse<User>> createPatient(@RequestBody CreatePatientRequest request) {
+
         log.info("Endpoint '/register/patient' (POST) called - request = {}", request);
-        var response = registrationService.createNewPatient(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        var data = registrationService.createNewPatient(request);
+
+        return new ResponseEntity<>(RestResponse.of(data, 201), HttpStatus.CREATED);
     }
 
-    @Override
     @PostMapping(path = "/doctor", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createDoctor(@RequestBody CreateDoctorRequest request) {
+    @ApiOperation(value = "create User", response = User.class, tags = {"Registration API"})
+    public ResponseEntity<RestResponse<User>> createDoctor(@RequestBody CreateDoctorRequest request) {
+
         log.info("Endpoint '/register/doctor' (POST) called - request = {}", request);
-        var response = registrationService.createNewDoctor(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        var data = registrationService.createNewDoctor(request);
+
+        return new ResponseEntity<>(RestResponse.of(data, 201), HttpStatus.CREATED);
     }
 
 }

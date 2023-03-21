@@ -1,9 +1,11 @@
 package com.innovup.meto.controller;
 
-import com.innovup.meto.controller.api.AuthenticationApi;
+import com.innovup.meto.core.web.RestResponse;
 import com.innovup.meto.request.AuthenticationRequest;
 import com.innovup.meto.result.AuthenticationResult;
 import com.innovup.meto.service.AuthenticationService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,13 +21,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("")
-public class AuthenticationController implements AuthenticationApi {
+@Api(value = "Authentication API Controller", tags = "Auth API")
+public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    @Override
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResult> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
-        return new ResponseEntity<>(authenticationService.authenticate(authenticationRequest), HttpStatus.OK);
+    @ApiOperation(value = "Authenticate user", response = AuthenticationResult.class, tags = {"Auth API"})
+    public ResponseEntity<RestResponse<AuthenticationResult>> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
+        return new ResponseEntity<>(
+                RestResponse.of(authenticationService.authenticate(authenticationRequest), 200),
+                HttpStatus.OK
+        );
     }
 }

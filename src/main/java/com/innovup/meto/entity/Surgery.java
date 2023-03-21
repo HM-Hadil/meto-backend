@@ -5,13 +5,11 @@ import com.innovup.meto.core.schema.ComSchemaColumnConstantName;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.Duration;
 import java.util.UUID;
 
 @Entity
 @Table(name = "surgeries", schema = "public")
-@Getter
-@Setter
+@Data
 @ToString
 @Builder(setterPrefix = "with")
 @NoArgsConstructor
