@@ -1,6 +1,6 @@
 package com.innovup.meto.service;
 
-import com.innovup.meto.prendreRendezVous.entity.DossierMedical;
+import com.innovup.meto.entity.DossierMedical;
 import com.innovup.meto.repository.DossierMedicalRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

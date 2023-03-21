@@ -1,5 +1,4 @@
-package com.innovup.meto.prendreRendezVous.entity;
-
+package com.innovup.meto.entity;
 
 import com.innovup.meto.core.data.EntityWithSelfAssignedId;
 import lombok.AllArgsConstructor;
@@ -29,3 +28,4 @@ public class DossierMedical extends EntityWithSelfAssignedId<UUID> {
         return this.numeroDossierMedicale;
     }
 }
+

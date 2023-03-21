@@ -1,6 +1,6 @@
 package com.innovup.meto.controller;
 
-import com.innovup.meto.prendreRendezVous.entity.DossierMedical;
+import com.innovup.meto.entity.DossierMedical;
 import com.innovup.meto.repository.DossierMedicalRepo;
 import com.innovup.meto.service.DossierMedicalService;
 import lombok.AllArgsConstructor;
