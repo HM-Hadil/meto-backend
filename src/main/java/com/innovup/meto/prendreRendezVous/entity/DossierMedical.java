@@ -1,7 +1,7 @@
 package com.innovup.meto.prendreRendezVous.entity;
 
 
-import com.innovup.meto.users.core.data.EntityWithSelfAssignedId;
+import com.innovup.meto.core.data.EntityWithSelfAssignedId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

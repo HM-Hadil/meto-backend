@@ -1,7 +1,7 @@
 package com.innovup.meto.security.service;
 
-import com.innovup.meto.users.entity.User;
-import com.innovup.meto.users.repository.UserRepository;
+import com.innovup.meto.entity.User;
+import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
