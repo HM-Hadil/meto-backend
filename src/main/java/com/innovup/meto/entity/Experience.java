@@ -17,13 +17,13 @@ import java.util.UUID;
 public class Experience extends EntityWithSelfAssignedId<UUID> {
 
     @Id
-    @Column(name = ComSchemaColumnConstantName.C_ID)
+    @Column(name = ComSchemaColumnConstantName.ID)
     private UUID id;
 
-    @Column(name = ComSchemaColumnConstantName.C_SPECIALTY)
+    @Column(name = ComSchemaColumnConstantName.SPECIALTY)
     private String specialty;
 
-    @Column(name = ComSchemaColumnConstantName.C_ESTABLISHMENT)
+    @Column(name = ComSchemaColumnConstantName.ESTABLISHMENT)
     private String establishment;
 
 }

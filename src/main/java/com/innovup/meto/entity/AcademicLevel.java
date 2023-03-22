@@ -17,16 +17,16 @@ import java.util.UUID;
 public class AcademicLevel extends EntityWithSelfAssignedId<UUID> {
 
     @Id
-    @Column(name = ComSchemaColumnConstantName.C_ID)
+    @Column(name = ComSchemaColumnConstantName.ID)
     private UUID id;
 
-    @Column(name = ComSchemaColumnConstantName.C_FIELD)
+    @Column(name = ComSchemaColumnConstantName.FIELD)
     private String field;
 
-    @Column(name = ComSchemaColumnConstantName.C_DIPLOMA)
+    @Column(name = ComSchemaColumnConstantName.DIPLOMA)
     private String diploma;
 
-    @Column(name = ComSchemaColumnConstantName.C_ESTABLISHMENT)
+    @Column(name = ComSchemaColumnConstantName.ESTABLISHMENT)
     private String establishment;
 
 }

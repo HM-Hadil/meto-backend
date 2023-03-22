@@ -17,17 +17,17 @@ import java.util.UUID;
 public class Surgery extends EntityWithSelfAssignedId<UUID> {
 
     @Id
-    @Column(name = ComSchemaColumnConstantName.C_ID)
+    @Column(name = ComSchemaColumnConstantName.ID)
     private UUID id;
 
-    @Column(name = ComSchemaColumnConstantName.C_NAME)
+    @Column(name = ComSchemaColumnConstantName.NAME)
     private String name;
 
-    @Column(name = ComSchemaColumnConstantName.C_DESCRIPTION)
+    @Column(name = ComSchemaColumnConstantName.DESCRIPTION)
     private String description;
 
     @Embedded
-    @Column(name = ComSchemaColumnConstantName.C_DURATION)
+    @Column(name = ComSchemaColumnConstantName.DURATION)
     private SurgeryDuration duration;
 
     /*
@@ -38,6 +38,6 @@ public class Surgery extends EntityWithSelfAssignedId<UUID> {
     @Transient
     private Long durationInSeconds;
 
-    @Column(name = ComSchemaColumnConstantName.C_IMAGE)
+    @Column(name = ComSchemaColumnConstantName.IMAGE)
     private String image;
 }
