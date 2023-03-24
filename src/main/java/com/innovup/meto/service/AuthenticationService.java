@@ -34,7 +34,7 @@ public class AuthenticationService {
                     .build();
         } catch (Exception e) {
             log.error("Error authentication user email {}", request.getEmail());
-            throw new RuntimeException(e.getMessage());
+            return null;
         }
     }
 }

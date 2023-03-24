@@ -27,7 +27,7 @@ public class AdminService extends UserService {
             user.setEmail(request.getEmail());
             return userRepository.save(user);
         } else {
-            throw new RuntimeException();
+            return null;
         }
     }
 }
