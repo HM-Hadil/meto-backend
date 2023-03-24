@@ -46,7 +46,7 @@ public abstract class UsersController<SERVICE extends UserService> {
         log.info("Endpoint '.../{id}' (GET) finished - id {}", id);
 
         if (data == null) {
-            return new ResponseEntity<>(RestResponse.empty(404), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(RestResponse.empty(404, "User not found"), HttpStatus.NOT_FOUND);
         }
 
         return ResponseEntity.ok(RestResponse.of(data, 200));

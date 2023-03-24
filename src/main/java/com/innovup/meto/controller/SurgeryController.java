@@ -78,6 +78,6 @@ public class SurgeryController {
 
         surgeryService.deleteSurgery(id);
 
-        return new ResponseEntity<>(RestResponse.empty(203), HttpStatus.OK);
+        return new ResponseEntity<>(RestResponse.empty(203, null), HttpStatus.OK);
     }
 }

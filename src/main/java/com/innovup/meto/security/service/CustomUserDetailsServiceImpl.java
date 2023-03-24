@@ -1,11 +1,14 @@
 package com.innovup.meto.security.service;
 
 import com.innovup.meto.entity.User;
+import com.innovup.meto.enums.Role;
+import com.innovup.meto.exception.UserNotFoundException;
 import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -67,5 +70,13 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
             log.error("<ERROR>:User not found [login/toEmail: {}]", username);
             throw new UsernameNotFoundException("User not found [toEmail: " + username + "]");
         }
+    }
+
+    @Override
+    public User getCurrentUser() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        var userOptional = userRepository.findById(userPrincipal.getId());
+        return userOptional.orElse(null);
     }
 }

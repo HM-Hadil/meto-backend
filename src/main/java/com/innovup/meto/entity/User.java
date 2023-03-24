@@ -25,38 +25,38 @@ import java.util.UUID;
 public class User extends EntityWithSelfAssignedId<UUID> {
 
     @Id
-    @Column(name = ComSchemaColumnConstantName.C_ID, nullable = false)
+    @Column(name = ComSchemaColumnConstantName.ID, nullable = false)
     private UUID id;
 
-    @Column(name = ComSchemaColumnConstantName.C_FIRST_NAME,  nullable = false,length = ComSchemaConstantSize.XL_VALUE)
+    @Column(name = ComSchemaColumnConstantName.FIRSTNAME,  nullable = false,length = ComSchemaConstantSize.XL_VALUE)
     private String firstname;
 
-    @Column(name = ComSchemaColumnConstantName.C_LAST_NAME, nullable = false, length = ComSchemaConstantSize.XL_VALUE)
+    @Column(name = ComSchemaColumnConstantName.LASTNAME, nullable = false, length = ComSchemaConstantSize.XL_VALUE)
     private String lastname;
 
-    @Column(name = ComSchemaColumnConstantName.C_EMAIL, nullable = false, length = ComSchemaConstantSize.XL_VALUE)
+    @Column(name = ComSchemaColumnConstantName.EMAIL, nullable = false, length = ComSchemaConstantSize.XL_VALUE)
     private String email;
 
-    @Column(name = ComSchemaColumnConstantName.C_PASSWORD, nullable = false, length = ComSchemaConstantSize.XL_VALUE)
+    @Column(name = ComSchemaColumnConstantName.PASSWORD, nullable = false, length = ComSchemaConstantSize.XL_VALUE)
     private String password;
 
-    @Column(name = ComSchemaColumnConstantName.C_GENDER)
+    @Column(name = ComSchemaColumnConstantName.GENDER, nullable = false, length = ComSchemaConstantSize.CODE)
     @Convert(converter = GenderConverter.class)
     private Gender gender;
 
-    @Column(name = ComSchemaColumnConstantName.C_ADDRESS, length = ComSchemaConstantSize.XL_VALUE)
+    @Column(name = ComSchemaColumnConstantName.ADDRESS, length = ComSchemaConstantSize.XL_VALUE)
     private String address;
 
-    @Column(name = ComSchemaColumnConstantName.C_CITY, length = ComSchemaConstantSize.XL_VALUE)
+    @Column(name = ComSchemaColumnConstantName.CITY, length = ComSchemaConstantSize.XL_VALUE)
     private String city;
 
-    @Column(name = ComSchemaColumnConstantName.C_IS_ENABLED)
+    @Column(name = ComSchemaColumnConstantName.IS_ENABLED)
     private boolean isEnabled;
 
-    @Column(name = ComSchemaColumnConstantName.C_CREATED_ON, nullable = false, updatable = false)
+    @Column(name = ComSchemaColumnConstantName.CREATED_ON, nullable = false, updatable = false)
     private LocalDate createdOn;
 
-    @Column(name = ComSchemaColumnConstantName.C_ROLE, nullable = false, length = 1)
+    @Column(name = ComSchemaColumnConstantName.ROLE, nullable = false, length = ComSchemaConstantSize.CODE)
     @Convert(converter = RoleConverter.class)
     private Role role;
 
@@ -67,5 +67,8 @@ public class User extends EntityWithSelfAssignedId<UUID> {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<Experience> experiences;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "patient")
+    private List<Appointment> appointments;
 
 }

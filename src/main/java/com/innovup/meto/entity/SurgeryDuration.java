@@ -14,15 +14,15 @@ import javax.persistence.Embeddable;
 @AllArgsConstructor
 public class SurgeryDuration {
 
-    @Column(name = ComSchemaColumnConstantName.C_DURATION_DAYS)
+    @Column(name = ComSchemaColumnConstantName.DURATION_DAYS)
     private Integer days;
 
-    @Column(name = ComSchemaColumnConstantName.C_DURATION_HOURS)
+    @Column(name = ComSchemaColumnConstantName.DURATION_HOURS)
     private Integer hours;
 
-    @Column(name = ComSchemaColumnConstantName.C_DURATION_MINUTES)
+    @Column(name = ComSchemaColumnConstantName.DURATION_MINUTES)
     private Integer minutes;
 
-    @Column(name = ComSchemaColumnConstantName.C_DURATION_SECONDS)
+    @Column(name = ComSchemaColumnConstantName.DURATION_SECONDS)
     private Integer seconds;
 }

@@ -29,6 +29,10 @@ public class AuthenticationController {
     @PostMapping("/authenticate")
     @ApiOperation(value = "Authenticate user", response = AuthenticationResult.class, tags = {"Auth API"})
     public ResponseEntity<RestResponse<AuthenticationResult>> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
+        var authenticationResult = authenticationService.authenticate(authenticationRequest);
+        if (authenticationResult == null) {
+            return new ResponseEntity<>(RestResponse.empty(404, "User not found"), HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(
                 RestResponse.of(authenticationService.authenticate(authenticationRequest), 200),
                 HttpStatus.OK
