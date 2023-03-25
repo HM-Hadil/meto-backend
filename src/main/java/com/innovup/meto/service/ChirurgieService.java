@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,7 +24,6 @@ import java.util.UUID;
 public class ChirurgieService {
     @Autowired
     private ChirurgieRepo repo;
-
 
 
     public List<ChirurgieResult> findAllSurgeries() {
@@ -81,6 +81,11 @@ public class ChirurgieService {
     }
 
     public void deleteSurgery(UUID id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
+        Chirurgie deletedSurgery = repo.findById(id).orElseThrow(() -> new EntityNotFoundException("Surgery not found with ID: " + id));
         repo.deleteById(id);
+        log.info("Deleted surgery with ID: {}", deletedSurgery.getId());
     }
-    }
+}

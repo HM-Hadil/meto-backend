@@ -26,30 +26,30 @@ import java.util.UUID;
 public class ChirurgieController  {
     private final ChirurgieService surgeryService;
 
-    @GetMapping("")
+    @GetMapping("getAllChirurgie")
     @ApiOperation(value = "Finds All Surgeries", response = Chirurgie.class, tags = {"Surgery API"})
-    public ResponseEntity<RestResponse<List<ChirurgieResult>>> findAllSurgeries() {
+    public ResponseEntity<List<ChirurgieResult>> findAllSurgeries() {
 
         log.info("Endpoint '/surgeries' (GET) called");
 
         var data = surgeryService.findAllSurgeries();
 
-        return new ResponseEntity<>(RestResponse.of(data,  200), HttpStatus.OK);
+        return new ResponseEntity<>( data,HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("GetChirurgieById/{id}")
     @ApiOperation(value = "Find a Surgery by id", response = Chirurgie.class, tags = {"Surgery API"})
-    public ResponseEntity<RestResponse<ChirurgieResult>> findSurgeryById(@PathVariable UUID id) throws Exception {
+    public ResponseEntity<ChirurgieResult> findSurgeryById(@PathVariable UUID id) throws Exception {
 
         log.info("Endpoint '/surgeries/{id}' (GET) called - id = {}", id);
 
         // @ControllerExceptionHandler will need to be implemented, Exceptions need to be handled
         var data = surgeryService.findSurgeryById(id).orElseThrow(Exception::new);
 
-        return new ResponseEntity<>(RestResponse.of(data,  200), HttpStatus.OK);
+        return new ResponseEntity<>(data,  HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping("addChirurgie")
     @ApiOperation(value = "create Surgery", response = Chirurgie.class, tags = {"Surgery API"})
     public ResponseEntity<RestResponse<ChirurgieResult>> addSurgery(@RequestBody ChirurgieRequest request) {
 
@@ -60,26 +60,25 @@ public class ChirurgieController  {
         return new ResponseEntity<>(RestResponse.of(data,  201), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("UpdateChirurgie/{id}")
     @ApiOperation(value = "Update Surgery", response = Chirurgie.class, tags = {"Surgery API"})
-    public ResponseEntity<RestResponse<ChirurgieResult>> updateSurgery(@PathVariable UUID id, @RequestBody ChirurgieRequest request) {
+    public ResponseEntity<ChirurgieResult> updateSurgery(@PathVariable UUID id, @RequestBody ChirurgieRequest request) {
 
         log.info("Endpoint '/surgeries/{id}' (PUT) called - id = {} - request = {}", id, request);
 
         var data = surgeryService.updateSurgery(id, request);
 
-        return new ResponseEntity<>(RestResponse.of(data,  200), HttpStatus.OK);
+        return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("DeleteChirurgie/{id}")
     @ApiOperation(value = "Delete Surgery by id", response = Chirurgie.class, tags = {"Surgery API"})
-    public ResponseEntity<RestResponse<Chirurgie>> deleteSurgery(@PathVariable UUID id) {
+    public void deleteSurgery(@PathVariable UUID id) {
 
         log.info("Endpoint '/surgeries/{id}' (DELETE) called - id = {}", id);
 
         surgeryService.deleteSurgery(id);
 
-        return new ResponseEntity<>(RestResponse.empty(203), HttpStatus.OK);
     }
 
 }

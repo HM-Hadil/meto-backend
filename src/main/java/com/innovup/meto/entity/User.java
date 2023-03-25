@@ -49,7 +49,9 @@ public class User extends EntityWithSelfAssignedId<UUID> {
     @Column(name = ComSchemaColumnConstantName.C_TELEPHONE, length = ComSchemaConstantSize.XL_VALUE)
     private String telephone;
 
+
     @Column(name = ComSchemaColumnConstantName.C_IMAGE, length = ComSchemaConstantSize.XL_VALUE)
+    @Lob
     private String image;
 
     @Column(name = ComSchemaColumnConstantName.C_SPECIALITE, length = ComSchemaConstantSize.XL_VALUE)

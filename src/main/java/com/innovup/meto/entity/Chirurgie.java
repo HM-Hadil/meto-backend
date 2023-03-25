@@ -39,5 +39,6 @@ public class Chirurgie extends EntityWithSelfAssignedId<UUID> {
     private Long durationInSeconds;
 
     @Column(name = ComSchemaColumnConstantName.C_IMAGE)
+    @Lob
     private String image;
 }
