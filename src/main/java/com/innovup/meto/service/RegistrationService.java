@@ -25,7 +25,19 @@ public class RegistrationService {
     private final PasswordEncoder passwordEncoder;
 
 
+    public boolean checkEmailExists(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.isPresent();
+    }
+
+
     public User createNewAdmin(CreateAdminRequest request) {
+
+        String email = request.getEmail();
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("Email is already in use.");
+        }
+
         var user = User.builder()
                 .withId(UUID.randomUUID())
                 .withFirstname(request.getFirstname())
@@ -43,6 +55,12 @@ public class RegistrationService {
     }
 
     public User createNewPatient(CreatePatientRequest request) {
+
+        String email = request.getEmail();
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("Email is already in use.");
+        }
+
         var user = User.builder()
                 .withId(UUID.randomUUID())
                 .withFirstname(request.getFirstname())
@@ -58,11 +76,20 @@ public class RegistrationService {
 
     public User createNewDoctor(CreateDoctorRequest request) {
 
+
+        String email = request.getEmail();
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new IllegalArgumentException("Email is already in use.");
+        }
+
         var user = User.builder()
                 .withId(UUID.randomUUID())
                 .withFirstname(request.getFirstname())
                 .withLastname(request.getLastname())
                 .withEmail(request.getEmail())
+                .withTelephone(request.getTelephone())
+                .withSpecialite(request.getSpecialite())
+                .withImage(request.getImage())
                 .withPassword(passwordEncoder.encode(request.getPassword()))
                 .withVille(request.getVille())
                 .withParcours(createAcademicLevels(request.getParcours()))

@@ -23,6 +23,9 @@ public  class DoctorsService extends UserService {
             user.setId(id);
             user.setFirstname(request.getFirstname());
             user.setLastname(request.getLastname());
+            user.setImage(request.getImage());
+            user.setTelephone(request.getTelephone());
+            user.setSpecialite(request.getSpecialite());
            /// user.setEmail(request.getEmail());
             user.setGender(request.getGender());
             user.setAdresse(request.getAdresse());

@@ -1,7 +1,7 @@
 package com.innovup.meto.repository;
 
-import com.innovup.meto.enums.Role;
 import com.innovup.meto.entity.User;
+import com.innovup.meto.enums.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -18,4 +18,8 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     boolean existsByEmail(String email);
 
     Optional<User> findUserById(UUID id);
+
+    List<User> findByRoleAndIsEnabled(Role role, boolean isEnabled);
+    Optional<User> findByIdAndRoleAndIsEnabledFalse(UUID id , Role role);
+
 }

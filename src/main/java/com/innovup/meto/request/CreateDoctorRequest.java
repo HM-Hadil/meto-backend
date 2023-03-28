@@ -34,5 +34,4 @@ public class CreateDoctorRequest extends CreateUserRequest{
     @NotNull
     private String telephone;
 
-
 }
