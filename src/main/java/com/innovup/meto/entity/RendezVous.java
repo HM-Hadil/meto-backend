@@ -17,7 +17,7 @@ import java.util.UUID;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(setterPrefix = "with")
 public class RendezVous extends EntityWithSelfAssignedId<UUID> {
 
     @Id
@@ -28,13 +28,13 @@ public class RendezVous extends EntityWithSelfAssignedId<UUID> {
     @Convert(converter = RendezVousStatusConverter.class)
     private RendezVousStatus status;
 
-    @Column(name = ComSchemaColumnConstantName.CREATED_ON, nullable = false)
-    private LocalDateTime createdOn;
-
     @Column(name = ComSchemaColumnConstantName.DATE, nullable = false)
     private LocalDateTime date;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "appointment_id")
-    private Appointment appointment;
+    @Column(name = ComSchemaColumnConstantName.CREATED_ON, nullable = false)
+    private LocalDateTime createdOn;
+
+    @Column(name = ComSchemaColumnConstantName.LAST_UPDATED_ON)
+    private LocalDateTime lastUpdatedOn;
+
 }

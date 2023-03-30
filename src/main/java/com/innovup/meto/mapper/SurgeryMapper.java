@@ -5,11 +5,13 @@ import com.innovup.meto.result.SurgeryResult;
 import com.innovup.meto.utils.DurationConverter;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Component
 public class SurgeryMapper {
 
-    public static SurgeryResult durationToSeconds(Surgery surgery) {
+    public SurgeryResult entityToResult(Surgery surgery) {
         return SurgeryResult.builder()
                 .withId(surgery.getId())
                 .withName(surgery.getName())

@@ -27,7 +27,7 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/authenticate")
-    @ApiOperation(value = "Authenticate user", response = AuthenticationResult.class, tags = {"Auth API"})
+    @ApiOperation(value = "Authenticate all users", response = AuthenticationResult.class, tags = {"Auth API"})
     public ResponseEntity<RestResponse<AuthenticationResult>> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
         var authenticationResult = authenticationService.authenticate(authenticationRequest);
         if (authenticationResult == null) {

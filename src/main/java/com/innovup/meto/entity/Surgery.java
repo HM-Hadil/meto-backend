@@ -5,6 +5,7 @@ import com.innovup.meto.core.schema.ComSchemaColumnConstantName;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -40,4 +41,24 @@ public class Surgery extends EntityWithSelfAssignedId<UUID> {
 
     @Column(name = ComSchemaColumnConstantName.IMAGE)
     private String image;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "users_surgeries",
+            joinColumns = {
+                    @JoinColumn(
+                            foreignKey = @ForeignKey(name = "fk_surgery_ref_user"),
+                            name = ComSchemaColumnConstantName.SURGERY_ID,
+                            referencedColumnName = ComSchemaColumnConstantName.ID
+                    )
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(
+                            foreignKey = @ForeignKey(name = "fk_user_ref_surgery"),
+                            name = ComSchemaColumnConstantName.USER_ID,
+                            referencedColumnName = ComSchemaColumnConstantName.ID
+                    )
+            }
+    )
+    private List<User> users;
 }

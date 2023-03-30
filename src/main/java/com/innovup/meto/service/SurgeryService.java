@@ -22,16 +22,18 @@ public class SurgeryService {
 
     private final SurgeryRepository surgeryRepository;
 
+    private final SurgeryMapper surgeryMapper;
+
 
     public List<SurgeryResult> findAllSurgeries() {
         return surgeryRepository.findAll().stream()
-                .map(SurgeryMapper::durationToSeconds)
+                .map(surgeryMapper::entityToResult)
                 .toList();
     }
 
     public Optional<SurgeryResult> findSurgeryById(UUID id) {
         return surgeryRepository.findById(id)
-                .map(SurgeryMapper::durationToSeconds);
+                .map(surgeryMapper::entityToResult);
     }
 
     public SurgeryResult addSurgery(SurgeryRequest request) {
@@ -51,7 +53,7 @@ public class SurgeryService {
                 .withDurationInSeconds(DurationConverter.toSeconds(request.getDuration()))
                 .build();
         surgery = surgeryRepository.save(surgery);
-        return SurgeryMapper.durationToSeconds(surgery);
+        return surgeryMapper.entityToResult(surgery);
     }
 
     public SurgeryResult updateSurgery(UUID id, SurgeryRequest request) {
@@ -71,7 +73,7 @@ public class SurgeryService {
             surgery.setDurationInSeconds(DurationConverter.toSeconds(request.getDuration()));
             surgery.setImage(request.getImage());
             surgery = surgeryRepository.save(surgery);
-            return SurgeryMapper.durationToSeconds(surgery);
+            return surgeryMapper.entityToResult(surgery);
         } else { // else throw new SurgeryNotFoundException
             throw new RuntimeException();
         }

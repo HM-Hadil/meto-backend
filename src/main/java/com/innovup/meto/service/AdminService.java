@@ -1,9 +1,13 @@
 package com.innovup.meto.service;
 
+import com.innovup.meto.entity.Appointment;
 import com.innovup.meto.entity.User;
 import com.innovup.meto.enums.Role;
+import com.innovup.meto.exception.AppointmentNotFoundException;
+import com.innovup.meto.exception.UserNotFoundException;
 import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.CreateAdminRequest;
+import com.innovup.meto.result.AppointmentResult;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -12,10 +16,12 @@ import java.util.UUID;
 public class AdminService extends UserService {
 
     private final UserRepository userRepository;
+    private final AppointmentService appointmentService;
 
-    protected AdminService(UserRepository repository) {
+    protected AdminService(UserRepository repository, AppointmentService appointmentService) {
         super(Role.ADMIN, repository);
         this.userRepository = repository;
+        this.appointmentService = appointmentService;
     }
 
     public User update(UUID id, CreateAdminRequest request) {
@@ -29,5 +35,13 @@ public class AdminService extends UserService {
         } else {
             return null;
         }
+    }
+
+    public AppointmentResult validateAppointment(UUID adminId, UUID appointmentId) {
+        return appointmentService.validateAppointment(adminId, appointmentId, null);
+    }
+
+    public AppointmentResult validateAppointmentWithDoctorId(UUID adminId, UUID appointmentId, UUID doctorId) {
+        return appointmentService.validateAppointment(adminId, appointmentId, doctorId);
     }
 }

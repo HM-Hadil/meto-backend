@@ -7,6 +7,7 @@ import lombok.extern.jackson.Jacksonized;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @SuperBuilder
@@ -23,5 +24,7 @@ public class AppointmentRequest {
 
     private final String note;
 
-    private final AppointmentPatientRequest patient;
+    private final PatientRequest patient;
+
+    private final LocalDateTime rendezVous;
 }

@@ -7,8 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum RendezVousStatus {
     CREATED("C"),
-    CANCELED("X"),
-    FINISHED("F")
+    UPDATED("X")
     ;
 
     private final String dbCode;

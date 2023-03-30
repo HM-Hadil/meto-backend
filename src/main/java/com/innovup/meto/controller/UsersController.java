@@ -24,6 +24,7 @@ public abstract class UsersController<SERVICE extends UserService> {
     @Getter(AccessLevel.PROTECTED)
     private final SERVICE service;
 
+
     @GetMapping(value = "")
     @ApiOperation(value = "Finds All", response = User.class)
     public ResponseEntity<RestResponse<List<User>>> findAll() {

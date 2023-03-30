@@ -7,12 +7,16 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.UUID;
+
 @SuperBuilder
 @Data
 @Jacksonized
 @Validated
 @ToString
-public class AppointmentPatientRequest {
+public class PatientRequest {
+
+    private final UUID id;
 
     private final String firstname;
 

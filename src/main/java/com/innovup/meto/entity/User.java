@@ -44,6 +44,9 @@ public class User extends EntityWithSelfAssignedId<UUID> {
     @Convert(converter = GenderConverter.class)
     private Gender gender;
 
+    @Column(name = ComSchemaColumnConstantName.WEIGHT)
+    private Double weight;
+
     @Column(name = ComSchemaColumnConstantName.ADDRESS, length = ComSchemaConstantSize.XL_VALUE)
     private String address;
 
@@ -70,5 +73,25 @@ public class User extends EntityWithSelfAssignedId<UUID> {
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "patient")
     private List<Appointment> appointments;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "users_surgeries",
+            joinColumns = {
+                    @JoinColumn(
+                            foreignKey = @ForeignKey(name = "fk_user_ref_surgery"),
+                            name = ComSchemaColumnConstantName.USER_ID,
+                            referencedColumnName = ComSchemaColumnConstantName.ID
+                    )
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(
+                            foreignKey = @ForeignKey(name = "fk_surgery_ref_user"),
+                            name = ComSchemaColumnConstantName.SURGERY_ID,
+                            referencedColumnName = ComSchemaColumnConstantName.ID
+                    )
+            }
+    )
+    private List<Surgery> surgeries;
 
 }

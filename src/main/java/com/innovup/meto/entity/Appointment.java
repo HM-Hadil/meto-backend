@@ -35,22 +35,23 @@ public class Appointment extends EntityWithSelfAssignedId<UUID> {
     private LocalDateTime createdOn;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "surgery_id")
+    @JoinColumn(name = ComSchemaColumnConstantName.SURGERY_ID)
     private Surgery surgery;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id")
+    @JoinColumn(name = ComSchemaColumnConstantName.PATIENT_ID)
     private User patient;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "appointment")
-    private RendezVous rendezVous;
-
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "doctor_id")
+    @JoinColumn(name = ComSchemaColumnConstantName.DOCTOR_ID)
     private User doctor;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "administrator_id")
+    @JoinColumn(name = ComSchemaColumnConstantName.ADMINISTRATOR_ID)
     private User administrator;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = ComSchemaColumnConstantName.RENDEZ_VOUS_ID)
+    private RendezVous rendezVous;
 
 }

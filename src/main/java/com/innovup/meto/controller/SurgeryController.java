@@ -26,7 +26,7 @@ public class SurgeryController {
     private final SurgeryService surgeryService;
 
     @GetMapping("")
-    @ApiOperation(value = "Finds All Surgeries", response = Surgery.class, tags = {"Surgery API"})
+    @ApiOperation(value = "Finds All Surgeries", response = SurgeryResult.class, tags = {"Surgery API"})
     public ResponseEntity<RestResponse<List<SurgeryResult>>> findAllSurgeries() {
 
         log.info("Endpoint '/surgeries' (GET) called");
@@ -37,7 +37,7 @@ public class SurgeryController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Find a Surgery by id", response = Surgery.class, tags = {"Surgery API"})
+    @ApiOperation(value = "Find a Surgery by id", response = SurgeryResult.class, tags = {"Surgery API"})
     public ResponseEntity<RestResponse<SurgeryResult>> findSurgeryById(@PathVariable UUID id) throws Exception {
 
         log.info("Endpoint '/surgeries/{id}' (GET) called - id = {}", id);
@@ -49,7 +49,7 @@ public class SurgeryController {
     }
 
     @PostMapping("")
-    @ApiOperation(value = "create Surgery", response = Surgery.class, tags = {"Surgery API"})
+    @ApiOperation(value = "create Surgery", response = SurgeryResult.class, tags = {"Surgery API"})
     public ResponseEntity<RestResponse<SurgeryResult>> addSurgery(@RequestBody SurgeryRequest request) {
 
         log.info("Endpoint '/surgeries' (POST) called - request = {}", request);
@@ -60,7 +60,7 @@ public class SurgeryController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation(value = "Update Surgery", response = Surgery.class, tags = {"Surgery API"})
+    @ApiOperation(value = "Update Surgery", response = SurgeryResult.class, tags = {"Surgery API"})
     public ResponseEntity<RestResponse<SurgeryResult>> updateSurgery(@PathVariable UUID id, @RequestBody SurgeryRequest request) {
 
         log.info("Endpoint '/surgeries/{id}' (PUT) called - id = {} - request = {}", id, request);
@@ -71,7 +71,7 @@ public class SurgeryController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "Delete Surgery by id", response = Surgery.class, tags = {"Surgery API"})
+    @ApiOperation(value = "Delete Surgery by id", response = SurgeryResult.class, tags = {"Surgery API"})
     public ResponseEntity<RestResponse<Surgery>> deleteSurgery(@PathVariable UUID id) {
 
         log.info("Endpoint '/surgeries/{id}' (DELETE) called - id = {}", id);

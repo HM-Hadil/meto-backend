@@ -1,8 +1,10 @@
 package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
+import com.innovup.meto.entity.Appointment;
 import com.innovup.meto.entity.User;
 import com.innovup.meto.request.CreateAdminRequest;
+import com.innovup.meto.result.AppointmentResult;
 import com.innovup.meto.service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +38,47 @@ public class AdminController extends UsersController<AdminService> {
         if (data == null) {
             return new ResponseEntity<>(RestResponse.empty(404, "Admin not found"), HttpStatus.NOT_FOUND);
         }
+
+        return ResponseEntity.ok(RestResponse.of(data, 200));
+    }
+
+    @PatchMapping(value = "/{id}/validate/{appointmentId}")
+    @ApiOperation(value = "Validates an appointment", response = AppointmentResult.class)
+    public ResponseEntity<RestResponse<AppointmentResult>> validateAppointment(
+            @NotNull @PathVariable UUID id,
+            @NotNull @PathVariable UUID appointmentId
+    ) {
+        log.info(
+                "Endpoint '.../{id}/validate/{appointmentId}/{doctorId}' (PATCH) called - id {}, appointmentId {}",
+                id, appointmentId
+        );
+
+        var data = getService().validateAppointment(id, appointmentId);
+
+        log.info("Endpoint '.../{id}/validate/{appointmentId}/{doctorId}' (PATCH) finished - id {}, appointmentId {}",
+                id, appointmentId
+        );
+
+        return ResponseEntity.ok(RestResponse.of(data, 200));
+    }
+
+    @PatchMapping(value = "/{id}/validate/{appointmentId}/{doctorId}")
+    @ApiOperation(value = "Validates an appointment with the chosen doctor", response = AppointmentResult.class)
+    public ResponseEntity<RestResponse<AppointmentResult>> validateAppointmentWithDoctorId(
+            @NotNull @PathVariable UUID id,
+            @NotNull @PathVariable UUID appointmentId,
+            @NotNull @PathVariable UUID doctorId
+    ) {
+        log.info(
+                "Endpoint '.../{id}/validate/{appointmentId}/{doctorId}' (PATCH) called - id {}, appointmentId {}, doctorId {}",
+                id, appointmentId, doctorId
+        );
+
+        var data = getService().validateAppointmentWithDoctorId(id, appointmentId, doctorId);
+
+        log.info("Endpoint '.../{id}/validate/{appointmentId}/{doctorId}' (PATCH) finished - id {}, appointmentId {}, doctorId {}",
+                id, appointmentId, doctorId
+        );
 
         return ResponseEntity.ok(RestResponse.of(data, 200));
     }
