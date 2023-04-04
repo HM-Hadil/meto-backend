@@ -73,12 +73,13 @@ public class ChirurgieController  {
 
     @DeleteMapping("DeleteChirurgie/{id}")
     @ApiOperation(value = "Delete Surgery by id", response = Chirurgie.class, tags = {"Surgery API"})
-    public void deleteSurgery(@PathVariable UUID id) {
+    public ResponseEntity<RestResponse<Chirurgie>> deleteSurgery(@PathVariable UUID id) {
 
         log.info("Endpoint '/surgeries/{id}' (DELETE) called - id = {}", id);
 
         surgeryService.deleteSurgery(id);
 
+        return new ResponseEntity<>(RestResponse.empty(203, null), HttpStatus.OK);
     }
 
 }

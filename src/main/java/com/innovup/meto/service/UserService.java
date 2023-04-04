@@ -23,4 +23,8 @@ public abstract  class UserService {
     public User findById(UUID id) {
         return userRepository.findById(id).orElse(null);
     }
+
+    public List<User>  findAllDoctorsBySurgeryId(UUID surgeryId) {
+        return userRepository.findAllBySurgeriesId(surgeryId);
+    }
 }

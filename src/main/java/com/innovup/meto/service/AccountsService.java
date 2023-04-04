@@ -25,6 +25,35 @@ public class AccountsService {
    public  Optional< User> getUserByIdWithRoleAndEnabledFalse(UUID id) {
         return userRepository.findByIdAndRoleAndIsEnabledFalse(id, Role.DOCTOR);
     }
+    public List<User> findDisabledPatient() {
+        return userRepository.findByRoleAndIsEnabled(Role.PATIENT,false);
+    }
 
+    public  Optional< User> getUsersByIdWithRoleAndEnabledFalse(UUID id) {
+        return userRepository.findByIdAndRoleAndIsEnabledFalse(id, Role.PATIENT);
+    }
+
+    //delete accounts
+    public void DeleteAccounts(UUID id){
+         this.userRepository.deleteById(id);
+    }
+
+    //activate Accounts of doctors
+    public User Activate(UUID id) {
+        var userOptional = userRepository.findById(id);
+
+        if (userOptional.isPresent() && userOptional.get().isEnabled()==false ) {
+            var user = userOptional.get();
+            user.setEnabled((true));
+
+
+            return userRepository.save(user);
+        } else {
+            throw new RuntimeException();
+        }
+    }
+    public  Optional< User> getUserByIdWithRoleAndEnabledTrue(UUID id) {
+        return userRepository.findByIdAndRoleAndIsEnabledTrue(id, Role.DOCTOR);
+    }
 
 }

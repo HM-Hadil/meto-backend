@@ -25,16 +25,15 @@ public class ChirurgieService {
     @Autowired
     private ChirurgieRepo repo;
 
-
     public List<ChirurgieResult> findAllSurgeries() {
         return repo.findAll().stream()
-                .map(ChirurgieMapper::durationToSeconds)
+                .map(ChirurgieMapper::entityToResult)
                 .toList();
     }
 
     public Optional<ChirurgieResult> findSurgeryById(UUID id) {
         return repo.findById(id)
-                .map(ChirurgieMapper::durationToSeconds);
+                .map(ChirurgieMapper::entityToResult);
     }
 
     public ChirurgieResult addSurgery(ChirurgieRequest request) {
@@ -54,7 +53,7 @@ public class ChirurgieService {
                 .withDurationInSeconds(DurationConverter.toSeconds(request.getDuration()))
                 .build();
         chirurgie = repo.save(chirurgie);
-        return ChirurgieMapper.durationToSeconds(chirurgie);
+        return ChirurgieMapper.entityToResult(chirurgie);
     }
 
     public ChirurgieResult updateSurgery(UUID id, ChirurgieRequest request) {
@@ -74,7 +73,7 @@ public class ChirurgieService {
             chirurgie.setDurationInSeconds(DurationConverter.toSeconds(request.getDuration()));
             chirurgie.setImage(request.getImage());
             chirurgie = repo.save(chirurgie);
-            return ChirurgieMapper.durationToSeconds(chirurgie);
+            return ChirurgieMapper.entityToResult(chirurgie);
         } else { // else throw new SurgeryNotFoundException
             throw new RuntimeException();
         }

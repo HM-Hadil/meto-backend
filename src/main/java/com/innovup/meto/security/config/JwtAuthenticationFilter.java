@@ -7,8 +7,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -31,25 +29,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected void doFilterInternal( @NonNull HttpServletRequest request,
-                                     @NonNull HttpServletResponse response,
-                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-
-
-          // response.setHeader("Access-Control-Allow-Origin", "*");
-          //  response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-
-        if (request.getMethod().equals(HttpMethod.OPTIONS.name())) {
-            response.setHeader("Access-Control-Allow-Origin", "*");
-            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            response.setHeader("Access-Control-Allow-Headers", "authorization, content-type");
-            response.setStatus(HttpStatus.OK.value());
-            return;
-        }
-
-        //take the header from the request
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String header =request.getHeader("Authorization");
-
         if (header != null && header.startsWith("Bearer ")){
             var jwtToken = header.substring(7);
             try {
@@ -57,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 var userPrincipal = (UserPrincipal) customUserDetailsService.loadUserByUsername(userEmail);
 
                 if (Boolean.TRUE.equals(jwtTokenProvider.isTokenValid(jwtToken , userPrincipal))){
-                    var authentication =  new UsernamePasswordAuthenticationToken(userPrincipal ,null , userPrincipal.getAuthorities());
+                    var authentication =  new UsernamePasswordAuthenticationToken (userPrincipal ,null , userPrincipal.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
@@ -69,11 +52,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         } else {
             log.info("JWT Token does not begin with Bearer String");
+            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
+            response.setHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE,PUT,OPTIONS");
+            response.setHeader("Access-Control-Allow-Headers", "*");
             filterChain.doFilter(request, response);
         }
     }
-
-
 
     }
 

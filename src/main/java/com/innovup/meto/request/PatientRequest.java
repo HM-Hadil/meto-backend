@@ -5,23 +5,24 @@ import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotNull;
+import java.util.UUID;
 
 @SuperBuilder
 @Data
 @Jacksonized
+@Validated
 @ToString
-public class CreateUserRequest {
+public class PatientRequest {
 
-    @NotNull
+    private final UUID id;
+
     private final String firstname;
-    @NotNull
+
     private final String lastname;
-    @NotNull
-    private final String email;
-    @NotNull
-    private final String password;
-    @NotNull
+
+    private final Double weight;
+
     private final Gender gender;
 }

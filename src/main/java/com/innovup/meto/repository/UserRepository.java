@@ -15,11 +15,12 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByEmail(String email);
 
 
-    boolean existsByEmail(String email);
+   // boolean existsByEmail(String email);
 
-    Optional<User> findUserById(UUID id);
+   // Optional<User> findUserById(UUID id);
 
     List<User> findByRoleAndIsEnabled(Role role, boolean isEnabled);
     Optional<User> findByIdAndRoleAndIsEnabledFalse(UUID id , Role role);
-
+    Optional<User> findByIdAndRoleAndIsEnabledTrue(UUID id , Role role);
+    List<User> findAllBySurgeriesId(UUID surgeryId);
 }

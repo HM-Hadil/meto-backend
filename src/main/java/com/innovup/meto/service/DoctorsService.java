@@ -26,7 +26,6 @@ public  class DoctorsService extends UserService {
             user.setImage(request.getImage());
             user.setTelephone(request.getTelephone());
             user.setSpecialite(request.getSpecialite());
-           /// user.setEmail(request.getEmail());
             user.setGender(request.getGender());
             user.setAdresse(request.getAdresse());
             user.setVille(request.getVille());
@@ -37,4 +36,8 @@ public  class DoctorsService extends UserService {
             throw new RuntimeException();
         }
     }
+
+
+    //SELECT DOCTOR WITH CHIRURGIE
+
 }

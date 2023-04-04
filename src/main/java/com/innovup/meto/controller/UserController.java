@@ -19,7 +19,7 @@ import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
-public class UserController<SERVICE extends UserService> {
+public abstract class UserController<SERVICE extends UserService> {
 
     @Getter(AccessLevel.PROTECTED)
     private final SERVICE service;
@@ -27,29 +27,30 @@ public class UserController<SERVICE extends UserService> {
     @GetMapping(value = "")
     @ApiOperation(value = "Finds All", response = User.class)
     public ResponseEntity<RestResponse<List<User>>> findAll() {
-        log.info("Endpoint '.../' (GET) called");
 
-        var data = getService().findAll();
+            log.info("Endpoint '.../' (GET) called");
 
-        log.info("Endpoint '.../{id}' (GET) finished");
+            var data = getService().findAll();
 
-        return ResponseEntity.ok(RestResponse.of(data, 200));
-    }
+            log.info("Endpoint '.../{id}' (GET) finished");
 
-    @GetMapping(value = "/{id}")
-    @ApiOperation(value = "Finds one by id", response = User.class)
-    public ResponseEntity<RestResponse<User>> findById(@NotNull @PathVariable UUID id) {
-        log.info("Endpoint '.../{id}' (GET) called - id {}", id);
-
-        var data = getService().findById(id);
-
-        log.info("Endpoint '.../{id}' (GET) finished - id {}", id);
-
-        if (data == null) {
-            return new ResponseEntity<>(RestResponse.empty(404), HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok(RestResponse.of(data, 200));
         }
 
-        return ResponseEntity.ok(RestResponse.of(data, 200));
-    }
+        @GetMapping(value = "/{id}")
+        @ApiOperation(value = "Finds one by id", response = User.class)
+        public ResponseEntity<RestResponse<User>> findById(@NotNull @PathVariable UUID id) {
+            log.info("Endpoint '.../{id}' (GET) called - id {}", id);
+
+            var data = getService().findById(id);
+
+            log.info("Endpoint '.../{id}' (GET) finished - id {}", id);
+
+            if (data == null) {
+                return new ResponseEntity<>(RestResponse.empty(404, "User not found"), HttpStatus.NOT_FOUND);
+            }
+
+            return ResponseEntity.ok(RestResponse.of(data, 200));
+        }
 
 }

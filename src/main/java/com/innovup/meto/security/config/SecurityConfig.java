@@ -30,7 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] auth_tec_files = {"/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**"};
     private static final String[] auth_ext_files = {"/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html", "/**/*.css", "/**/*.js"};
-    private static final String[] auth_public_url = {"/","/chirurgies/**","/accounts/**","/doctors/**","/admins/**","/patients/**","/dossierMedical/**","/authenticate","/api/**","/register/**", "/**/public/**", "/**/loginForm/**", "/**/VAADIN/**", "/**/vaadinServlet/**"};
+    private static final String[] auth_public_url = {"/","/chirurgies/**","/appointments/**","/accounts/**","/doctors/**","/admins/**","/patients/**","/dossierMedical/**","/authenticate","/api/**","/register/**", "/**/public/**", "/**/loginForm/**", "/**/VAADIN/**", "/**/vaadinServlet/**"};
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -101,7 +101,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 Lists.newArrayList(
                         "Origin","Accept", "responseType","Access-Control-Allow-Origin"
                         , "Access-Control-allow-Credentials", "Authorization",
-                        "content-type", "Accept-Language"
+                        "content-type", "Accept-Language", "No_Auth"
                 )
         );
         source.registerCorsConfiguration("/**", configuration);

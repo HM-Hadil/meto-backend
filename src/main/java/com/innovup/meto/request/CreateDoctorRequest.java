@@ -1,6 +1,5 @@
 package com.innovup.meto.request;
 
-import com.innovup.meto.enums.Gender;
 import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -17,8 +16,6 @@ import java.util.List;
 @ToString
 public class CreateDoctorRequest extends CreateUserRequest{
 
-    @NotNull
-    private final Gender gender;
     @NotNull
     private final List<ParcoursRequest> parcours;
     @NotNull

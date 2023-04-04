@@ -21,7 +21,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AcademicLevel extends EntityWithSelfAssignedId<UUID> {
     @Id
-    @Column(name = ComSchemaColumnConstantName.C_ID)
+    @Column(name = ComSchemaColumnConstantName.ID)
     private UUID id;
 
     @Column(name = ComSchemaColumnConstantName.C_FIELD)

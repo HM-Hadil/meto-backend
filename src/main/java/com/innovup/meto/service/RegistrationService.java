@@ -44,6 +44,7 @@ public class RegistrationService {
                 .withEmail(request.getEmail())
                 .withPassword(passwordEncoder.encode(request.getPassword()))
                 .withLastname(request.getLastname())
+                .withGender(request.getGender())
                 .withRole(Role.ADMIN)
                 .withIsEnabled(true)
                 .withCreatedOn(LocalDate.now())
@@ -66,6 +67,7 @@ public class RegistrationService {
                 .withFirstname(request.getFirstname())
                 .withLastname(request.getLastname())
                 .withEmail(request.getEmail())
+                .withGender(request.getGender())
                 .withPassword(passwordEncoder.encode(request.getPassword()))
                 .withRole(Role.PATIENT)
                 .withCreatedOn(LocalDate.now())
@@ -74,7 +76,8 @@ public class RegistrationService {
     }
 
 
-    public User createNewDoctor(CreateDoctorRequest request) {
+
+    public User createNewDoctor(CreateDoctorRequest request )   {
 
 
         String email = request.getEmail();
@@ -101,6 +104,10 @@ public class RegistrationService {
                 .build();
         return userRepository.save(user);
     }
+
+
+
+
 
     public User findUserById(UUID uuid) {
         Optional<User> optional = userRepository.findById(uuid);

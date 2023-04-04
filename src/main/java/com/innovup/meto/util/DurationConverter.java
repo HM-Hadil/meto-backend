@@ -2,6 +2,10 @@ package com.innovup.meto.util;
 
 import com.innovup.meto.entity.ChirurgieDuration;
 import com.innovup.meto.request.ChirurgieDurationRequest;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 
 public class DurationConverter {
 

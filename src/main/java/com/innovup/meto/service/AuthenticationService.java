@@ -30,12 +30,13 @@ public class AuthenticationService {
             var accessToken = jwtTokenProvider.generateToken(userPrincipal);
             return AuthenticationResult.builder()
                     .withEmail(userPrincipal.getEmail())
+                    .withId(userPrincipal.getId())
                     .withRole(user.getRole())
                     .withToken(accessToken)
                     .build();
         } catch (Exception e) {
             log.error("Error authentication user email {}", request.getEmail());
-            throw new RuntimeException(e.getMessage());
+            return null;
         }
     }
 }
