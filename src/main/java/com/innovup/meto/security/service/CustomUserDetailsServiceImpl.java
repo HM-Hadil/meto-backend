@@ -77,4 +77,8 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
         var userOptional = userRepository.findById(userPrincipal.getId());
         return userOptional.orElse(null);
     }
+
+
+
 }
+
