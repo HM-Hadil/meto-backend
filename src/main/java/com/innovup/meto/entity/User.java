@@ -71,10 +71,10 @@ public class User extends EntityWithSelfAssignedId<UUID> {
     @JoinColumn(name = "user_id")
     private List<Experience> experiences;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "patient")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
     private List<Appointment> appointments;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
             name = "users_surgeries",
             joinColumns = {

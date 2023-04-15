@@ -8,5 +8,5 @@ import java.util.UUID;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, UUID> {
 
-    List<Appointment> findAppointmentByDoctorOrderByCreatedOn(UUID doctorId);
+    List<Appointment> findAppointmentsByDoctorIdOrderByCreatedOn(UUID doctorId);
 }

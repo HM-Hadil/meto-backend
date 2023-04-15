@@ -1,7 +1,8 @@
 package com.innovup.meto.request;
 
-import com.innovup.meto.enums.Gender;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
@@ -10,14 +11,11 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @SuperBuilder
-@Data
+@Getter
+@Setter
 @Jacksonized
 @ToString
 public class CreateDoctorRequest extends CreateUserRequest {
-
-    @NotNull
-    private final Gender gender;
-
     @NotNull
     private final String address;
 

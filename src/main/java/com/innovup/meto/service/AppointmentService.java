@@ -2,13 +2,11 @@ package com.innovup.meto.service;
 
 import com.innovup.meto.entity.Appointment;
 import com.innovup.meto.entity.RendezVous;
-import com.innovup.meto.entity.User;
 import com.innovup.meto.enums.AppointmentStatus;
 import com.innovup.meto.enums.RendezVousStatus;
 import com.innovup.meto.enums.Role;
 import com.innovup.meto.exception.AppointmentNotFoundException;
 import com.innovup.meto.exception.SurgeryNotFoundException;
-import com.innovup.meto.exception.UnauthorizedUserException;
 import com.innovup.meto.exception.UserNotFoundException;
 import com.innovup.meto.mapper.AppointmentMapper;
 import com.innovup.meto.repository.AppointmentRepository;
@@ -16,14 +14,12 @@ import com.innovup.meto.repository.SurgeryRepository;
 import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.AppointmentRequest;
 import com.innovup.meto.result.AppointmentResult;
-import com.innovup.meto.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -34,7 +30,6 @@ public class AppointmentService {
     private final AppointmentRepository appointmentRepository;
     private final SurgeryRepository surgeryRepository;
     private final UserRepository userRepository;
-    private final CustomUserDetailsService customUserDetailsService;
     private final AppointmentMapper appointmentMapper;
 
     public List<AppointmentResult> findAllAppointments() {
@@ -44,7 +39,7 @@ public class AppointmentService {
     }
 
     public List<AppointmentResult> findAllAppointmentsByDoctor(UUID doctorId) {
-        return appointmentRepository.findAppointmentByDoctorOrderByCreatedOn(doctorId).stream()
+        return appointmentRepository.findAppointmentsByDoctorIdOrderByCreatedOn(doctorId).stream()
                 .map(appointmentMapper::entityToResult)
                 .toList();
     }
@@ -52,6 +47,7 @@ public class AppointmentService {
     public AppointmentResult createAppointment(AppointmentRequest request) {
         var surgery = surgeryRepository.findById(request.getSurgeryId()).orElseThrow(SurgeryNotFoundException::new);
         var patient = userRepository.findById(request.getPatient().getId()).orElseThrow(() -> new UserNotFoundException(Role.PATIENT));
+
         patient.setGender(request.getPatient().getGender());
         patient.setWeight(request.getPatient().getWeight());
 

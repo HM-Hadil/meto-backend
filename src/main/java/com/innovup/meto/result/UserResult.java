@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @SuperBuilder(setterPrefix = "with")
@@ -23,4 +24,6 @@ public abstract class UserResult {
     private String email;
 
     private Role role;
+
+    private LocalDate createdOn;
 }

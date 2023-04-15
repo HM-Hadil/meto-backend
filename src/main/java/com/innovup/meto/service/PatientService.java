@@ -14,7 +14,7 @@ public class PatientService extends UserService{
     private final UserRepository userRepository;
 
     protected PatientService(UserRepository repository) {
-        super(Role.ADMIN, repository);
+        super(Role.PATIENT, repository);
         this.userRepository = repository;
     }
 

@@ -2,18 +2,17 @@ package com.innovup.meto.mapper;
 
 import com.innovup.meto.entity.Appointment;
 import com.innovup.meto.result.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-//@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
 @Component
 public class AppointmentMapper {
 
     private final SurgeryMapper surgeryMapper;
     private final UserMapper userMapper;
+
+    private final RendezVousMapper rendezVousMapper;
 
     public AppointmentResult entityToResult(Appointment appointment) {
         if (appointment == null) {
@@ -29,15 +28,7 @@ public class AppointmentMapper {
                 .withPatient(userMapper.entityToPatient(appointment.getPatient()))
                 .withDoctor(userMapper.entityToDoctor(appointment.getDoctor()))
                 .withAdministrator(userMapper.entityToAdministrator(appointment.getAdministrator()))
-                .withRendezVous(
-                        RendezVousResult.builder()
-                                .withId(appointment.getRendezVous().getId())
-                                .withStatus(appointment.getRendezVous().getStatus())
-                                .withDate(appointment.getRendezVous().getDate())
-                                .withCreatedOn(appointment.getRendezVous().getCreatedOn())
-                                .withLastUpdatedOn(appointment.getRendezVous().getLastUpdatedOn())
-                                .build()
-                )
+                .withRendezVous(rendezVousMapper.entityToResult(appointment.getRendezVous()))
                 .build();
     }
 }

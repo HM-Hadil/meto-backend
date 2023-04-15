@@ -4,8 +4,12 @@ import com.innovup.meto.entity.AcademicLevel;
 import com.innovup.meto.entity.Experience;
 import com.innovup.meto.entity.User;
 import com.innovup.meto.enums.Role;
+import com.innovup.meto.mapper.UserMapper;
 import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.*;
+import com.innovup.meto.result.AdministratorResult;
+import com.innovup.meto.result.DoctorResult;
+import com.innovup.meto.result.PatientResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,38 +28,39 @@ public class RegistrationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final UserMapper userMapper;
 
-    public User createNewAdmin(CreateAdminRequest request) {
+
+    public AdministratorResult createNewAdmin(CreateAdminRequest request) {
         var user = User.builder()
                 .withId(UUID.randomUUID())
                 .withFirstname(request.getFirstname())
                 .withEmail(request.getEmail())
                 .withPassword(passwordEncoder.encode(request.getPassword()))
+                .withGender(request.getGender())
                 .withLastname(request.getLastname())
                 .withRole(Role.ADMIN)
                 .withIsEnabled(true)
                 .withCreatedOn(LocalDate.now())
                 .build();
-
-        // ObjectMapper.map(user, createUserResult)
-
-         return userRepository.save(user);
+         return userMapper.entityToAdministrator(userRepository.save(user));
     }
 
-    public User createNewPatient(CreatePatientRequest request) {
+    public PatientResult createNewPatient(CreatePatientRequest request) {
         var user = User.builder()
                 .withId(UUID.randomUUID())
                 .withFirstname(request.getFirstname())
                 .withLastname(request.getLastname())
                 .withEmail(request.getEmail())
                 .withPassword(passwordEncoder.encode(request.getPassword()))
+                .withGender(request.getGender())
                 .withRole(Role.PATIENT)
                 .withCreatedOn(LocalDate.now())
                 .build();
-        return userRepository.save(user);
+        return userMapper.entityToPatient(userRepository.save(user));
     }
 
-    public User createNewDoctor(CreateDoctorRequest request) {
+    public DoctorResult createNewDoctor(CreateDoctorRequest request) {
 
         var user = User.builder()
                 .withId(UUID.randomUUID())
@@ -71,7 +76,7 @@ public class RegistrationService {
                 .withRole(Role.DOCTOR)
                 .withCreatedOn(LocalDate.now())
                 .build();
-        return userRepository.save(user);
+        return userMapper.entityToDoctor(userRepository.save(user));
     }
 
     public User findById(UUID uuid) {

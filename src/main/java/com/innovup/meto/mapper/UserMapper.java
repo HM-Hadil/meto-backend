@@ -23,6 +23,7 @@ public class UserMapper {
                 .withLastname(user.getLastname())
                 .withEmail(user.getLastname())
                 .withRole(user.getRole())
+                .withCreatedOn(user.getCreatedOn())
                 .build();
     }
 
@@ -37,6 +38,7 @@ public class UserMapper {
                 .withLastname(user.getLastname())
                 .withEmail(user.getEmail())
                 .withRole(user.getRole())
+                .withCreatedOn(user.getCreatedOn())
                 .withGender(user.getGender())
                 .withWeight(user.getWeight())
                 .build();
@@ -53,9 +55,12 @@ public class UserMapper {
                 .withLastname(user.getLastname())
                 .withEmail(user.getEmail())
                 .withRole(user.getRole())
+                .withCreatedOn(user.getCreatedOn())
                 .withGender(user.getGender())
                 .withAddress(user.getAddress())
                 .withCity(user.getCity())
+                .withAcademicLevels(user.getAcademicLevels())
+                .withExperiences(user.getExperiences())
                 .build();
     }
 }

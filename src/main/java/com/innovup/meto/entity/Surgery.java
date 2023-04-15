@@ -10,7 +10,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "surgeries", schema = "public")
-@Data
+@Getter
+@Setter
 @ToString
 @Builder(setterPrefix = "with")
 @NoArgsConstructor
@@ -42,7 +43,7 @@ public class Surgery extends EntityWithSelfAssignedId<UUID> {
     @Column(name = ComSchemaColumnConstantName.IMAGE)
     private String image;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
             name = "users_surgeries",
             joinColumns = {

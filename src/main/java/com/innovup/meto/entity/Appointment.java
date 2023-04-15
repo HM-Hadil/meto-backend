@@ -13,7 +13,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "appointments", schema = "public")
-@Data
+@Getter
+@Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,23 +35,23 @@ public class Appointment extends EntityWithSelfAssignedId<UUID> {
     @Column(name = ComSchemaColumnConstantName.CREATED_ON, nullable = false)
     private LocalDateTime createdOn;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = ComSchemaColumnConstantName.SURGERY_ID)
     private Surgery surgery;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = ComSchemaColumnConstantName.PATIENT_ID)
     private User patient;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = ComSchemaColumnConstantName.DOCTOR_ID)
     private User doctor;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = ComSchemaColumnConstantName.ADMINISTRATOR_ID)
     private User administrator;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = ComSchemaColumnConstantName.RENDEZ_VOUS_ID)
     private RendezVous rendezVous;
 
