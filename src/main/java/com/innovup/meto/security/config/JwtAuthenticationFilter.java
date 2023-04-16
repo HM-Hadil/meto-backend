@@ -27,42 +27,45 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
     private final CustomUserDetailsService customUserDetailsService;
 
-
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-        final String header =request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")){
-            var jwtToken = header.substring(7);
-            try {
-                var userEmail = jwtTokenProvider.getUserNameFromToken(jwtToken);
-                var userPrincipal = (UserPrincipal) customUserDetailsService.loadUserByUsername(userEmail);
 
-                if (Boolean.TRUE.equals(jwtTokenProvider.isTokenValid(jwtToken , userPrincipal))){
-                    var authentication =  new UsernamePasswordAuthenticationToken (userPrincipal ,null , userPrincipal.getAuthorities());
+        final String header = request.getHeader("Authorization");
+
+        if (header != null && header.startsWith("Bearer ")) {
+            String jwtToken = header.substring(7);
+
+            try {
+                String userEmail = jwtTokenProvider.getUserNameFromToken(jwtToken);
+                UserPrincipal userPrincipal = (UserPrincipal) customUserDetailsService.loadUserByUsername(userEmail);
+
+                if (Boolean.TRUE.equals(jwtTokenProvider.isTokenValid(jwtToken, userPrincipal))) {
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(userPrincipal, null, userPrincipal.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
                 filterChain.doFilter(request, response);
-            } catch (IllegalArgumentException e){
-                log.info("unable to get the jwt token");
+
+            } catch (IllegalArgumentException e) {
+                log.info("Unable to get the JWT token");
+
             } catch (ExpiredJwtException e) {
                 log.info("JWT Token has expired");
             }
+
         } else {
             log.info("JWT Token does not begin with Bearer String");
+
             response.setHeader("Access-Control-Allow-Origin", "*");
             response.setHeader("Access-Control-Expose-Headers", "Content-Disposition");
-            response.setHeader("Access-Control-Allow-Methods", "GET,POST,PATCH,DELETE,PUT,OPTIONS");
+            response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, PUT, OPTIONS");
             response.setHeader("Access-Control-Allow-Headers", "*");
+            request.setAttribute("No-Auth", "true");
+
             filterChain.doFilter(request, response);
         }
     }
-
-    }
-
-
-
-
-
+}

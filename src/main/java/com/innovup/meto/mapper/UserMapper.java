@@ -31,6 +31,7 @@ public class UserMapper {
             return null;
         }
 
+
         return PatientResult.builder()
                 .withId(user.getId())
                 .withFirstname(user.getFirstname())

@@ -1,11 +1,9 @@
 package com.innovup.meto.security.config;
 
-import com.google.common.collect.Lists;
 import com.innovup.meto.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -21,6 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
@@ -30,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] auth_tec_files = {"/swagger-resources/**", "/swagger-ui.html", "/v2/api-docs", "/webjars/**"};
     private static final String[] auth_ext_files = {"/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html", "/**/*.css", "/**/*.js"};
-    private static final String[] auth_public_url = {"/","/chirurgies/**","/appointments/**","/accounts/**","/doctors/**","/admins/**","/patients/**","/dossierMedical/**","/authenticate","/api/**","/register/**", "/**/public/**", "/**/loginForm/**", "/**/VAADIN/**", "/**/vaadinServlet/**"};
+    private static final String[] auth_public_url = {"/","/chirurgies/**","/appointments/**","/accounts/**","/doctors/**","/admins/**","/patients/**","/authenticate","/api/**","/register/**", "/**/public/**", "/**/loginForm/**", "/**/VAADIN/**", "/**/vaadinServlet/**"};
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -49,10 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .headers().frameOptions().disable()
-                .and().exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+
+        http.csrf().disable().cors().disable()
+                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 // Token based authentication instead of session based
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests()
@@ -70,14 +68,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //corsConfiguration.addAllowedOrigin("*");
         //  Cross domain configuration error , take .allowedOrigins Replace with .allowedOriginPatterns that will do .
         //  Set the domain name that allows cross domain requests
-        corsConfiguration.addAllowedOriginPattern("*");
-        corsConfiguration.addAllowedHeader("*");
+       // corsConfiguration.addAllowedOriginPattern("*");
+       // corsConfiguration.addAllowedHeader("*");
         //  Set allowed methods
         corsConfiguration.addAllowedMethod("*");
         //  Whether to allow certificates
         corsConfiguration.setAllowCredentials(true);
-        //  Cross domain allow time
-        //corsConfiguration.setMaxAge(3600L);
+
+        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET","POST", "OPTIONS", "DELETE", "PUT"));
+        corsConfiguration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+        corsConfiguration.setAllowCredentials(true);
         return corsConfiguration;
     }
 
@@ -85,29 +86,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configuration = new CorsConfiguration();
-        source.registerCorsConfiguration("/**", buildConfig());
-        //configuration.setAllowCredentials(true);
-        configuration.setAllowedOriginPatterns(Collections.singletonList("http://localhost:4200"));
-      //  configuration.setAllowedOrigins(List.of("));
-        configuration.addAllowedOrigin("*");
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod(HttpMethod.OPTIONS);
-        configuration.addAllowedMethod(HttpMethod.GET);
-        configuration.addAllowedMethod(HttpMethod.POST);
-        configuration.addAllowedMethod(HttpMethod.PUT);
-        configuration.addAllowedMethod(HttpMethod.PATCH);
-        configuration.addAllowedMethod(HttpMethod.DELETE);
-        configuration.setAllowedHeaders(
-                Lists.newArrayList(
-                        "Origin","Accept", "responseType","Access-Control-Allow-Origin"
-                        , "Access-Control-allow-Credentials", "Authorization",
-                        "content-type", "Accept-Language", "No_Auth"
-                )
-        );
+        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT"));
+        configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+        configuration.setAllowCredentials(true);
         source.registerCorsConfiguration("/**", configuration);
         return new CorsFilter(source);
     }
-
 
 
 

@@ -8,12 +8,12 @@ public class WebConfig  implements WebMvcConfigurer  {
    public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("http://localhost:4200") // Replace with your front-end URL
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowedHeaders("*")
-                .allowCredentials(true)
+                .allowedMethods("*")
+                .allowedHeaders("*");
+               /** .allowCredentials(true)
                 .exposedHeaders("Authorization")
-                .allowCredentials(true)
-                .maxAge(3600);
+                .allowedHeaders("Content-Type")
+                .maxAge(3600L);**/
 
 
 }

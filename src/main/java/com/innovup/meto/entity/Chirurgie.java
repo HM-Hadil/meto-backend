@@ -5,7 +5,6 @@ import com.innovup.meto.core.schema.ComSchemaColumnConstantName;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -43,7 +42,7 @@ public class Chirurgie extends EntityWithSelfAssignedId<UUID> {
     @Column(name = ComSchemaColumnConstantName.C_IMAGE)
     @Lob
     private String image;
-
+/**
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_surgeries",
@@ -62,5 +61,5 @@ public class Chirurgie extends EntityWithSelfAssignedId<UUID> {
                     )
             }
     )
-    private List<User> users;
+    private List<User> users;**/
 }

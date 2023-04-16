@@ -1,6 +1,7 @@
 package com.innovup.meto.result;
 
 import com.innovup.meto.enums.AppointmentStatus;
+import com.innovup.meto.pojo.Administrator;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,14 +22,22 @@ public class AppointmentResult {
     private UUID id;
 
     private String note;
-
+    private String image;
+    private final Double age;
+    private final Double weight;
+    private final LocalDateTime dateRDV;
+    private final String typeSang;
+    private final String phone;
     private AppointmentStatus status;
-
+    private final String ville;
     private LocalDateTime createdOn;
 
     private ChirurgieResult surgery;
 
     private PatientResult patient;
+    private Administrator lastUpdatedBy;
+
+    private LocalDateTime lastUpdatedOn;
 
     private DoctorResult doctor;
 

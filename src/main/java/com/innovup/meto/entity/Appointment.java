@@ -25,7 +25,30 @@ public class Appointment extends EntityWithSelfAssignedId<UUID> {
     private UUID id;
 
     @Column(name = ComSchemaColumnConstantName.NOTE)
-    private String note;
+    @Lob
+    private String description;
+
+    @Column(name = ComSchemaColumnConstantName.C_IMAGE)
+    @Lob
+    private  String image;
+
+    @Column(name = ComSchemaColumnConstantName.C_AGE)
+    private Double age;
+
+    @Column(name = ComSchemaColumnConstantName.C_WEIGHT)
+    private Double weight;
+
+    @Column(name = ComSchemaColumnConstantName.C_dateRdv, nullable = false)
+    private  LocalDateTime dateRDV;
+
+    @Column(name = ComSchemaColumnConstantName.C_TYPESANG)
+    private String typeSang;
+
+    @Column(name = ComSchemaColumnConstantName.C_TELEPHONE)
+    private String phone;
+
+    @Column(name = ComSchemaColumnConstantName.C_VILLE)
+    private String ville;
 
     @Column(name = ComSchemaColumnConstantName.STATUS, nullable = false, length = ComSchemaConstantSize.CODE)
     @Convert(converter = AppointmentStatusConverter.class)
@@ -34,19 +57,26 @@ public class Appointment extends EntityWithSelfAssignedId<UUID> {
     @Column(name = ComSchemaColumnConstantName.CREATED_ON, nullable = false)
     private LocalDateTime createdOn;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @Column(name = ComSchemaColumnConstantName.LAST_UPDATED_ON)
+    private LocalDateTime lastUpdatedOn;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = ComSchemaColumnConstantName.LAST_UPDATED_BY)
+    private User lastUpdatedBy;
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = ComSchemaColumnConstantName.SURGERY_ID)
     private Chirurgie surgery;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = ComSchemaColumnConstantName.PATIENT_ID)
     private User patient;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = ComSchemaColumnConstantName.DOCTOR_ID)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = ComSchemaColumnConstantName.DOCTOR_ID )
     private User doctor;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = ComSchemaColumnConstantName.ADMINISTRATOR_ID)
     private User administrator;
 

@@ -20,7 +20,7 @@ public class RendezVousResult {
 
     private RendezVousStatus status;
 
-    private LocalDateTime date;
+    private LocalDateTime dateRDV;
 
     private LocalDateTime createdOn;
 

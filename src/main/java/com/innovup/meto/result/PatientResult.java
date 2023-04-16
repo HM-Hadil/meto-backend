@@ -13,7 +13,6 @@ import lombok.extern.jackson.Jacksonized;
 @ToString
 public class PatientResult extends UserResult {
 
-    private Double weight;
 
 
 }

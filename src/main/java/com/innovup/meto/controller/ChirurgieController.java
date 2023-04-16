@@ -3,6 +3,7 @@ package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
 import com.innovup.meto.entity.Chirurgie;
+import com.innovup.meto.repository.ChirurgieRepo;
 import com.innovup.meto.request.ChirurgieRequest;
 import com.innovup.meto.result.ChirurgieResult;
 import com.innovup.meto.service.ChirurgieService;
@@ -14,7 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @CrossOrigin( origins = {"http://localhost:4200"})
@@ -25,6 +28,8 @@ import java.util.UUID;
 @Api(value = "Surgery API Controller", tags = "Surgery API")
 public class ChirurgieController  {
     private final ChirurgieService surgeryService;
+    private final ChirurgieRepo  repo;
+
 
     @GetMapping("getAllChirurgie")
     @ApiOperation(value = "Finds All Surgeries", response = Chirurgie.class, tags = {"Surgery API"})
@@ -70,7 +75,7 @@ public class ChirurgieController  {
 
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
-
+/**
     @DeleteMapping("DeleteChirurgie/{id}")
     @ApiOperation(value = "Delete Surgery by id", response = Chirurgie.class, tags = {"Surgery API"})
     public ResponseEntity<Chirurgie> deleteSurgery(@PathVariable UUID id) {
@@ -80,6 +85,16 @@ public class ChirurgieController  {
         surgeryService.deleteSurgery(id);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+**/
+    @DeleteMapping(path = "DeleteChirurgie/{id}")
+    @ApiOperation(value = "Delete Surgery by id", response = Chirurgie.class, tags = {"Surgery API"})
+
+    public ResponseEntity<Map<String ,String>> deleteCategory(@PathVariable UUID id) {
+        this.repo.deleteById(id);
+        HashMap<String,String> response = new HashMap<>();
+        response.put("message","chirurgie deleted");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }

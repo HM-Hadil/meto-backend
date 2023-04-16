@@ -13,6 +13,7 @@ import com.innovup.meto.repository.AppointmentRepository;
 import com.innovup.meto.repository.ChirurgieRepo;
 import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.AppointmentRequest;
+import com.innovup.meto.request.UpdateAppointmentRequest;
 import com.innovup.meto.result.AppointmentResult;
 import com.innovup.meto.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -39,25 +44,53 @@ public class AppointmentService {
                 .toList();
     }
 
-    public List<AppointmentResult> findAllAppointmentsByDoctor(UUID doctorId) {
-        return appointmentRepository.findAppointmentByDoctorOrderByCreatedOn(doctorId).stream()
-                .map(appointmentMapper::entityToResult)
-                .toList();
+    public List<AppointmentResult> findAllAppointmentsByDoctorIdNull() {
+        return appointmentRepository.findByDoctorIsNull()
+                .stream()
+                .collect(Collectors.mapping(appointmentMapper::entityToResult, Collectors.toList()));
     }
 
+    public List<AppointmentResult> findAllAppointmentsByDoctor(UUID doctorId) {
+        return appointmentRepository.findAppointmentByDoctorIdOrderByCreatedOn(doctorId).stream()
+                .map(appointments -> appointments.stream()
+                        .map(appointmentMapper::entityToResult)
+                        .collect(Collectors.toList()))
+                .findFirst()
+                .orElse(Collections.emptyList());
+    }    public List<AppointmentResult> findAllAppointmentsByPatient(UUID patientId) {
+        return appointmentRepository.findAppointmentByPatientIdOrderByCreatedOn(patientId).stream()
+                .map(appointments -> appointments.stream()
+                        .map(appointmentMapper::entityToResult)
+                        .collect(Collectors.toList()))
+                .findFirst()
+                .orElse(Collections.emptyList());
+    }
+
+    public Optional<AppointmentResult> findAppointmentById(UUID id) {
+        return   appointmentRepository.findById(id)
+                .map(appointmentMapper::entityToResult);
+    }
     public AppointmentResult createAppointment(AppointmentRequest request) {
         var surgery = surgeryRepository.findById(request.getSurgeryId()).orElseThrow(SurgeryNotFoundException::new);
-        var patient = userRepository.findById(request.getPatient().getId()).orElseThrow(() -> new UserNotFoundException(Role.PATIENT));
-        patient.setGender(request.getPatient().getGender());
+       // var patient = userRepository.findById(request.getPatient().getId()).orElseThrow(() -> new UserNotFoundException(Role.PATIENT));
+      //  patient.setGender(request.getPatient().getGender());
      //   patient.setWeight(request.getPatient().getWeight());
 
         var appointment = Appointment.builder()
                 .withId(UUID.randomUUID())
-                .withNote(request.getNote())
+                .withDescription(request.getNote())
                 .withStatus(request.getDoctorId() != null ? AppointmentStatus.IN_PROGRESS : AppointmentStatus.CREATED)
                 .withCreatedOn(LocalDateTime.now())
                 .withSurgery(surgery)
-                .withPatient(patient)
+                .withAge(request.getAge())
+                .withImage(request.getImage())
+                .withPhone(request.getPhone())
+                .withTypeSang(request.getTypeSang())
+                .withVille(request.getVille())
+                .withWeight(request.getWeight())
+                .withDateRDV(request.getDateRDV())
+                .withPatient(request.getPatientId()!= null ? userRepository.findById(request.getPatientId()).orElseThrow(() -> new UserNotFoundException(Role.PATIENT)) : null
+                )
                 .withDoctor(
                         request.getDoctorId() != null ? userRepository.findById(request.getDoctorId()).orElseThrow(() -> new UserNotFoundException(Role.DOCTOR)) : null
                 )
@@ -68,10 +101,34 @@ public class AppointmentService {
                                 .withId(UUID.randomUUID())
                                 .withStatus(RendezVousStatus.CREATED)
                                 .withCreatedOn(LocalDateTime.now())
-                                .withDate(request.getRendezVous())
+                                .withDateRDV(request.getDateRDV())
                                 .build()
                 )
                 .build();
+        return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
+    }
+
+
+    public AppointmentResult updateAppointment(UUID appointmentId, UpdateAppointmentRequest request) {
+        var appointment = appointmentRepository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
+        var admin = userRepository.findById(request.getAdminId()).orElseThrow(() -> new UserNotFoundException(Role.ADMIN));
+        if (request.getDoctorId() != null) {
+            var doctor = userRepository.findById(request.getDoctorId()).orElseThrow(() -> new UserNotFoundException(Role.DOCTOR));
+            appointment.setDoctor(doctor);
+        }
+        if (request.getSurgeryId() != null) {
+            var surgery = surgeryRepository.findById(request.getSurgeryId()).orElseThrow(SurgeryNotFoundException::new);
+            appointment.setSurgery(surgery);
+        }
+        if (request.getRendezVous() != null) {
+            var rendezVous = appointment.getRendezVous();
+            rendezVous.setDateRDV(request.getRendezVous());
+            rendezVous.setStatus(RendezVousStatus.UPDATED);
+            rendezVous.setLastUpdatedOn(LocalDateTime.now());
+            appointment.setRendezVous(rendezVous);
+        }
+        appointment.setLastUpdatedBy(admin);
+        appointment.setLastUpdatedOn(LocalDateTime.now());
         return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
     }
 
@@ -88,4 +145,5 @@ public class AppointmentService {
         appointment.setStatus(AppointmentStatus.IN_PROGRESS);
         return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
     }
+
 }

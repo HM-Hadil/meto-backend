@@ -27,8 +27,8 @@ public class RendezVous extends EntityWithSelfAssignedId<UUID> {
     @Convert(converter = RendezVousStatusConverter.class)
     private RendezVousStatus status;
 
-    @Column(name = ComSchemaColumnConstantName.DATE, nullable = false)
-    private LocalDateTime date;
+    @Column(name = ComSchemaColumnConstantName.C_dateRdv, nullable = false)
+    private LocalDateTime dateRDV;
 
     @Column(name = ComSchemaColumnConstantName.CREATED_ON, nullable = false)
     private LocalDateTime createdOn;
