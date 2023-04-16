@@ -10,6 +10,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(AppointmentNotFoundException.class)
+    public ResponseEntity<RestResponse<Void>> surgeryNotFoundHandler(AppointmentNotFoundException e) {
+        return new ResponseEntity<>(RestResponse.empty(404, "Appointment not found"), HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(SurgeryNotFoundException.class)
     public ResponseEntity<RestResponse<Void>> surgeryNotFoundHandler(SurgeryNotFoundException e) {
         return new ResponseEntity<>(RestResponse.empty(404, "Surgery not found"), HttpStatus.NOT_FOUND);

@@ -1,6 +1,7 @@
 package com.innovup.meto.result;
 
 import com.innovup.meto.enums.AppointmentStatus;
+import com.innovup.meto.pojo.Administrator;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
@@ -22,6 +23,10 @@ public class AppointmentResult {
     private AppointmentStatus status;
 
     private LocalDateTime createdOn;
+
+    private Administrator lastUpdatedBy;
+
+    private LocalDateTime lastUpdatedOn;
 
     private SurgeryResult surgery;
 

@@ -35,23 +35,30 @@ public class Appointment extends EntityWithSelfAssignedId<UUID> {
     @Column(name = ComSchemaColumnConstantName.CREATED_ON, nullable = false)
     private LocalDateTime createdOn;
 
-    @OneToOne
+    @Column(name = ComSchemaColumnConstantName.LAST_UPDATED_ON)
+    private LocalDateTime lastUpdatedOn;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = ComSchemaColumnConstantName.LAST_UPDATED_BY)
+    private User lastUpdatedBy;
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = ComSchemaColumnConstantName.SURGERY_ID)
     private Surgery surgery;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = ComSchemaColumnConstantName.PATIENT_ID)
     private User patient;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = ComSchemaColumnConstantName.DOCTOR_ID)
     private User doctor;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = ComSchemaColumnConstantName.ADMINISTRATOR_ID)
     private User administrator;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = ComSchemaColumnConstantName.RENDEZ_VOUS_ID)
     private RendezVous rendezVous;
 

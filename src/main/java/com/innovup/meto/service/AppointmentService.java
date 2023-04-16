@@ -9,10 +9,12 @@ import com.innovup.meto.exception.AppointmentNotFoundException;
 import com.innovup.meto.exception.SurgeryNotFoundException;
 import com.innovup.meto.exception.UserNotFoundException;
 import com.innovup.meto.mapper.AppointmentMapper;
+import com.innovup.meto.pojo.Administrator;
 import com.innovup.meto.repository.AppointmentRepository;
 import com.innovup.meto.repository.SurgeryRepository;
 import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.AppointmentRequest;
+import com.innovup.meto.request.UpdateAppointmentRequest;
 import com.innovup.meto.result.AppointmentResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,6 +74,29 @@ public class AppointmentService {
                                 .build()
                 )
                 .build();
+        return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
+    }
+
+    public AppointmentResult updateAppointment(UUID appointmentId, UpdateAppointmentRequest request) {
+        var appointment = appointmentRepository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
+        var admin = userRepository.findById(request.getAdminId()).orElseThrow(() -> new UserNotFoundException(Role.ADMIN));
+        if (request.getDoctorId() != null) {
+            var doctor = userRepository.findById(request.getDoctorId()).orElseThrow(() -> new UserNotFoundException(Role.DOCTOR));
+            appointment.setDoctor(doctor);
+        }
+        if (request.getSurgeryId() != null) {
+            var surgery = surgeryRepository.findById(request.getSurgeryId()).orElseThrow(SurgeryNotFoundException::new);
+            appointment.setSurgery(surgery);
+        }
+        if (request.getRendezVous() != null) {
+            var rendezVous = appointment.getRendezVous();
+            rendezVous.setDate(request.getRendezVous());
+            rendezVous.setStatus(RendezVousStatus.UPDATED);
+            rendezVous.setLastUpdatedOn(LocalDateTime.now());
+            appointment.setRendezVous(rendezVous);
+        }
+        appointment.setLastUpdatedBy(admin);
+        appointment.setLastUpdatedOn(LocalDateTime.now());
         return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
     }
 
