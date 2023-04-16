@@ -2,6 +2,7 @@ package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
 import com.innovup.meto.entity.User;
+import com.innovup.meto.result.UserResult;
 import com.innovup.meto.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.AccessLevel;
@@ -25,31 +26,4 @@ public abstract class UsersController<SERVICE extends UserService> {
     private final SERVICE service;
 
 
-    @GetMapping(value = "")
-    @ApiOperation(value = "Finds All", response = User.class)
-    public ResponseEntity<RestResponse<List<User>>> findAll() {
-        log.info("Endpoint '.../' (GET) called");
-
-        var data = getService().findAll();
-
-        log.info("Endpoint '.../{id}' (GET) finished");
-
-        return ResponseEntity.ok(RestResponse.of(data, 200));
-    }
-
-    @GetMapping(value = "/{id}")
-    @ApiOperation(value = "Finds one by id", response = User.class)
-    public ResponseEntity<RestResponse<User>> findById(@NotNull @PathVariable UUID id) {
-        log.info("Endpoint '.../{id}' (GET) called - id {}", id);
-
-        var data = getService().findById(id);
-
-        log.info("Endpoint '.../{id}' (GET) finished - id {}", id);
-
-        if (data == null) {
-            return new ResponseEntity<>(RestResponse.empty(404, "User not found"), HttpStatus.NOT_FOUND);
-        }
-
-        return ResponseEntity.ok(RestResponse.of(data, 200));
-    }
 }
