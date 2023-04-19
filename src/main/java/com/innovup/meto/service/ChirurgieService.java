@@ -82,4 +82,8 @@ public class ChirurgieService {
         repo.deleteById(id);
         log.info("Deleted surgery with ID: {}",id );
     }
+
+    public int getChirurgieCount() {
+        return repo.getChirurgieCount();
+    }
 }

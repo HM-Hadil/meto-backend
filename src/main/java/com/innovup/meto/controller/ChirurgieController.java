@@ -97,4 +97,9 @@ public class ChirurgieController  {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @GetMapping("/chirurgie-count")
+    public int getChirurgieCount() {
+        return surgeryService.getChirurgieCount();
+    }
+
 }

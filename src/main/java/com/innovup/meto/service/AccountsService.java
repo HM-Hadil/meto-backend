@@ -118,4 +118,12 @@ public class AccountsService {
         }
     }
 
+
+    public int getDoctorCount() {
+        return userRepository.getDoctorCount();
+    }
+    public int getPatientCount() {
+        return userRepository.getPatientCount();
+    }
+
 }

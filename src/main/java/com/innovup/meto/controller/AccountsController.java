@@ -117,5 +117,15 @@ public class AccountsController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
+    @GetMapping("/doctor-count")
+    public int getDoctorCount() {
+        return accountsService.getDoctorCount();
+    }
+    @GetMapping("/patient-count")
+    public int getPatientCount() {
+        return accountsService.getPatientCount();
+    }
 }
 

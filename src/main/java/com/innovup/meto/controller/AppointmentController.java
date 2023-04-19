@@ -4,6 +4,7 @@ import com.innovup.meto.core.web.RestResponse;
 import com.innovup.meto.request.AppointmentRequest;
 import com.innovup.meto.request.UpdateAppointmentRequest;
 import com.innovup.meto.result.AppointmentResult;
+import com.innovup.meto.result.AppointmentStatsResult;
 import com.innovup.meto.service.AppointmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -99,5 +100,42 @@ public class AppointmentController {
         var response = appointmentService.updateAppointment(appointmentId, request);
 
         return ResponseEntity.ok(RestResponse.of(response, 200));
+    }
+
+    @GetMapping("/mostFrequentSurgeryId")
+    @ApiOperation(value = "get the most frequent surgery", response = AppointmentResult.class, tags = {"Appointment API"})
+
+    public List<Object[]> findMostFrequentSurgeryWithNameAndImageAndCount() {
+        return appointmentService.findMostFrequentSurgeryWithNameAndImageAndCount();
+    }
+
+    @GetMapping("/mostFrequentDoctorId")
+    @ApiOperation(value = "get the most frequent doctor", response = AppointmentResult.class, tags = {"Appointment API"})
+
+    public List<Object[]> findMostFrequentUserWithNameAndImageAndCount() {
+        return appointmentService.findMostFrequentUserWithNameAndImageAndCount();
+    }
+
+
+    @GetMapping("/mostFrequentCity")
+    public List<Object[]>  getMostFrequentCity() {
+
+        return   appointmentService.getMostFrequentCity();
+    }
+
+
+
+    @GetMapping("/getAppointmentStatsByDoctor/{doctorId}")
+    @ApiOperation(value = "Get appointment statistics by doctor", response = AppointmentStatsResult.class, tags = {"Appointment API"})
+    public ResponseEntity<AppointmentStatsResult> getAppointmentStatsByDoctor(@PathVariable UUID doctorId) {
+        log.info("Endpoint '/appointments/getAppointmentStatsByDoctor/{doctorId}' (GET) called");
+
+        AppointmentStatsResult statsResult = appointmentService.findAppointmentStatsByDoctor(doctorId);
+        if (statsResult != null) {
+            return ResponseEntity.ok(statsResult);
+        } else {
+            // Return appropriate response when no data found
+            return ResponseEntity.notFound().build();
+        }
     }
 }

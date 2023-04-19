@@ -30,8 +30,12 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Query("SELECT u FROM User u WHERE u.role = 'DOCTOR' AND (u.specialite LIKE CONCAT('%',:query, '%') OR u.firstname LIKE CONCAT('%', :query, '%'))")
     List<User> searchDoctor(@Param("query") String query);
 
-    @Query("SELECT gender, count(*) FROM User u WHERE u.role = 'D' GROUP BY u.gender")
+    @Query(value = "SELECT gender, count(*) FROM User u WHERE u.role = 'D' GROUP BY u.gender")
     List<Object[]> countPatientPerGender();
 
+    @Query(value =  "SELECT COUNT(*) as doctor_count FROM User u WHERE u.role = 'D'")
+    public int getDoctorCount();
 
+    @Query(value =  "SELECT COUNT(*) as doctor_count FROM User u WHERE u.role = 'P'")
+    public int getPatientCount();
 }

@@ -15,11 +15,13 @@ import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.AppointmentRequest;
 import com.innovup.meto.request.UpdateAppointmentRequest;
 import com.innovup.meto.result.AppointmentResult;
+import com.innovup.meto.result.AppointmentStatsResult;
 import com.innovup.meto.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Tuple;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -57,7 +59,8 @@ public class AppointmentService {
                         .collect(Collectors.toList()))
                 .findFirst()
                 .orElse(Collections.emptyList());
-    }    public List<AppointmentResult> findAllAppointmentsByPatient(UUID patientId) {
+    }
+    public List<AppointmentResult> findAllAppointmentsByPatient(UUID patientId) {
         return appointmentRepository.findAppointmentByPatientIdOrderByCreatedOn(patientId).stream()
                 .map(appointments -> appointments.stream()
                         .map(appointmentMapper::entityToResult)
@@ -146,4 +149,29 @@ public class AppointmentService {
         return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
     }
 
+
+        public List<Object[]> findMostFrequentSurgeryWithNameAndImageAndCount() {
+            return appointmentRepository.findMostFrequentSurgeryWithNameAndImageAndCount();
+        }
+
+    public List<Object[]> findMostFrequentUserWithNameAndImageAndCount() {
+        return appointmentRepository.findMostFrequentUserWithNameAndImageAndCount();
+    }
+    public List<Object[]> getMostFrequentCity() {
+        return appointmentRepository.getMostFrequentCity();
+    }
+
+    public AppointmentStatsResult findAppointmentStatsByDoctor(UUID doctorId) {
+        Tuple result = appointmentRepository.findAppointmentStatsByDoctorId(doctorId);
+        if (result != null) {
+            AppointmentStatsResult statsResult = new AppointmentStatsResult();
+            statsResult.setTotal(result.get("total", Long.class));
+            statsResult.setMales(result.get("males", Long.class));
+            statsResult.setFemales(result.get("females", Long.class));
+            return statsResult;
+        } else {
+            // Return appropriate response when no data found
+            return null;
+        }
+    }
 }
