@@ -1,5 +1,6 @@
 package com.innovup.meto.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.innovup.meto.core.data.EntityWithSelfAssignedId;
 import com.innovup.meto.core.schema.ComSchemaColumnConstantName;
 import com.innovup.meto.core.schema.ComSchemaConstantSize;
@@ -18,7 +19,6 @@ import java.util.UUID;
 @Table(name = "users", schema = "public")
 @Getter
 @Setter
-@ToString
 @Builder(setterPrefix = "with")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -74,7 +74,8 @@ public class User extends EntityWithSelfAssignedId<UUID> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
     private List<Appointment> appointments;
 
-    @ManyToMany
+    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_surgeries",
             joinColumns = {

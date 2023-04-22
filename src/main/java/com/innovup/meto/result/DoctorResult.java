@@ -28,4 +28,8 @@ public class DoctorResult extends UserResult{
 
     private List<Experience> experiences;
 
+    private List<DoctorSurgery> surgeries;
+
 }
+
+

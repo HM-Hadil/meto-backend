@@ -1,18 +1,16 @@
 package com.innovup.meto.request;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 @SuperBuilder
-@Getter
-@Setter
+@Data
 @Jacksonized
 @ToString
 public class CreateDoctorRequest extends CreateUserRequest {
@@ -27,5 +25,8 @@ public class CreateDoctorRequest extends CreateUserRequest {
 
     @NotNull
     private final List<ExperienceRequest> experiences;
+
+    @NotNull
+    private final List<UUID> surgeries;
 
 }

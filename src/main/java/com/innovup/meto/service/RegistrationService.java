@@ -4,7 +4,9 @@ import com.innovup.meto.entity.AcademicLevel;
 import com.innovup.meto.entity.Experience;
 import com.innovup.meto.entity.User;
 import com.innovup.meto.enums.Role;
+import com.innovup.meto.exception.UserNotFoundException;
 import com.innovup.meto.mapper.UserMapper;
+import com.innovup.meto.repository.SurgeryRepository;
 import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.*;
 import com.innovup.meto.result.AdministratorResult;
@@ -16,9 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -27,9 +27,9 @@ public class RegistrationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
     private final UserMapper userMapper;
-
+    private final SurgeryRepository surgeryRepository;
+    private final SurgeryService surgeryService;
 
     public AdministratorResult createNewAdmin(CreateAdminRequest request) {
         var user = User.builder()
@@ -61,6 +61,7 @@ public class RegistrationService {
     }
 
     public DoctorResult createNewDoctor(CreateDoctorRequest request) {
+        var surgeries = surgeryService.findSurgeriesByIds(request.getSurgeries());
 
         var user = User.builder()
                 .withId(UUID.randomUUID())
@@ -69,9 +70,10 @@ public class RegistrationService {
                 .withEmail(request.getEmail())
                 .withPassword(passwordEncoder.encode(request.getPassword()))
                 .withCity(request.getCity())
-                .withAcademicLevels(createAcademicLevels(request.getAcademicLevels()))
                 .withGender(request.getGender())
+                .withAcademicLevels(createAcademicLevels(request.getAcademicLevels()))
                 .withExperiences(createExperiences(request.getExperiences()))
+                .withSurgeries(surgeries)
                 .withAddress(request.getAddress())
                 .withRole(Role.DOCTOR)
                 .withCreatedOn(LocalDate.now())
@@ -79,12 +81,8 @@ public class RegistrationService {
         return userMapper.entityToDoctor(userRepository.save(user));
     }
 
-    public User findById(UUID uuid) {
-        Optional<User> optional = userRepository.findById(uuid);
-        if (optional.isPresent()) {
-            return optional.get();
-        }
-        throw new RuntimeException("User with id {} not found" + uuid);
+    public User findById(UUID id) {
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
     private List<AcademicLevel> createAcademicLevels(List<AcademicLevelRequest> academicLevelRequests) {

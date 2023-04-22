@@ -1,8 +1,10 @@
 package com.innovup.meto.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.innovup.meto.core.data.EntityWithSelfAssignedId;
 import com.innovup.meto.core.schema.ComSchemaColumnConstantName;
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,7 +14,6 @@ import java.util.UUID;
 @Table(name = "surgeries", schema = "public")
 @Getter
 @Setter
-@ToString
 @Builder(setterPrefix = "with")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,7 +44,8 @@ public class Surgery extends EntityWithSelfAssignedId<UUID> {
     @Column(name = ComSchemaColumnConstantName.IMAGE)
     private String image;
 
-    @ManyToMany
+    @JsonBackReference
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_surgeries",
             joinColumns = {

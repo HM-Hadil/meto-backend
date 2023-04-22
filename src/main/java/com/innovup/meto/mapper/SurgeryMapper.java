@@ -1,6 +1,7 @@
 package com.innovup.meto.mapper;
 
 import com.innovup.meto.entity.Surgery;
+import com.innovup.meto.result.DoctorSurgery;
 import com.innovup.meto.result.SurgeryResult;
 import com.innovup.meto.utils.DurationConverter;
 import lombok.AccessLevel;
@@ -19,6 +20,13 @@ public class SurgeryMapper {
                 .withDuration(surgery.getDuration())
                 .withDurationInSeconds(DurationConverter.toSeconds(surgery.getDuration()))
                 .withImage(surgery.getImage())
+                .build();
+    }
+
+    public DoctorSurgery entityToName(Surgery surgery) {
+        return DoctorSurgery.builder()
+                .withId(surgery.getId())
+                .withName(surgery.getName())
                 .build();
     }
 }

@@ -2,6 +2,7 @@ package com.innovup.meto.service;
 
 import com.innovup.meto.entity.Surgery;
 import com.innovup.meto.entity.SurgeryDuration;
+import com.innovup.meto.exception.SurgeryNotFoundException;
 import com.innovup.meto.mapper.SurgeryMapper;
 import com.innovup.meto.repository.SurgeryRepository;
 import com.innovup.meto.request.SurgeryRequest;
@@ -34,6 +35,16 @@ public class SurgeryService {
     public Optional<SurgeryResult> findSurgeryById(UUID id) {
         return surgeryRepository.findById(id)
                 .map(surgeryMapper::entityToResult);
+    }
+
+    public List<Surgery> findSurgeriesByIds(List<UUID> ids) {
+        return ids.stream()
+                .map(this::surgeryById)
+                .toList();
+    }
+
+    private Surgery surgeryById(UUID id) {
+        return surgeryRepository.findById(id).orElse(null);
     }
 
     public SurgeryResult addSurgery(SurgeryRequest request) {
@@ -74,8 +85,8 @@ public class SurgeryService {
             surgery.setImage(request.getImage());
             surgery = surgeryRepository.save(surgery);
             return surgeryMapper.entityToResult(surgery);
-        } else { // else throw new SurgeryNotFoundException
-            throw new RuntimeException();
+        } else {
+            throw new SurgeryNotFoundException();
         }
     }
 

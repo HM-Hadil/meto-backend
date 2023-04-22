@@ -11,6 +11,11 @@ public class UserNotFoundException extends RuntimeException {
 
     private final Role role;
 
+    public UserNotFoundException() {
+        super();
+        this.role = null;
+    }
+
     public UserNotFoundException(Role role) {
         super();
         this.role = role;

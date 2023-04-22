@@ -1,16 +1,16 @@
 package com.innovup.meto.mapper;
 
 import com.innovup.meto.entity.User;
-import com.innovup.meto.result.AdministratorResult;
-import com.innovup.meto.result.DoctorResult;
-import com.innovup.meto.result.PatientResult;
+import com.innovup.meto.result.*;
 import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Component
 public class UserMapper {
+
+    private final SurgeryMapper surgeryMapper;
 
     public AdministratorResult entityToAdministrator(User user) {
         if (user == null) {
@@ -61,6 +61,13 @@ public class UserMapper {
                 .withCity(user.getCity())
                 .withAcademicLevels(user.getAcademicLevels())
                 .withExperiences(user.getExperiences())
+                .withSurgeries(
+                        user.getSurgeries().stream()
+                                .map(
+                                        surgeryMapper::entityToName
+                                )
+                                .toList()
+                )
                 .build();
     }
 }
