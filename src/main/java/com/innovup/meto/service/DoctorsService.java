@@ -1,12 +1,13 @@
 package com.innovup.meto.service;
 
+import com.innovup.meto.entity.SurgeriesRequest;
 import com.innovup.meto.entity.User;
 import com.innovup.meto.enums.Role;
+import com.innovup.meto.exception.UserNotFoundException;
 import com.innovup.meto.mapper.UserMapper;
 import com.innovup.meto.repository.UserRepository;
-import com.innovup.meto.result.AdministratorResult;
+import com.innovup.meto.request.SurgeryRequest;
 import com.innovup.meto.result.DoctorResult;
-import com.innovup.meto.result.PatientResult;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,11 +18,13 @@ public class DoctorsService extends UserService<DoctorResult> {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final SurgeriesRequestService surgeriesRequestService;
 
-    protected DoctorsService(UserRepository repository, UserMapper userMapper) {
+    protected DoctorsService(UserRepository repository, UserMapper userMapper, SurgeriesRequestService service) {
         super(Role.DOCTOR, repository);
         this.userRepository = repository;
         this.userMapper = userMapper;
+        surgeriesRequestService = service;
     }
 
     public List<DoctorResult> findAll() {
@@ -31,7 +34,7 @@ public class DoctorsService extends UserService<DoctorResult> {
     }
 
     public List<DoctorResult>  findAllDoctorsBySurgeryId(UUID surgeryId) {
-        return userRepository.findAllBySurgeriesId(surgeryId).stream()
+        return userRepository.findAllBySpecialtiesId(surgeryId).stream()
                 .map(userMapper::entityToDoctor)
                 .toList();
     }
@@ -55,7 +58,11 @@ public class DoctorsService extends UserService<DoctorResult> {
             user.setExperiences(request.getExperiences());
             return userMapper.entityToDoctor(userRepository.save(user));
         } else {
-            throw new RuntimeException();
+            throw new UserNotFoundException(Role.DOCTOR);
         }
+    }
+
+    public SurgeriesRequest createSurgeryRequest(UUID doctorId, SurgeryRequest request) {
+        return surgeriesRequestService.createSurgeryRequest(doctorId, request);
     }
 }

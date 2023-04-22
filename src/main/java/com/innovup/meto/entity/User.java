@@ -1,5 +1,6 @@
 package com.innovup.meto.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.innovup.meto.core.data.EntityWithSelfAssignedId;
 import com.innovup.meto.core.schema.ComSchemaColumnConstantName;
@@ -71,6 +72,7 @@ public class User extends EntityWithSelfAssignedId<UUID> {
     @JoinColumn(name = "user_id")
     private List<Experience> experiences;
 
+    @JsonBackReference
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patient")
     private List<Appointment> appointments;
 
@@ -93,6 +95,6 @@ public class User extends EntityWithSelfAssignedId<UUID> {
                     )
             }
     )
-    private List<Surgery> surgeries;
+    private List<Surgery> specialties;
 
 }

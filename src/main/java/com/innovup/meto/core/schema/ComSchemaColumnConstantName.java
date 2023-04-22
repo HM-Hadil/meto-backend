@@ -41,5 +41,5 @@ public final class ComSchemaColumnConstantName {
     public static final String LAST_UPDATED_ON = "last_updated_on";
     public static final String LAST_UPDATED_BY = "last_updated_by";
     public static final String RENDEZ_VOUS_ID = "rendez_vous_id";
-
+    public static final String REQUESTER_ID = "requester_id";
 }

@@ -1,9 +1,10 @@
 package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
-import com.innovup.meto.entity.Surgery;
+import com.innovup.meto.entity.SurgeriesRequest;
 import com.innovup.meto.request.SurgeryRequest;
 import com.innovup.meto.result.SurgeryResult;
+import com.innovup.meto.service.SurgeriesRequestService;
 import com.innovup.meto.service.SurgeryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +25,7 @@ import java.util.UUID;
 public class SurgeryController {
 
     private final SurgeryService surgeryService;
+    private final SurgeriesRequestService surgeriesRequestService;
 
     @GetMapping("")
     @ApiOperation(value = "Finds All Surgeries", response = SurgeryResult.class, tags = {"Surgery API"})
@@ -72,7 +74,7 @@ public class SurgeryController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete Surgery by id", response = SurgeryResult.class, tags = {"Surgery API"})
-    public ResponseEntity<RestResponse<Surgery>> deleteSurgery(@PathVariable UUID id) {
+    public ResponseEntity<RestResponse<Void>> deleteSurgery(@PathVariable UUID id) {
 
         log.info("Endpoint '/surgeries/{id}' (DELETE) called - id = {}", id);
 
@@ -80,4 +82,17 @@ public class SurgeryController {
 
         return new ResponseEntity<>(RestResponse.empty(203, null), HttpStatus.OK);
     }
+    @GetMapping("/requested")
+    @ApiOperation(value = "Finds All Surgery requests", response = SurgeriesRequest.class, tags = {"Surgery API"})
+    public ResponseEntity<RestResponse<List<SurgeriesRequest>>> findAllRequestedSurgeries() {
+
+        log.info("Endpoint '/surgeries/requested' (GET) called");
+
+        var data = surgeriesRequestService.findAllRequestedSurgeries();
+
+        log.info("Endpoint '/surgeries/requested' (GET) finished");
+
+        return new ResponseEntity<>(RestResponse.of(data,  200), HttpStatus.OK);
+    }
+
 }

@@ -73,7 +73,7 @@ public class RegistrationService {
                 .withGender(request.getGender())
                 .withAcademicLevels(createAcademicLevels(request.getAcademicLevels()))
                 .withExperiences(createExperiences(request.getExperiences()))
-                .withSurgeries(surgeries)
+                .withSpecialties(surgeries)
                 .withAddress(request.getAddress())
                 .withRole(Role.DOCTOR)
                 .withCreatedOn(LocalDate.now())
@@ -85,8 +85,11 @@ public class RegistrationService {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
-    private List<AcademicLevel> createAcademicLevels(List<AcademicLevelRequest> academicLevelRequests) {
-        return academicLevelRequests.stream()
+    private List<AcademicLevel> createAcademicLevels(List<AcademicLevelRequest> academicLevelsRequest) {
+        if (academicLevelsRequest == null) {
+            return Collections.emptyList();
+        }
+        return academicLevelsRequest.stream()
                 .map(this::newAcademicLevel)
                 .toList();
     }
@@ -100,8 +103,11 @@ public class RegistrationService {
                 .build();
     }
 
-    private List<Experience> createExperiences(List<ExperienceRequest> experienceRequests) {
-        return experienceRequests.stream()
+    private List<Experience> createExperiences(List<ExperienceRequest> experiencesRequest) {
+        if (experiencesRequest == null) {
+            return Collections.emptyList();
+        }
+        return experiencesRequest.stream()
                 .map(this::newExperience)
                 .toList();
     }

@@ -1,5 +1,6 @@
 package com.innovup.meto.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.innovup.meto.core.data.EntityWithSelfAssignedId;
 import com.innovup.meto.core.schema.ComSchemaColumnConstantName;
 import com.innovup.meto.core.schema.ComSchemaConstantSize;
@@ -46,6 +47,7 @@ public class Appointment extends EntityWithSelfAssignedId<UUID> {
     @JoinColumn(name = ComSchemaColumnConstantName.SURGERY_ID)
     private Surgery surgery;
 
+    @JsonManagedReference
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = ComSchemaColumnConstantName.PATIENT_ID)
     private User patient;

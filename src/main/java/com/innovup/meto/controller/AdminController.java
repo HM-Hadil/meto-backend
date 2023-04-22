@@ -2,10 +2,14 @@ package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
 import com.innovup.meto.entity.Appointment;
+import com.innovup.meto.entity.SurgeriesRequest;
+import com.innovup.meto.entity.Surgery;
 import com.innovup.meto.entity.User;
 import com.innovup.meto.request.CreateAdminRequest;
+import com.innovup.meto.request.SurgeryRequest;
 import com.innovup.meto.result.AdministratorResult;
 import com.innovup.meto.result.AppointmentResult;
+import com.innovup.meto.result.SurgeryResult;
 import com.innovup.meto.service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -109,6 +113,18 @@ public class AdminController extends UsersController<AdminService> {
         log.info("Endpoint '.../{id}/validate/{appointmentId}/{doctorId}' (PATCH) finished - id {}, appointmentId {}, doctorId {}",
                 id, appointmentId, doctorId
         );
+
+        return ResponseEntity.ok(RestResponse.of(data, 200));
+    }
+
+    @PutMapping(value = "/surgeries/{surgeryId}/approve")
+    @ApiOperation(value = "Approve a surgery request", response = SurgeryResult.class)
+    public ResponseEntity<RestResponse<SurgeryResult>> approveSurgery(@NotNull @PathVariable UUID surgeryId, @NotNull @RequestBody SurgeryRequest request) {
+        log.info("Endpoint '.../surgeries/{surgeryId}/approve' (PUT) called - id {}, request {}", surgeryId, request);
+
+        var data = getService().approveSurgeryRequest(surgeryId, request);
+
+        log.info("Endpoint '.../surgeries/{surgeryId}/approve' (PUT) finished - id {}, request {}", surgeryId, request);
 
         return ResponseEntity.ok(RestResponse.of(data, 200));
     }

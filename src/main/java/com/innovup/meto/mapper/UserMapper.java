@@ -62,7 +62,7 @@ public class UserMapper {
                 .withAcademicLevels(user.getAcademicLevels())
                 .withExperiences(user.getExperiences())
                 .withSurgeries(
-                        user.getSurgeries().stream()
+                        user.getSpecialties().stream()
                                 .map(
                                         surgeryMapper::entityToName
                                 )

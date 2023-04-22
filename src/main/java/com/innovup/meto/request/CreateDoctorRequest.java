@@ -20,10 +20,8 @@ public class CreateDoctorRequest extends CreateUserRequest {
     @NotNull
     private final String city;
 
-    @NotNull
     private final List<AcademicLevelRequest> academicLevels;
 
-    @NotNull
     private final List<ExperienceRequest> experiences;
 
     @NotNull

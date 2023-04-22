@@ -1,10 +1,11 @@
 package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
+import com.innovup.meto.entity.SurgeriesRequest;
+import com.innovup.meto.entity.Surgery;
 import com.innovup.meto.entity.User;
-import com.innovup.meto.result.AdministratorResult;
+import com.innovup.meto.request.SurgeryRequest;
 import com.innovup.meto.result.DoctorResult;
-import com.innovup.meto.result.PatientResult;
 import com.innovup.meto.service.DoctorsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -68,7 +69,7 @@ public class DoctorsController extends UsersController<DoctorsService> {
     }
 
     @GetMapping(value = "/surgery/{surgeryId}")
-    @ApiOperation(value = "Find all doctors by the chosen surgery type", response = DoctorResult.class)
+    @ApiOperation(value = "Find doctors by surgery id", response = DoctorResult.class)
     public ResponseEntity<RestResponse<List<DoctorResult>>> update(@NotNull @PathVariable UUID surgeryId) {
         log.info("Endpoint '/doctors/surgery/{surgeryId}' (GET) called - surgeryId {}", surgeryId);
 
@@ -79,5 +80,20 @@ public class DoctorsController extends UsersController<DoctorsService> {
         log.info("Endpoint '/doctors/surgery/{surgeryId}' (GET) finished - id {}", surgeryId);
 
         return ResponseEntity.ok(RestResponse.of(data, 200));
+    }
+
+    @PostMapping(value = "/{id}/surgery/requested")
+    @ApiOperation(value = "Create a surgery request", response = SurgeriesRequest.class)
+    public ResponseEntity<RestResponse<SurgeriesRequest>> requestSurgery(
+            @NotNull @PathVariable UUID id,
+            @NotNull @RequestBody SurgeryRequest request
+    ) {
+        log.info("Endpoint '/doctors/{id}/surgery/request' (POST) called - id {}, surgeryRequest {}", id, request);
+
+        var data = getService().createSurgeryRequest(id, request);
+
+        log.info("Endpoint '/doctors/{id}/surgery/request' (POST) finished - id {}, surgeryRequest {}", id, request);
+
+        return ResponseEntity.ok(RestResponse.of(data, 201));
     }
 }
