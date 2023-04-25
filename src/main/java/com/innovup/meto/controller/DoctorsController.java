@@ -1,6 +1,7 @@
 package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
+import com.innovup.meto.entity.ChirurgieRequest;
 import com.innovup.meto.entity.User;
 import com.innovup.meto.result.DoctorResult;
 import com.innovup.meto.service.DoctorsService;
@@ -56,21 +57,21 @@ public class DoctorsController extends UserController<DoctorsService> {
     }
 
     @PutMapping(value = "updateDoctor/{id}")
-    @ApiOperation(value = "Updates Doctor", response = User.class)
-    public ResponseEntity<RestResponse<User>> update(@NotNull @PathVariable UUID id, @NotNull @RequestBody User request) {
-        log.info("Endpoint '.../{id}' (PUT) called - id {}, doctor {}", id, request);
+    @ApiOperation(value = "Updates Doctor", response = DoctorResult.class)
+    public ResponseEntity<RestResponse<DoctorResult>> update(@NotNull @PathVariable UUID id, @NotNull @RequestBody User request) {
+        log.info("Endpoint '/doctors/{id}' (PUT) called - id {}, doctor {}", id, request);
 
         var data = getService().update(id, request);
 
-        log.info("Endpoint '.../{id}' (PUT) finished - id {}, doctor {}", id, request);
+        log.info("Endpoint '/doctors/{id}' (PUT) finished - id {}, doctor {}", id, request);
 
         return ResponseEntity.ok(RestResponse.of(data, 200));
     }
 
 
     @GetMapping(value = "/surgery/{surgeryId}")
-    @ApiOperation(value = "Find all doctors by the chosen surgery type", response = DoctorResult.class)
-    public ResponseEntity<RestResponse<List<DoctorResult>>> update(@NotNull @PathVariable UUID surgeryId) {
+    @ApiOperation(value = "Find doctors by surgery id", response = DoctorResult.class)
+    public ResponseEntity<List<DoctorResult>> getDoctorByChirurgie(@NotNull @PathVariable UUID surgeryId) {
         log.info("Endpoint '/doctors/surgery/{surgeryId}' (GET) called - surgeryId {}", surgeryId);
 
         // TODO add doctor availability with a specified rendez-vous date of a patient
@@ -79,7 +80,22 @@ public class DoctorsController extends UserController<DoctorsService> {
 
         log.info("Endpoint '/doctors/surgery/{surgeryId}' (GET) finished - id {}", surgeryId);
 
-        return ResponseEntity.ok(RestResponse.of(data, 200));
+        return ResponseEntity.ok(data);
     }
-}
 
+    @PostMapping(value = "/{id}/surgery/requested")
+    @ApiOperation(value = "Create a surgery request", response = ChirurgieRequest.class)
+    public ResponseEntity<RestResponse<ChirurgieRequest>> requestSurgery(
+            @NotNull @PathVariable UUID id,
+            @NotNull @RequestBody com.innovup.meto.request.ChirurgieRequest request
+    ) {
+        log.info("Endpoint '/doctors/{id}/surgery/request' (POST) called - id {}, surgeryRequest {}", id, request);
+
+        var data = getService().createSurgeryRequest(id, request);
+
+        log.info("Endpoint '/doctors/{id}/surgery/request' (POST) finished - id {}, surgeryRequest {}", id, request);
+
+        return ResponseEntity.ok(RestResponse.of(data, 201));
+    }
+
+}

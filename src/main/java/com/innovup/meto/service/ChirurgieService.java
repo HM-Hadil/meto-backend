@@ -3,6 +3,7 @@ package com.innovup.meto.service;
 
 import com.innovup.meto.entity.Chirurgie;
 import com.innovup.meto.entity.ChirurgieDuration;
+import com.innovup.meto.exception.SurgeryNotFoundException;
 import com.innovup.meto.mapper.ChirurgieMapper;
 import com.innovup.meto.repository.ChirurgieRepo;
 import com.innovup.meto.request.ChirurgieRequest;
@@ -14,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -23,6 +26,22 @@ import java.util.UUID;
 public class ChirurgieService {
     @Autowired
     private ChirurgieRepo repo;
+
+    public List<Chirurgie> findSurgeriesByIds(List<UUID> id) {
+        return id.stream()
+                .map(this::surgeryById)
+                .toList();
+    }
+    public List<String> findNameByIds(List<UUID> ids) {
+        return ids.stream()
+                .map(this::surgeryById)
+                .filter(Objects::nonNull)
+                .map(Chirurgie::getName)
+                .collect(Collectors.toList());
+    }
+    private Chirurgie surgeryById(UUID id) {
+        return repo.findById(id).orElse(null);
+    }
 
     public List<ChirurgieResult> findAllSurgeries() {
         return repo.findAll().stream()
@@ -58,10 +77,10 @@ public class ChirurgieService {
     public ChirurgieResult updateSurgery(UUID id, ChirurgieRequest request) {
         var optional = repo.findById(id);
         if (optional.isPresent()) {
-            var chirurgie = optional.get();
-            chirurgie.setName(request.getName());
-            chirurgie.setDescription(request.getDescription());
-            chirurgie.setDuration(
+            var surgery = optional.get();
+            surgery.setName(request.getName());
+            surgery.setDescription(request.getDescription());
+            surgery.setDuration(
                     ChirurgieDuration.builder()
                             .withDays(request.getDuration().getDays())
                             .withHours(request.getDuration().getHours())
@@ -69,15 +88,14 @@ public class ChirurgieService {
                             .withSeconds(request.getDuration().getSeconds())
                             .build()
             );
-            chirurgie.setDurationInSeconds(DurationConverter.toSeconds(request.getDuration()));
-            chirurgie.setImage(request.getImage());
-            chirurgie = repo.save(chirurgie);
-            return ChirurgieMapper.entityToResult(chirurgie);
-        } else { // else throw new SurgeryNotFoundException
-            throw new RuntimeException();
+            surgery.setDurationInSeconds(DurationConverter.toSeconds(request.getDuration()));
+            surgery.setImage(request.getImage());
+            surgery = repo.save(surgery);
+            return ChirurgieMapper.entityToResult(surgery);
+        } else {
+            throw new SurgeryNotFoundException();
         }
     }
-
     public void deleteSurgery(UUID id) {
         repo.deleteById(id);
         log.info("Deleted surgery with ID: {}",id );

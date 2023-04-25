@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,7 +69,7 @@ public class AppointmentController {
 
         return ResponseEntity.ok(data);
     }
-    @PostMapping("createAppointement")
+    @PostMapping(path ="createAppointement", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Create a new appointment", response = AppointmentResult.class, tags = {"Appointment API"})
     public ResponseEntity<RestResponse<AppointmentResult>> createAppointment(@RequestBody AppointmentRequest request) {
         log.info("Endpoint '/appointments' (POST) called - request {}", request);
@@ -88,7 +89,7 @@ public class AppointmentController {
         return ResponseEntity.ok(data);
     }
 
-
+/**
     @PutMapping("affecterMedecin/{appointmentId}")
     @ApiOperation(value = "update an appointment by id - Admin only!", response = AppointmentResult.class, tags = {"Appointment API"})
     public ResponseEntity<RestResponse<AppointmentResult>> updateAppointment(
@@ -101,7 +102,20 @@ public class AppointmentController {
 
         return ResponseEntity.ok(RestResponse.of(response, 200));
     }
+**/
 
+@PutMapping("affecterMedecin/{appointmentId}")
+@ApiOperation(value = "update an appointment by id - Admin only!", response = AppointmentResult.class, tags = {"Appointment API"})
+public ResponseEntity<RestResponse<AppointmentResult>> updateAppointment(
+        @NotNull @PathVariable UUID appointmentId,
+        @NotNull @RequestBody UpdateAppointmentRequest request
+) {
+    log.info("Endpoint '/appointments' (POST) called - request {}", request);
+
+    var response = appointmentService.updateAppointment(appointmentId, request.getDoctorId());
+
+    return ResponseEntity.ok(RestResponse.of(response, 200));
+}
     @GetMapping("/mostFrequentSurgeryId")
     @ApiOperation(value = "get the most frequent surgery", response = AppointmentResult.class, tags = {"Appointment API"})
 
@@ -137,5 +151,11 @@ public class AppointmentController {
             // Return appropriate response when no data found
             return ResponseEntity.notFound().build();
         }
+    }
+
+
+    @GetMapping("/appointments/count")
+    public List<Object[]> getAppointmentsCountByMonthAndYear() {
+        return appointmentService.getAppointmentsCountByMonthAndYear();
     }
 }

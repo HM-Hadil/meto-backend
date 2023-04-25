@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.UUID;
 
 @SuperBuilder
 @Data
@@ -25,10 +26,13 @@ public class CreateDoctorRequest extends CreateUserRequest{
     @NotNull
     private String adresse;
     @NotNull
-    private String specialite;
+    private String  specialite;
     @NotNull
     private String image;
     @NotNull
     private String telephone;
+
+
+    private final List<UUID> surgeries;
 
 }

@@ -6,6 +6,7 @@ import com.innovup.meto.entity.Chirurgie;
 import com.innovup.meto.repository.ChirurgieRepo;
 import com.innovup.meto.request.ChirurgieRequest;
 import com.innovup.meto.result.ChirurgieResult;
+import com.innovup.meto.service.ChirurgieRequestService;
 import com.innovup.meto.service.ChirurgieService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +30,8 @@ import java.util.UUID;
 public class ChirurgieController  {
     private final ChirurgieService surgeryService;
     private final ChirurgieRepo  repo;
+    private final ChirurgieRequestService surgeriesRequestService;
+
 
 
     @GetMapping("getAllChirurgie")
@@ -100,6 +103,19 @@ public class ChirurgieController  {
     @GetMapping("/chirurgie-count")
     public int getChirurgieCount() {
         return surgeryService.getChirurgieCount();
+    }
+
+    @GetMapping("/requested")
+    @ApiOperation(value = "Finds All Surgery requests", response = com.innovup.meto.entity.ChirurgieRequest.class, tags = {"Surgery API"})
+    public ResponseEntity<RestResponse<List<com.innovup.meto.entity.ChirurgieRequest>>> findAllRequestedSurgeries() {
+
+        log.info("Endpoint '/surgeries/requested' (GET) called");
+
+        var data = surgeriesRequestService.findAllRequestedSurgeries();
+
+        log.info("Endpoint '/surgeries/requested' (GET) finished");
+
+        return new ResponseEntity<>(RestResponse.of(data,  200), HttpStatus.OK);
     }
 
 }

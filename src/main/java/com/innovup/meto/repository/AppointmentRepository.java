@@ -52,4 +52,11 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, UUID>
             "GROUP BY a.doctor.id")
     Tuple findAppointmentStatsByDoctorId(@Param("doctorId") UUID doctorId);
 
+
+    @Query(value = "SELECT DATE_TRUNC('month', a.created_on) AS month, DATE_TRUNC('year', a.created_on) AS year, COUNT(*) AS appointment_count "
+            + "FROM appointments a "
+            + "GROUP BY month, year "
+            + "ORDER BY year, month", nativeQuery = true)
+    List<Object[]> getAppointmentsCountByMonthAndYear();
+
 }

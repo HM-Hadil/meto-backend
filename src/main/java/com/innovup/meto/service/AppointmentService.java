@@ -13,7 +13,6 @@ import com.innovup.meto.repository.AppointmentRepository;
 import com.innovup.meto.repository.ChirurgieRepo;
 import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.AppointmentRequest;
-import com.innovup.meto.request.UpdateAppointmentRequest;
 import com.innovup.meto.result.AppointmentResult;
 import com.innovup.meto.result.AppointmentStatsResult;
 import com.innovup.meto.security.service.CustomUserDetailsService;
@@ -112,7 +111,7 @@ public class AppointmentService {
     }
 
 
-    public AppointmentResult updateAppointment(UUID appointmentId, UpdateAppointmentRequest request) {
+   /** public AppointmentResult updateAppointment(UUID appointmentId, UpdateAppointmentRequest request) {
         var appointment = appointmentRepository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
         var admin = userRepository.findById(request.getAdminId()).orElseThrow(() -> new UserNotFoundException(Role.ADMIN));
         if (request.getDoctorId() != null) {
@@ -133,7 +132,18 @@ public class AppointmentService {
         appointment.setLastUpdatedBy(admin);
         appointment.setLastUpdatedOn(LocalDateTime.now());
         return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
-    }
+    }**/
+   public AppointmentResult updateAppointment(UUID appointmentId, UUID doctorId) {
+       var appointment = appointmentRepository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
+
+       if (doctorId != null) {
+           var doctor = userRepository.findById(doctorId).orElseThrow(() -> new UserNotFoundException(Role.DOCTOR));
+           appointment.setDoctor(doctor);
+       }
+
+       appointment.setLastUpdatedOn(LocalDateTime.now());
+       return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
+   }
 
     public AppointmentResult validateAppointment(UUID adminId, UUID appointmentId, UUID doctorId)
             throws AppointmentNotFoundException, UserNotFoundException {
@@ -174,4 +184,10 @@ public class AppointmentService {
             return null;
         }
     }
+
+
+    public List<Object[]> getAppointmentsCountByMonthAndYear() {
+        return appointmentRepository.getAppointmentsCountByMonthAndYear();
+    }
+
 }

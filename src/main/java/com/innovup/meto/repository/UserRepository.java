@@ -24,10 +24,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findByIdAndRoleAndIsEnabledTrue(UUID id, Role role);
 
-    List<User> findAllBySurgeriesId(UUID surgeryId);
 
 
-    @Query("SELECT u FROM User u WHERE u.role = 'DOCTOR' AND (u.specialite LIKE CONCAT('%',:query, '%') OR u.firstname LIKE CONCAT('%', :query, '%'))")
+    @Query("SELECT u FROM User u WHERE u.role = 'DOCTOR' AND  u.firstname LIKE CONCAT('%', :query, '%')")
     List<User> searchDoctor(@Param("query") String query);
 
     @Query(value = "SELECT gender, count(*) FROM User u WHERE u.role = 'D' GROUP BY u.gender")
@@ -38,4 +37,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
     @Query(value =  "SELECT COUNT(*) as doctor_count FROM User u WHERE u.role = 'P'")
     public int getPatientCount();
+
+    List<User> findAllBySpecialitesId(UUID surgeryId);
 }

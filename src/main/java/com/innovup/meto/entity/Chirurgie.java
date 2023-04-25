@@ -1,10 +1,12 @@
 package com.innovup.meto.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.innovup.meto.core.data.EntityWithSelfAssignedId;
 import com.innovup.meto.core.schema.ComSchemaColumnConstantName;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -42,8 +44,10 @@ public class Chirurgie extends EntityWithSelfAssignedId<UUID> {
     @Column(name = ComSchemaColumnConstantName.C_IMAGE)
     @Lob
     private String image;
-/**
-    @ManyToMany(fetch = FetchType.LAZY)
+
+
+    @JsonBackReference
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_surgeries",
             joinColumns = {
@@ -61,5 +65,5 @@ public class Chirurgie extends EntityWithSelfAssignedId<UUID> {
                     )
             }
     )
-    private List<User> users;**/
+    private List<User> users;
 }

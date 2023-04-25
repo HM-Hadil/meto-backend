@@ -6,6 +6,8 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.UUID;
 
 
 @SuperBuilder
@@ -23,4 +25,6 @@ public abstract  class CreateUserRequest {
     private final String password;
     @NotNull
     private final Gender gender;
+    @NotNull
+    private final List<UUID> surgeries;
 }

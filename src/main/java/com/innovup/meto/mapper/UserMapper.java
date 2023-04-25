@@ -5,12 +5,14 @@ import com.innovup.meto.result.AdministratorResult;
 import com.innovup.meto.result.DoctorResult;
 import com.innovup.meto.result.PatientResult;
 import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Component
 public class UserMapper {
+
+    private final ChirurgieMapper surgeryMapper;
 
     public AdministratorResult entityToAdministrator(User user) {
         if (user == null) {
@@ -57,6 +59,19 @@ public class UserMapper {
                 .withGender(user.getGender())
                 .withAddress(user.getAdresse())
                 .withCity(user.getVille())
+                .withParcours((user.getParcours()))
+                .withExperiences(user.getExperience())
+                .withImage(user.getImage())
+                .withSpecialite(user.getSpecialite())
+                .withTelephone(user.getTelephone())
+
+                .withSurgeries(
+                        user.getSpecialites().stream()
+                                .map(
+                                       surgeryMapper ::entityToName
+                                )
+                                .toList()
+                )
                 .build();
     }
 }

@@ -22,6 +22,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<RestResponse<Void>> userNotFoundHandler(UserNotFoundException e) {
         var message = "User with role " + e.getRole() + " not found";
+        if (e.getRole() == null) {
+            message = "User not found";
+        }
         return new ResponseEntity<>(RestResponse.empty(404, message), HttpStatus.NOT_FOUND);
     }
 

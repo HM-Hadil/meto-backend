@@ -1,8 +1,12 @@
 package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
+import com.innovup.meto.entity.User;
+import com.innovup.meto.request.ChirurgieRequest;
+import com.innovup.meto.request.CreateAdminRequest;
 import com.innovup.meto.result.AdministratorResult;
 import com.innovup.meto.result.AppointmentResult;
+import com.innovup.meto.result.ChirurgieResult;
 import com.innovup.meto.service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -72,6 +76,22 @@ public class AdminController extends UserController<AdminService>{
         return ResponseEntity.ok(RestResponse.of(data, 200));
     }
 
+    @PutMapping(value = "updateAdmin/{id}")
+    @ApiOperation(value = "Updates Admin", response = User.class)
+    public ResponseEntity<RestResponse<User>> update(@NotNull @PathVariable UUID id, @NotNull @RequestBody CreateAdminRequest request) {
+        log.info("Endpoint '.../{id}' (PUT) called - id {}, admin {}", id, request);
+
+        var data = getService().update(id, request);
+
+        log.info("Endpoint '.../{id}' (PUT) finished - id {}, admin {}", id, request);
+
+        if (data == null) {
+            return new ResponseEntity<>(RestResponse.empty(404, "Admin not found"), HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok(RestResponse.of(data, 200));
+    }
+
     @PatchMapping(value = "/{id}/validate/{appointmentId}/{doctorId}")
     @ApiOperation(value = "Validates an appointment with the chosen doctor", response = AppointmentResult.class)
     public ResponseEntity<RestResponse<AppointmentResult>> validateAppointmentWithDoctorId(
@@ -89,6 +109,18 @@ public class AdminController extends UserController<AdminService>{
         log.info("Endpoint '.../{id}/validate/{appointmentId}/{doctorId}' (PATCH) finished - id {}, appointmentId {}, doctorId {}",
                 id, appointmentId, doctorId
         );
+
+        return ResponseEntity.ok(RestResponse.of(data, 200));
+    }
+
+    @PutMapping(value = "/surgeries/{surgeryId}/approve")
+    @ApiOperation(value = "Approve a surgery request", response = ChirurgieResult.class)
+    public ResponseEntity<RestResponse<ChirurgieResult>> approveSurgery(@NotNull @PathVariable UUID surgeryId, @NotNull @RequestBody ChirurgieRequest request) {
+        log.info("Endpoint '.../surgeries/{surgeryId}/approve' (PUT) called - id {}, request {}", surgeryId, request);
+
+        var data = getService().approveSurgeryRequest(surgeryId, request);
+
+        log.info("Endpoint '.../surgeries/{surgeryId}/approve' (PUT) finished - id {}, request {}", surgeryId, request);
 
         return ResponseEntity.ok(RestResponse.of(data, 200));
     }
