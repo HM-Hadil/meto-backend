@@ -1,6 +1,7 @@
 package com.innovup.meto.repository;
 
 import com.innovup.meto.entity.Appointment;
+import com.innovup.meto.enums.AppointmentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +13,9 @@ import java.util.UUID;
 
 public interface AppointmentRepository  extends JpaRepository<Appointment, UUID> {
 
-    Optional<List<Appointment>> findAppointmentByDoctorIdOrderByCreatedOn(UUID doctorId);
+    Optional<List<Appointment>> findByDoctorIdAndStatusOrderByCreatedOn(UUID doctorId, AppointmentStatus status);
+    Optional<List<Appointment>> findAllByDoctorIdAndStatusOrderByCreatedOn(UUID doctorId, AppointmentStatus status);
+
     Optional<List<Appointment>> findAppointmentByPatientIdOrderByCreatedOn(UUID patientId);
 
     List<Appointment> findByDoctorIsNull();
@@ -58,5 +61,10 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, UUID>
             + "GROUP BY month, year "
             + "ORDER BY year, month", nativeQuery = true)
     List<Object[]> getAppointmentsCountByMonthAndYear();
+
+    /**
+     *        @Query(value="select count(*), to_char(cast(cast(d.create_date as TIMESTAMP) as DATE), 'MM-YYYY') as YEAR, to_char(cast(cast(d.create_date as TIMESTAMP) as DATE), 'YYYY') as DATEFORMATTED from dbh d group by YEAR, DATEFORMATTED order by DATEFORMATTED asc", nativeQuery=true)
+     * 		public List<Object[]> CountREqPerMonth();
+     * **/
 
 }

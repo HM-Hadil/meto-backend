@@ -51,8 +51,17 @@ public class AppointmentService {
                 .collect(Collectors.mapping(appointmentMapper::entityToResult, Collectors.toList()));
     }
 
-    public List<AppointmentResult> findAllAppointmentsByDoctor(UUID doctorId) {
-        return appointmentRepository.findAppointmentByDoctorIdOrderByCreatedOn(doctorId).stream()
+    public List<AppointmentResult> findAllInProgressAppointmentsByDoctor(UUID doctorId) {
+        return appointmentRepository.findByDoctorIdAndStatusOrderByCreatedOn(doctorId ,AppointmentStatus.IN_PROGRESS).stream()
+                .map(appointments -> appointments.stream()
+                        .map(appointmentMapper::entityToResult)
+                        .collect(Collectors.toList()))
+                .findFirst()
+                .orElse(Collections.emptyList());
+    }
+
+    public List<AppointmentResult> findAllAccptedAppointmentsByDoctor(UUID doctorId) {
+        return appointmentRepository.findByDoctorIdAndStatusOrderByCreatedOn(doctorId ,AppointmentStatus.ACCEPTED).stream()
                 .map(appointments -> appointments.stream()
                         .map(appointmentMapper::entityToResult)
                         .collect(Collectors.toList()))
@@ -140,6 +149,8 @@ public class AppointmentService {
            var doctor = userRepository.findById(doctorId).orElseThrow(() -> new UserNotFoundException(Role.DOCTOR));
            appointment.setDoctor(doctor);
        }
+       appointment.setStatus(AppointmentStatus.IN_PROGRESS);
+
 
        appointment.setLastUpdatedOn(LocalDateTime.now());
        return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
@@ -156,8 +167,27 @@ public class AppointmentService {
         }
         appointment.setAdministrator(admin);
         appointment.setStatus(AppointmentStatus.IN_PROGRESS);
+        appointment.setLastUpdatedOn(LocalDateTime.now());
         return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
     }
+    public AppointmentResult acceptAppointment(UUID appointmentId)
+            throws AppointmentNotFoundException, UserNotFoundException {
+        var appointment = appointmentRepository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
+        appointment.setStatus(AppointmentStatus.ACCEPTED);
+        appointment.setLastUpdatedOn(LocalDateTime.now());
+
+        return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
+    }
+
+    public AppointmentResult rejectAppointment(UUID appointmentId)
+            throws AppointmentNotFoundException, UserNotFoundException {
+        var appointment = appointmentRepository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
+        appointment.setStatus(AppointmentStatus.REJECTED);
+        appointment.setLastUpdatedOn(LocalDateTime.now());
+
+        return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
+    }
+
 
 
         public List<Object[]> findMostFrequentSurgeryWithNameAndImageAndCount() {

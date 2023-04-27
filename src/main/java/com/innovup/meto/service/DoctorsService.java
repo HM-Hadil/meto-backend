@@ -6,6 +6,7 @@ import com.innovup.meto.exception.UserNotFoundException;
 import com.innovup.meto.mapper.UserMapper;
 import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.ChirurgieRequest;
+import com.innovup.meto.request.CreateDoctorRequest;
 import com.innovup.meto.result.DoctorResult;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,7 @@ public  class DoctorsService extends UserService<DoctorResult> {
     public DoctorResult findById(UUID id) {
         return userMapper.entityToDoctor(userRepository.findById(id).orElse(null));
     }
+
     public DoctorResult update(UUID id, User request) {
         var userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
@@ -55,6 +57,19 @@ public  class DoctorsService extends UserService<DoctorResult> {
             user.setVille(request.getVille());
             user.setParcours(request.getParcours());
             user.setExperience(request.getExperience());
+            return userMapper.entityToDoctor(userRepository.save(user));
+        } else {
+            throw new UserNotFoundException(Role.DOCTOR);
+        }
+    }
+
+    public DoctorResult updatePhoto(UUID id, CreateDoctorRequest request) {
+        var userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            var user = userOptional.get();
+            user.setId(id);
+            user.setImage(request.getImage());
+
             return userMapper.entityToDoctor(userRepository.save(user));
         } else {
             throw new UserNotFoundException(Role.DOCTOR);

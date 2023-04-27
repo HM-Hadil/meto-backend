@@ -52,11 +52,21 @@ public class AppointmentController {
     }
 
     @GetMapping("getAppointmentByDoctor/{doctorId}")
-    @ApiOperation(value = "Find all appointments of a doctor", response = AppointmentResult.class, tags = {"Appointment API"})
-    public ResponseEntity<List<AppointmentResult>> findAllAppointmentsByDoctor(@PathVariable UUID doctorId) {
+    @ApiOperation(value = "Find all appointments in progress of a doctor", response = AppointmentResult.class, tags = {"Appointment API"})
+    public ResponseEntity<List<AppointmentResult>> findAllAppointmentsInProgressByDoctor(@PathVariable UUID doctorId) {
         log.info("Endpoint '/appointments/{doctorId}' (GET) called");
 
-        var data = appointmentService.findAllAppointmentsByDoctor(doctorId);
+        var data = appointmentService.findAllInProgressAppointmentsByDoctor(doctorId);
+
+        return ResponseEntity.ok(data);
+    }
+
+    @GetMapping("getAccptedAppointmentByDoctor/{doctorId}")
+    @ApiOperation(value = "Find all accepted  appointments of a doctor", response = AppointmentResult.class, tags = {"Appointment API"})
+    public ResponseEntity<List<AppointmentResult>> findAllAcceptedAppointmentsByDoctor(@PathVariable UUID doctorId) {
+        log.info("Endpoint '/appointments/{doctorId}' (GET) called");
+
+        var data = appointmentService.findAllAccptedAppointmentsByDoctor(doctorId);
 
         return ResponseEntity.ok(data);
     }
@@ -116,6 +126,30 @@ public ResponseEntity<RestResponse<AppointmentResult>> updateAppointment(
 
     return ResponseEntity.ok(RestResponse.of(response, 200));
 }
+
+    @PutMapping("accepterAppointment/{appointmentId}")
+    @ApiOperation(value = "accept an appointment by id - doctor only!", response = AppointmentResult.class, tags = {"Doctors API"})
+    public ResponseEntity<RestResponse<AppointmentResult>> accepterAppointment(
+            @NotNull @PathVariable UUID appointmentId
+    ) {
+        log.info("Endpoint '/appointments' (POST) called - request {}", appointmentId);
+
+        var response = appointmentService.acceptAppointment(appointmentId);
+
+        return ResponseEntity.ok(RestResponse.of(response, 200));
+    }
+
+    @PutMapping("rejectAppointment/{appointmentId}")
+    @ApiOperation(value = "reject an appointment by id - doctor only!", response = AppointmentResult.class, tags = {"Doctors API"})
+    public ResponseEntity<RestResponse<AppointmentResult>> rejectAppointment(
+            @NotNull @PathVariable UUID appointmentId
+    ) {
+        log.info("Endpoint '/appointments' (POST) called - request {}", appointmentId);
+
+        var response = appointmentService.rejectAppointment(appointmentId);
+
+        return ResponseEntity.ok(RestResponse.of(response, 200));
+    }
     @GetMapping("/mostFrequentSurgeryId")
     @ApiOperation(value = "get the most frequent surgery", response = AppointmentResult.class, tags = {"Appointment API"})
 

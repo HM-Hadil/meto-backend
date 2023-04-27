@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum  AppointmentStatus {
     CREATED("C"),
     IN_PROGRESS("P"),
-    CANCELED("X"),
-    FINISHED("F")
+    REJECTED("X"),
+    ACCEPTED("A")
     ;
 
     private final String dbCode;
