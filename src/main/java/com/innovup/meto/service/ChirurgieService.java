@@ -14,10 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -103,5 +100,17 @@ public class ChirurgieService {
 
     public int getChirurgieCount() {
         return repo.getChirurgieCount();
+    }
+
+    public List<Map<String, Object>> getNumDoctorsPerSurgery() {
+        List<Object[]> rows = repo.getNumDoctorsPerSurgery();
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (Object[] row : rows) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("surgeryId", row[0]);
+            map.put("numDoctors", row[1]);
+            result.add(map);
+        }
+        return result;
     }
 }

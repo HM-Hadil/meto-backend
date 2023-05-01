@@ -2,6 +2,7 @@ package com.innovup.meto.service;
 
 import com.innovup.meto.entity.Appointment;
 import com.innovup.meto.entity.RendezVous;
+import com.innovup.meto.entity.User;
 import com.innovup.meto.enums.AppointmentStatus;
 import com.innovup.meto.enums.RendezVousStatus;
 import com.innovup.meto.enums.Role;
@@ -13,31 +14,35 @@ import com.innovup.meto.repository.AppointmentRepository;
 import com.innovup.meto.repository.ChirurgieRepo;
 import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.AppointmentRequest;
+import com.innovup.meto.request.UpdateAppointmentPatient;
 import com.innovup.meto.result.AppointmentResult;
 import com.innovup.meto.result.AppointmentStatsResult;
+import com.innovup.meto.result.DoctorResult;
 import com.innovup.meto.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.Tuple;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+
 public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
+
     private final ChirurgieRepo surgeryRepository;
     private final UserRepository userRepository;
     private final CustomUserDetailsService customUserDetailsService;
     private final AppointmentMapper appointmentMapper;
+
 
     public List<AppointmentResult> findAllAppointments() {
         return appointmentRepository.findAll().stream()
@@ -83,14 +88,17 @@ public class AppointmentService {
     }
     public AppointmentResult createAppointment(AppointmentRequest request) {
         var surgery = surgeryRepository.findById(request.getSurgeryId()).orElseThrow(SurgeryNotFoundException::new);
-       // var patient = userRepository.findById(request.getPatient().getId()).orElseThrow(() -> new UserNotFoundException(Role.PATIENT));
-      //  patient.setGender(request.getPatient().getGender());
-     //   patient.setWeight(request.getPatient().getWeight());
+
 
         var appointment = Appointment.builder()
                 .withId(UUID.randomUUID())
                 .withDescription(request.getNote())
-                .withStatus(request.getDoctorId() != null ? AppointmentStatus.IN_PROGRESS : AppointmentStatus.CREATED)
+                .withStatus(
+                        Optional.ofNullable(request.getDoctorId())
+                                .map(d -> AppointmentStatus.IN_PROGRESS)
+                                .orElse(AppointmentStatus.CREATED)
+                  )
+
                 .withCreatedOn(LocalDateTime.now())
                 .withSurgery(surgery)
                 .withAge(request.getAge())
@@ -120,13 +128,15 @@ public class AppointmentService {
     }
 
 
-   /** public AppointmentResult updateAppointment(UUID appointmentId, UpdateAppointmentRequest request) {
-        var appointment = appointmentRepository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
-        var admin = userRepository.findById(request.getAdminId()).orElseThrow(() -> new UserNotFoundException(Role.ADMIN));
+    public AppointmentResult updateAppointment(UUID appointmentId, UpdateAppointmentPatient request) {
+        var appointment = appointmentRepository.findByIdAndStatusIn(appointmentId, Arrays.asList(AppointmentStatus.IN_PROGRESS, AppointmentStatus.CREATED)).orElseThrow(AppointmentNotFoundException::new);
+        var patient = userRepository.findById(request.getPatientId()).orElseThrow(() -> new UserNotFoundException(Role.ADMIN));
+
         if (request.getDoctorId() != null) {
             var doctor = userRepository.findById(request.getDoctorId()).orElseThrow(() -> new UserNotFoundException(Role.DOCTOR));
             appointment.setDoctor(doctor);
         }
+
         if (request.getSurgeryId() != null) {
             var surgery = surgeryRepository.findById(request.getSurgeryId()).orElseThrow(SurgeryNotFoundException::new);
             appointment.setSurgery(surgery);
@@ -137,12 +147,25 @@ public class AppointmentService {
             rendezVous.setStatus(RendezVousStatus.UPDATED);
             rendezVous.setLastUpdatedOn(LocalDateTime.now());
             appointment.setRendezVous(rendezVous);
+            appointment.setLastUpdatedBy(patient);
+
         }
-        appointment.setLastUpdatedBy(admin);
+
+        appointment.setAge(request.getAge());
+        appointment.setWeight(request.getWeight());
+        appointment.setDateRDV(request.getDateRDV());
+        appointment.setTypeSang(request.getTypeSang());
+        appointment.setVille(request.getVille());
+        appointment.setPhone(request.getPhone());
+        appointment.setDescription(request.getNote());
+        appointment.setLastUpdatedBy(patient);
         appointment.setLastUpdatedOn(LocalDateTime.now());
+
+
         return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
-    }**/
-   public AppointmentResult updateAppointment(UUID appointmentId, UUID doctorId) {
+    }
+
+   public AppointmentResult affectDoctor(UUID appointmentId, UUID doctorId) {
        var appointment = appointmentRepository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
 
        if (doctorId != null) {
@@ -220,4 +243,24 @@ public class AppointmentService {
         return appointmentRepository.getAppointmentsCountByMonthAndYear();
     }
 
+
+    public List<Object[]>getNumAppointmentsByMonthAndDoctor(UUID doctorId) {
+        return appointmentRepository.getNumberAppointmentsByMonthAndDoctorId(doctorId);
+    }
+
+    public DoctorResult findMostFrequentDoctorId() {
+        Object[] result = appointmentRepository.findMostFrequentDoctorId().get(0);
+        UUID doctorId = (UUID) result[0];
+        Long doctorCount = ((BigInteger) result[1]).longValue();
+        User doctor = userRepository.findById(doctorId).orElseThrow(() -> new EntityNotFoundException("Doctor not found"));
+
+        return DoctorResult.builder()
+                .withId(doctorId)
+                .withFirstname(doctor.getFirstname())
+                .withLastname(doctor.getLastname())
+                .withSpecialite(doctor.getSpecialite())
+                .withImage(doctor.getImage())
+                .withCount(doctorCount)
+                .build();
+   }
 }

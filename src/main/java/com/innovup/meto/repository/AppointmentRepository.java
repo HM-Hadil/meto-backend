@@ -19,6 +19,7 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, UUID>
     Optional<List<Appointment>> findAppointmentByPatientIdOrderByCreatedOn(UUID patientId);
 
     List<Appointment> findByDoctorIsNull();
+    Optional<Appointment> findByIdAndStatusIn(UUID appointmentId, List<AppointmentStatus> statuses);
 
    /** @Query("SELECT a.surgery.id FROM Appointment a GROUP BY a.surgery.id ORDER BY COUNT(a) DESC")
     String findMostFrequentSurgeryId();**/
@@ -62,9 +63,16 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, UUID>
             + "ORDER BY year, month", nativeQuery = true)
     List<Object[]> getAppointmentsCountByMonthAndYear();
 
-    /**
-     *        @Query(value="select count(*), to_char(cast(cast(d.create_date as TIMESTAMP) as DATE), 'MM-YYYY') as YEAR, to_char(cast(cast(d.create_date as TIMESTAMP) as DATE), 'YYYY') as DATEFORMATTED from dbh d group by YEAR, DATEFORMATTED order by DATEFORMATTED asc", nativeQuery=true)
-     * 		public List<Object[]> CountREqPerMonth();
-     * **/
 
+    @Query(value="SELECT COUNT(*), to_char(cast(cast(a.date_rdv as TIMESTAMP) as DATE), 'MM-YYYY') as YEAR, to_char(cast(cast(a.date_rdv as TIMESTAMP) as DATE), 'YYYY') as DATEFORMATTED FROM appointments a WHERE doctor_i = :doctorId group by YEAR , DATEFORMATTED order by DATEFORMATTED asc", nativeQuery=true)
+
+    List<Object[]> getNumberAppointmentsByMonthAndDoctorId(@Param("doctorId") UUID doctorId);
+
+    @Query(value = "SELECT a.doctor_i, COUNT(*) as doctor_count " +
+            "FROM appointments a " +
+            "GROUP BY a.doctor_i " +
+            "ORDER BY doctor_count DESC " +
+            "LIMIT 1", nativeQuery = true)
+    List<Object[]> findMostFrequentDoctorId();
 }
+

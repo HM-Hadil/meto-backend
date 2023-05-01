@@ -16,6 +16,7 @@ import java.util.List;
 @Setter
 @Jacksonized
 @ToString
+
 public class DoctorResult extends UserResult{
 
 
@@ -29,6 +30,12 @@ public class DoctorResult extends UserResult{
     private String email;
     private String image;
     private String specialite;
+    private Long count;
 
     private List<DoctorChirurgie> surgeries;
+
+
+
+
+
 }

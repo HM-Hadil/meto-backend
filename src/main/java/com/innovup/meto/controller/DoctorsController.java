@@ -14,8 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -68,6 +67,8 @@ public class DoctorsController extends UserController<DoctorsService> {
 
         return ResponseEntity.ok(RestResponse.of(data, 200));
     }
+
+
     @PutMapping(value = "updatePhotoDoctor/{id}")
     @ApiOperation(value = "Updates photo Doctor", response = DoctorResult.class)
     public ResponseEntity<DoctorResult> updatePhoto(@NotNull @PathVariable UUID id, @NotNull @RequestBody CreateDoctorRequest request) {
@@ -109,5 +110,7 @@ public class DoctorsController extends UserController<DoctorsService> {
 
         return ResponseEntity.ok(RestResponse.of(data, 201));
     }
+
+
 
 }

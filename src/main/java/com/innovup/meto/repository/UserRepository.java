@@ -39,4 +39,9 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     public int getPatientCount();
 
     List<User> findAllBySpecialitesId(UUID surgeryId);
+
+
+    @Query(value="SELECT surgery_id, COUNT(DISTINCT user_id)  FROM users_surgeries GROUP BY surgery_id", nativeQuery = true)
+    List<Object[]> getNumDoctorsPerSurgery();
+
 }

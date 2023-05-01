@@ -107,4 +107,6 @@ public class User extends EntityWithSelfAssignedId<UUID> {
     )
     private List<Chirurgie> specialites;
 
+
+
 }

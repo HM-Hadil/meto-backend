@@ -2,9 +2,11 @@ package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
 import com.innovup.meto.request.AppointmentRequest;
+import com.innovup.meto.request.UpdateAppointmentPatient;
 import com.innovup.meto.request.UpdateAppointmentRequest;
 import com.innovup.meto.result.AppointmentResult;
 import com.innovup.meto.result.AppointmentStatsResult;
+import com.innovup.meto.result.DoctorResult;
 import com.innovup.meto.service.AppointmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -115,17 +117,30 @@ public class AppointmentController {
 **/
 
 @PutMapping("affecterMedecin/{appointmentId}")
-@ApiOperation(value = "update an appointment by id - Admin only!", response = AppointmentResult.class, tags = {"Appointment API"})
-public ResponseEntity<RestResponse<AppointmentResult>> updateAppointment(
+@ApiOperation(value = "affecter doctor   - Admin only!", response = AppointmentResult.class, tags = {"Appointment API"})
+public ResponseEntity<RestResponse<AppointmentResult>> affecterDoctor(
         @NotNull @PathVariable UUID appointmentId,
         @NotNull @RequestBody UpdateAppointmentRequest request
 ) {
     log.info("Endpoint '/appointments' (POST) called - request {}", request);
 
-    var response = appointmentService.updateAppointment(appointmentId, request.getDoctorId());
+    var response = appointmentService.affectDoctor(appointmentId, request.getDoctorId());
 
     return ResponseEntity.ok(RestResponse.of(response, 200));
 }
+
+    @PutMapping("updateAppointment/{appointmentId}")
+    @ApiOperation(value = "update an appointment by id - patient only!", response = AppointmentResult.class, tags = {"Appointment API"})
+    public ResponseEntity<RestResponse<AppointmentResult>> updateAppointment(
+            @NotNull @PathVariable UUID appointmentId,
+            @NotNull @RequestBody UpdateAppointmentPatient request
+    ) {
+        log.info("Endpoint '/appointments' (POST) called - request {}", request);
+
+        var response = appointmentService.updateAppointment(appointmentId, request);
+
+        return ResponseEntity.ok(RestResponse.of(response, 200));
+    }
 
     @PutMapping("accepterAppointment/{appointmentId}")
     @ApiOperation(value = "accept an appointment by id - doctor only!", response = AppointmentResult.class, tags = {"Doctors API"})
@@ -192,4 +207,18 @@ public ResponseEntity<RestResponse<AppointmentResult>> updateAppointment(
     public List<Object[]> getAppointmentsCountByMonthAndYear() {
         return appointmentService.getAppointmentsCountByMonthAndYear();
     }
+
+    @GetMapping("/appointmentsPerMont/{doctorId}")
+    public List<Object[]> getNumAppointmentsByMonthAndDoctor(@PathVariable UUID doctorId) {
+        return appointmentService.getNumAppointmentsByMonthAndDoctor(doctorId);
+    }
+
+
+    @GetMapping("doctors/most-frequent")
+    public ResponseEntity<DoctorResult> findMostFrequentDoctor() {
+        DoctorResult result = appointmentService.findMostFrequentDoctorId();
+        return ResponseEntity.ok(result);
+    }
+
 }
+

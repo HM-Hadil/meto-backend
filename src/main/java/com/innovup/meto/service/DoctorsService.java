@@ -10,8 +10,7 @@ import com.innovup.meto.request.CreateDoctorRequest;
 import com.innovup.meto.result.DoctorResult;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public  class DoctorsService extends UserService<DoctorResult> {
@@ -81,5 +80,6 @@ public  class DoctorsService extends UserService<DoctorResult> {
     public com.innovup.meto.entity.ChirurgieRequest createSurgeryRequest(UUID doctorId, ChirurgieRequest req){
         return surgeriesRequestService.createSurgeryRequest(doctorId, req);
     }
+
 
 }
