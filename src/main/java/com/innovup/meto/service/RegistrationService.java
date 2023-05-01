@@ -1,12 +1,13 @@
 package com.innovup.meto.service;
 
 import com.innovup.meto.entity.AcademicLevel;
+import com.innovup.meto.entity.ConfirmationToken;
 import com.innovup.meto.entity.Experience;
 import com.innovup.meto.entity.User;
 import com.innovup.meto.enums.Role;
 import com.innovup.meto.exception.UserNotFoundException;
 import com.innovup.meto.mapper.UserMapper;
-import com.innovup.meto.repository.SurgeryRepository;
+import com.innovup.meto.repository.ConfirmationTokenRepository;
 import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.*;
 import com.innovup.meto.result.AdministratorResult;
@@ -28,8 +29,9 @@ public class RegistrationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-    private final SurgeryRepository surgeryRepository;
+    private final MailService mailService;
     private final SurgeryService surgeryService;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
 
     public AdministratorResult createNewAdmin(CreateAdminRequest request) {
         var user = User.builder()
@@ -40,10 +42,12 @@ public class RegistrationService {
                 .withGender(request.getGender())
                 .withLastname(request.getLastname())
                 .withRole(Role.ADMIN)
-                .withIsEnabled(true)
+                .withIsEnabled(false)
                 .withCreatedOn(LocalDate.now())
                 .build();
-         return userMapper.entityToAdministrator(userRepository.save(user));
+        user = userRepository.save(user);
+        sendConfirmationToken(user.getEmail());
+         return userMapper.entityToAdministrator(user);
     }
 
     public PatientResult createNewPatient(CreatePatientRequest request) {
@@ -55,9 +59,12 @@ public class RegistrationService {
                 .withPassword(passwordEncoder.encode(request.getPassword()))
                 .withGender(request.getGender())
                 .withRole(Role.PATIENT)
+                .withIsEnabled(false)
                 .withCreatedOn(LocalDate.now())
                 .build();
-        return userMapper.entityToPatient(userRepository.save(user));
+        user = userRepository.save(user);
+        sendConfirmationToken(user.getEmail());
+        return userMapper.entityToPatient(user);
     }
 
     public DoctorResult createNewDoctor(CreateDoctorRequest request) {
@@ -76,13 +83,32 @@ public class RegistrationService {
                 .withSpecialties(surgeries)
                 .withAddress(request.getAddress())
                 .withRole(Role.DOCTOR)
+                .withIsEnabled(false)
                 .withCreatedOn(LocalDate.now())
                 .build();
-        return userMapper.entityToDoctor(userRepository.save(user));
+        user = userRepository.save(user);
+        sendConfirmationToken(user.getEmail());
+        return userMapper.entityToDoctor(user);
     }
 
     public User findById(UUID id) {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+    }
+
+    public ConfirmationToken createConfirmationToken(String email) {
+        var user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        var token = UUID.randomUUID().toString();
+        var confirmationToken = ConfirmationToken.builder()
+                .withId(UUID.randomUUID())
+                .withToken(token)
+                .withUser(user)
+                .build();
+        return confirmationTokenRepository.save(confirmationToken);
+    }
+
+    private void sendConfirmationToken(String email) {
+        var confirmationToken = createConfirmationToken(email);
+        mailService.send(confirmationToken);
     }
 
     private List<AcademicLevel> createAcademicLevels(List<AcademicLevelRequest> academicLevelsRequest) {

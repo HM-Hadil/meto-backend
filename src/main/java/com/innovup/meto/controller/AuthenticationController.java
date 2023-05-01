@@ -31,7 +31,7 @@ public class AuthenticationController {
     public ResponseEntity<RestResponse<AuthenticationResult>> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
         var authenticationResult = authenticationService.authenticate(authenticationRequest);
         if (authenticationResult == null) {
-            return new ResponseEntity<>(RestResponse.empty(404, "User not found"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(RestResponse.empty(401, "Unauthorized"), HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(
                 RestResponse.of(authenticationService.authenticate(authenticationRequest), 200),

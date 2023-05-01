@@ -1,6 +1,9 @@
 package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
+import com.innovup.meto.exception.UserNotFoundException;
+import com.innovup.meto.repository.ConfirmationTokenRepository;
+import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.CreateAdminRequest;
 import com.innovup.meto.request.CreateDoctorRequest;
 import com.innovup.meto.request.CreatePatientRequest;
@@ -14,10 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -29,6 +29,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class RegistrationController {
 
     private final RegistrationService registrationService;
+
+    private final ConfirmationTokenRepository confirmationTokenRepository;
+
+    private final UserRepository userRepository;
 
     @PostMapping(path = "/admin", produces = APPLICATION_JSON_VALUE)
     @ApiOperation(value = "create User", response = AdministratorResult.class, tags = {"Registration API"})
@@ -63,4 +67,20 @@ public class RegistrationController {
         return new ResponseEntity<>(RestResponse.of(data, 201), HttpStatus.CREATED);
     }
 
+    @GetMapping(path = "/confirm-account")
+    @ApiOperation(value = "Confirm a validation token", response = String.class, tags = {"Registration API"})
+    public ResponseEntity<String> confirmUserAccount(@RequestParam String token) {
+        var confirmationToken = confirmationTokenRepository.findByToken(token)
+                .orElse(null);
+        if (confirmationToken != null) {
+            if (confirmationToken.isExpired()) {
+                return ResponseEntity.badRequest().body("Confirmation token expired!");
+            }
+            var user = userRepository.findByEmail(confirmationToken.getUser().getEmail()).orElseThrow(UserNotFoundException::new);
+            user.setEnabled(true);
+            userRepository.save(user);
+            return ResponseEntity.ok("Email verified successfully!");
+        }
+        return ResponseEntity.badRequest().body("Error: Couldn't verify email!");
+    }
 }

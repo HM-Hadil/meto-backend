@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EntityScan(basePackages = {"com.innovup.meto.*"})
 @EnableJpaRepositories(basePackages = {"com.innovup.meto.*"})
-@PropertySource(encoding = "UTF-8", value = {"application.properties", "datasource.properties"})
+@PropertySource(encoding = "UTF-8", value = {"application.properties", "datasource.properties", "mail.properties"})
 public class MetoApplication {
 
     public static void main(String[] args) {
