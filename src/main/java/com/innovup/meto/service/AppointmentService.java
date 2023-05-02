@@ -51,7 +51,7 @@ public class AppointmentService {
     }
 
     public List<AppointmentResult> findAllAppointmentsByDoctorIdNull() {
-        return appointmentRepository.findByDoctorIsNull()
+        return appointmentRepository.findByDoctorIsNullAndStatus(AppointmentStatus.CREATED)
                 .stream()
                 .collect(Collectors.mapping(appointmentMapper::entityToResult, Collectors.toList()));
     }

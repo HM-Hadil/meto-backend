@@ -18,7 +18,7 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, UUID>
 
     Optional<List<Appointment>> findAppointmentByPatientIdOrderByCreatedOn(UUID patientId);
 
-    List<Appointment> findByDoctorIsNull();
+    List<Appointment> findByDoctorIsNullAndStatus(AppointmentStatus status);
     Optional<Appointment> findByIdAndStatusIn(UUID appointmentId, List<AppointmentStatus> statuses);
 
    /** @Query("SELECT a.surgery.id FROM Appointment a GROUP BY a.surgery.id ORDER BY COUNT(a) DESC")

@@ -2,7 +2,6 @@ package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
 import com.innovup.meto.entity.ChirurgieRequest;
-import com.innovup.meto.entity.User;
 import com.innovup.meto.request.CreateDoctorRequest;
 import com.innovup.meto.result.DoctorResult;
 import com.innovup.meto.service.DoctorsService;
@@ -14,7 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -58,7 +58,7 @@ public class DoctorsController extends UserController<DoctorsService> {
 
     @PutMapping(value = "updateDoctor/{id}")
     @ApiOperation(value = "Updates Doctor", response = DoctorResult.class)
-    public ResponseEntity<RestResponse<DoctorResult>> update(@NotNull @PathVariable UUID id, @NotNull @RequestBody User request) {
+    public ResponseEntity<RestResponse<DoctorResult>> update(@NotNull @PathVariable UUID id, @NotNull @RequestBody CreateDoctorRequest request) {
         log.info("Endpoint '/doctors/{id}' (PUT) called - id {}, doctor {}", id, request);
 
         var data = getService().update(id, request);

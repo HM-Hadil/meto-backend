@@ -27,7 +27,7 @@ public class CreateDoctorRequest extends CreateUserRequest{
     private String adresse;
     @NotNull
     private String  specialite;
-    @NotNull
+
     private String image;
     @NotNull
     private String telephone;
