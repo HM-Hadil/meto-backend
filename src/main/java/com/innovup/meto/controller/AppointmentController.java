@@ -101,20 +101,7 @@ public class AppointmentController {
         return ResponseEntity.ok(data);
     }
 
-/**
-    @PutMapping("affecterMedecin/{appointmentId}")
-    @ApiOperation(value = "update an appointment by id - Admin only!", response = AppointmentResult.class, tags = {"Appointment API"})
-    public ResponseEntity<RestResponse<AppointmentResult>> updateAppointment(
-            @NotNull @PathVariable UUID appointmentId,
-            @NotNull @RequestBody UpdateAppointmentRequest request
-    ) {
-        log.info("Endpoint '/appointments' (POST) called - request {}", request);
 
-        var response = appointmentService.updateAppointment(appointmentId, request);
-
-        return ResponseEntity.ok(RestResponse.of(response, 200));
-    }
-**/
 
 @PutMapping("affecterMedecin/{appointmentId}")
 @ApiOperation(value = "affecter doctor   - Admin only!", response = AppointmentResult.class, tags = {"Appointment API"})

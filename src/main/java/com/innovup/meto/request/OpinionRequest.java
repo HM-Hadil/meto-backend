@@ -6,19 +6,18 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.UUID;
+
 @SuperBuilder
 @Data
 @Jacksonized
 @Validated
 @ToString
-public class ChirurgieRequest {
+public class OpinionRequest {
 
-    private final String name;
-
-    private final String description;
+    private final String message;
 
     private final String image;
 
-    private ChirurgieDurationRequest duration;
-
+    private final UUID patientId;
 }

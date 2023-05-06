@@ -14,15 +14,13 @@ import java.util.UUID;
 public interface AppointmentRepository  extends JpaRepository<Appointment, UUID> {
 
     Optional<List<Appointment>> findByDoctorIdAndStatusOrderByCreatedOn(UUID doctorId, AppointmentStatus status);
-    Optional<List<Appointment>> findAllByDoctorIdAndStatusOrderByCreatedOn(UUID doctorId, AppointmentStatus status);
 
     Optional<List<Appointment>> findAppointmentByPatientIdOrderByCreatedOn(UUID patientId);
 
     List<Appointment> findByDoctorIsNullAndStatus(AppointmentStatus status);
     Optional<Appointment> findByIdAndStatusIn(UUID appointmentId, List<AppointmentStatus> statuses);
 
-   /** @Query("SELECT a.surgery.id FROM Appointment a GROUP BY a.surgery.id ORDER BY COUNT(a) DESC")
-    String findMostFrequentSurgeryId();**/
+
 
    @Query(value = "SELECT s.name, s.image ,COUNT(*) as surgery_count " +
            "FROM appointments a " +
@@ -74,5 +72,7 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, UUID>
             "ORDER BY doctor_count DESC " +
             "LIMIT 1", nativeQuery = true)
     List<Object[]> findMostFrequentDoctorId();
+
+    List<Appointment> findAppointmentByDoctorId(UUID doctorId);
 }
 

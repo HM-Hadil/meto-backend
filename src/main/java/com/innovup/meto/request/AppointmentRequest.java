@@ -4,10 +4,8 @@ import lombok.Data;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
-import org.springframework.lang.Nullable;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -18,10 +16,10 @@ import java.util.UUID;
 @ToString
 public class AppointmentRequest {
 
-    @NotNull
+
     private final UUID surgeryId;
 
-    @Nullable
+
     private final UUID doctorId;
 
     private final String note;

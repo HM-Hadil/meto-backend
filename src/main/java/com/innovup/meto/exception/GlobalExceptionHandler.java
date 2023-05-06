@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AppointmentNotFoundException.class)
-    public ResponseEntity<RestResponse<Void>> surgeryNotFoundHandler(AppointmentNotFoundException e) {
+    public ResponseEntity<RestResponse<Void>> surgeryNotFoundHandler() {
         return new ResponseEntity<>(RestResponse.empty(404, "Appointment not found"), HttpStatus.NOT_FOUND);
     }
 
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedUserException.class)
-    public ResponseEntity<RestResponse<Void>> unauthorizedUserHandler(UnauthorizedUserException e) {
+    public ResponseEntity<RestResponse<Void>> unauthorizedUserHandler() {
         return new ResponseEntity<>(RestResponse.empty(404, "Cannot retrieve authenticated user"), HttpStatus.NOT_FOUND);
     }
 }

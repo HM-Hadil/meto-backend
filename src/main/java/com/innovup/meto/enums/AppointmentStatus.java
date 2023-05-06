@@ -18,7 +18,7 @@ public enum  AppointmentStatus {
     String getDbCode() { return dbCode; }
 
     @NonNull
-    static AppointmentStatus fromDbCode(@NonNull String dbCode) {
+    static AppointmentStatus fromDbCode( String dbCode) {
         for(var status : values()) {
             if (status.dbCode.equals(dbCode)) {
                 return status;

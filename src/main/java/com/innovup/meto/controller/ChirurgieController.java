@@ -3,6 +3,7 @@ package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
 import com.innovup.meto.entity.Chirurgie;
+import com.innovup.meto.entity.ChirurgieRequestDoctor;
 import com.innovup.meto.repository.ChirurgieRepo;
 import com.innovup.meto.request.ChirurgieRequest;
 import com.innovup.meto.result.ChirurgieResult;
@@ -103,8 +104,8 @@ public class ChirurgieController  {
     }
 
     @GetMapping("/requested")
-    @ApiOperation(value = "Finds All Surgery requests", response = com.innovup.meto.entity.ChirurgieRequest.class, tags = {"Surgery API"})
-    public ResponseEntity<RestResponse<List<com.innovup.meto.entity.ChirurgieRequest>>> findAllRequestedSurgeries() {
+    @ApiOperation(value = "Finds All Surgery requests", response = Chirurgie.class, tags = {"Surgery API"})
+    public ResponseEntity<RestResponse<List<ChirurgieRequestDoctor>>> findAllRequestedSurgeries() {
 
         log.info("Endpoint '/surgeries/requested' (GET) called");
 

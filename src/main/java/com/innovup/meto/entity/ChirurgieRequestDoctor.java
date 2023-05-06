@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class ChirurgieRequest extends EntityWithSelfAssignedId<UUID> {
+public class ChirurgieRequestDoctor extends EntityWithSelfAssignedId<UUID> {
 
     @Id
     @Column(name = ComSchemaColumnConstantName.ID)

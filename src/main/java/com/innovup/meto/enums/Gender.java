@@ -1,7 +1,6 @@
 package com.innovup.meto.enums;
 
 import lombok.AccessLevel;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -11,11 +10,11 @@ public enum Gender {
 
     private final String dbCode;
 
-    @NonNull
+
     String getDbCode() { return dbCode; }
 
-    @NonNull
-    static Gender fromDbCode(@NonNull String dbCode) {
+
+    static Gender fromDbCode( String dbCode) {
         for(var gender : values()) {
             if (gender.dbCode.equals(dbCode)) {
                 return gender;

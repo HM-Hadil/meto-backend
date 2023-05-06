@@ -1,9 +1,10 @@
 package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
-import com.innovup.meto.entity.ChirurgieRequest;
+import com.innovup.meto.entity.ChirurgieRequestDoctor;
 import com.innovup.meto.request.CreateDoctorRequest;
 import com.innovup.meto.result.DoctorResult;
+import com.innovup.meto.service.ChirurgieRequestService;
 import com.innovup.meto.service.DoctorsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,9 +24,11 @@ import java.util.UUID;
 
 public class DoctorsController extends UserController<DoctorsService> {
 
-    protected DoctorsController(DoctorsService service) {
+    protected DoctorsController(DoctorsService service, ChirurgieRequestService chirurgieRequestService) {
         super(service);
+        this.chirurgieRequestService = chirurgieRequestService;
     }
+    private final ChirurgieRequestService chirurgieRequestService;
 
     @GetMapping(value = "")
     @ApiOperation(value = "Finds All", response = DoctorResult.class)
@@ -97,14 +100,14 @@ public class DoctorsController extends UserController<DoctorsService> {
     }
 
     @PostMapping(value = "/{id}/surgery/requested")
-    @ApiOperation(value = "Create a surgery request", response = ChirurgieRequest.class)
-    public ResponseEntity<RestResponse<ChirurgieRequest>> requestSurgery(
+    @ApiOperation(value = "Create a surgery request", response = ChirurgieRequestDoctor.class)
+    public ResponseEntity<RestResponse<ChirurgieRequestDoctor>> requestSurgery(
             @NotNull @PathVariable UUID id,
             @NotNull @RequestBody com.innovup.meto.request.ChirurgieRequest request
     ) {
         log.info("Endpoint '/doctors/{id}/surgery/request' (POST) called - id {}, surgeryRequest {}", id, request);
 
-        var data = getService().createSurgeryRequest(id, request);
+        var data = chirurgieRequestService.createSurgeryRequest(id, request);
 
         log.info("Endpoint '/doctors/{id}/surgery/request' (POST) finished - id {}, surgeryRequest {}", id, request);
 

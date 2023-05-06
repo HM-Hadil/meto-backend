@@ -1,31 +1,38 @@
 package com.innovup.meto.service;
 
 import com.innovup.meto.entity.AcademicLevel;
+import com.innovup.meto.entity.Appointment;
 import com.innovup.meto.entity.Experience;
 import com.innovup.meto.enums.Role;
 import com.innovup.meto.exception.UserNotFoundException;
 import com.innovup.meto.mapper.UserMapper;
+import com.innovup.meto.repository.AppointmentRepository;
 import com.innovup.meto.repository.UserRepository;
-import com.innovup.meto.request.ChirurgieRequest;
 import com.innovup.meto.request.CreateDoctorRequest;
 import com.innovup.meto.request.ExperienceRequest;
 import com.innovup.meto.request.ParcoursRequest;
 import com.innovup.meto.result.DoctorResult;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+
 @Service
+
 public  class DoctorsService extends UserService<DoctorResult> {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final AppointmentRepository appointmentRepository;
+
     private final ChirurgieRequestService surgeriesRequestService;
 
-    protected DoctorsService(UserRepository repository, UserMapper userMapper,ChirurgieRequestService service) {
+    protected DoctorsService(UserRepository repository, UserMapper userMapper, AppointmentRepository appointmentRepository, ChirurgieRequestService service) {
         super(Role.DOCTOR, repository);
         this.userRepository = repository;
         this.userMapper = userMapper;
+        this.appointmentRepository = appointmentRepository;
         surgeriesRequestService = service;
     }
 
@@ -79,16 +86,33 @@ public  class DoctorsService extends UserService<DoctorResult> {
     }
 
 
-
+/**
     public com.innovup.meto.entity.ChirurgieRequest createSurgeryRequest(UUID doctorId, ChirurgieRequest req){
         return surgeriesRequestService.createSurgeryRequest(doctorId, req);
     }
-
+**/
     private List<AcademicLevel> createAcademicLevels(List<ParcoursRequest> academicLevelRequests) {
         return academicLevelRequests.stream()
                 .map(this::newAcademicLevel)
                 .toList();
     }
+    public boolean isDoctorAvailable(UUID doctorId, LocalDateTime dateRDV) {
+        List<Appointment> appointments = appointmentRepository.findAppointmentByDoctorId(doctorId);
+
+        for (Appointment appointment : appointments) {
+            if (appointment.getDateRDV().isEqual(dateRDV)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+
+
+
+
 
     private AcademicLevel newAcademicLevel(ParcoursRequest request) {
         return AcademicLevel.builder()

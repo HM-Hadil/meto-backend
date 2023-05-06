@@ -1,18 +1,19 @@
 package com.innovup.meto.result;
 
 import com.innovup.meto.entity.ChirurgieDuration;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.UUID;
-
 @Builder(setterPrefix = "with")
 @Getter
 @Setter
 @Jacksonized
-@AllArgsConstructor
 @ToString
-public class ChirurgieResult {
+public class ChirurgieRequestResult {
     private final UUID id;
     private final String name;
     private final String description;

@@ -1,11 +1,12 @@
 package com.innovup.meto.service;
 
 import com.innovup.meto.entity.ChirurgieDuration;
-import com.innovup.meto.entity.ChirurgieRequest;
+import com.innovup.meto.entity.ChirurgieRequestDoctor;
 import com.innovup.meto.enums.Role;
 import com.innovup.meto.exception.UserNotFoundException;
 import com.innovup.meto.repository.ChirurgieRequestRepository;
 import com.innovup.meto.repository.UserRepository;
+import com.innovup.meto.request.ChirurgieRequest;
 import com.innovup.meto.util.DurationConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,9 @@ public class ChirurgieRequestService {
     private final UserRepository userRepository;
     private final ChirurgieRequestRepository surgeriesRequestRepository;
 
-    public com.innovup.meto.entity.ChirurgieRequest createSurgeryRequest(UUID doctorId, com.innovup.meto.request.ChirurgieRequest request) {
+    public ChirurgieRequestDoctor createSurgeryRequest(UUID doctorId, ChirurgieRequest request) {
         var doctor = userRepository.findById(doctorId).orElseThrow(() -> new UserNotFoundException(Role.DOCTOR));
-        var surgeryRequest = ChirurgieRequest.builder()
+        var chirurgieReq = ChirurgieRequestDoctor.builder()
                 .withId(UUID.randomUUID())
                 .withName(request.getName())
                 .withDescription(request.getDescription())
@@ -37,11 +38,11 @@ public class ChirurgieRequestService {
                 .withDurationInSeconds(DurationConverter.toSeconds(request.getDuration()))
                 .withRequester(doctor)
                 .build();
-        surgeryRequest = surgeriesRequestRepository.save(surgeryRequest);
-        return surgeryRequest;
+        chirurgieReq = surgeriesRequestRepository.save(chirurgieReq);
+        return chirurgieReq;
     }
 
-    public List<ChirurgieRequest> findAllRequestedSurgeries() {
+    public List<ChirurgieRequestDoctor> findAllRequestedSurgeries() {
         return surgeriesRequestRepository.findAll();
     }
 }

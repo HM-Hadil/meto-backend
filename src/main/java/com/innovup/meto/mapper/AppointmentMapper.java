@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 public class AppointmentMapper {
 
 
-    private final ChirurgieMapper surgeryMapper;
     private final UserMapper userMapper;
     private final RendezVousMapper rendezVousMapper;
 
@@ -45,7 +44,7 @@ public class AppointmentMapper {
 
                 .withLastUpdatedOn(appointment.getLastUpdatedOn() != null ? appointment.getLastUpdatedOn() : null)
 
-                .withSurgery(surgeryMapper.entityToResult(appointment.getSurgery()))
+                .withSurgery(ChirurgieMapper.entityToResult(appointment.getSurgery()))
                 .withPatient(userMapper.entityToPatient(appointment.getPatient()))
                 .withDoctor(userMapper.entityToDoctor(appointment.getDoctor()))
                 .withAdministrator(userMapper.entityToAdministrator(appointment.getAdministrator()))

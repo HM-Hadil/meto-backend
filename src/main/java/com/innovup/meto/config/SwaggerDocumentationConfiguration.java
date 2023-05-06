@@ -1,4 +1,4 @@
-package com.innovup.meto.configSwagger;
+package com.innovup.meto.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

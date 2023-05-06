@@ -58,6 +58,10 @@ public  final class  ComSchemaColumnConstantName {
     public static final String RENDEZ_VOUS_ID = "rendez_vous_id";
 
     public static final String REQUESTER_ID = "requester_id";
+    public static final String TOKEN = "token";
+    public static final String EXPIRATION_DATE = "expiration_date";
 
 
+    public static final String C_MESSAGE ="message" ;
+    public static final String C_IS_ENABLED = "is_enabled" ;
 }
