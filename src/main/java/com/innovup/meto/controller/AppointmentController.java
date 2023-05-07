@@ -1,11 +1,11 @@
 package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
-import com.innovup.meto.entity.Appointment;
-import com.innovup.meto.entity.Surgery;
 import com.innovup.meto.request.AppointmentRequest;
+import com.innovup.meto.request.DevisRequest;
 import com.innovup.meto.request.UpdateAppointmentRequest;
 import com.innovup.meto.result.AppointmentResult;
+import com.innovup.meto.result.DevisResult;
 import com.innovup.meto.service.AppointmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -67,6 +67,23 @@ public class AppointmentController {
 
         var response = appointmentService.updateAppointment(appointmentId, request);
 
+        return ResponseEntity.ok(RestResponse.of(response, 200));
+    }
+
+    @PutMapping("/{appointmentId}/devis")
+    @ApiOperation(value = "create a quotation for surgery and appointment", response = DevisResult.class, tags = {"Appointment API"})
+    public ResponseEntity<RestResponse<DevisResult>> createDevis(
+            @NotNull @PathVariable UUID appointmentId,
+            @NotNull @RequestBody DevisRequest request
+    ) {
+        log.info("Endpoint '/appointments' (POST) called - request {}", request);
+
+        if (!request.isApproved()) {
+            var response = appointmentService.createAppointmentDevis(appointmentId, request);
+            return ResponseEntity.ok(RestResponse.of(response, 200));
+        }
+
+        var response = appointmentService.approveAppointmentDevis(appointmentId, request);
         return ResponseEntity.ok(RestResponse.of(response, 200));
     }
 }

@@ -3,7 +3,6 @@ package com.innovup.meto.result;
 import com.innovup.meto.enums.AppointmentStatus;
 import com.innovup.meto.pojo.Administrator;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
 import java.time.LocalDateTime;
@@ -37,4 +36,6 @@ public class AppointmentResult {
     private AdministratorResult administrator;
 
     private RendezVousResult rendezVous;
+
+    private DevisResult devis;
 }

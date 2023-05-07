@@ -44,4 +44,5 @@ public final class ComSchemaColumnConstantName {
     public static final String REQUESTER_ID = "requester_id";
     public static final String TOKEN = "token";
     public static final String EXPIRATION_DATE = "expiration_date";
+    public static final String DEVIS_ID = "devis_id";
 }

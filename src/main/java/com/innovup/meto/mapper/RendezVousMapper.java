@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 public class RendezVousMapper {
 
     public RendezVousResult entityToResult(RendezVous rendezVous) {
+
+        if (rendezVous == null) {
+            return null;
+        }
+
         return RendezVousResult.builder()
                 .withId(rendezVous.getId())
                 .withStatus(rendezVous.getStatus())

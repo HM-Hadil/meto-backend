@@ -13,6 +13,11 @@ import org.springframework.stereotype.Component;
 public class SurgeryMapper {
 
     public SurgeryResult entityToResult(Surgery surgery) {
+
+        if (surgery == null) {
+            return null;
+        }
+
         return SurgeryResult.builder()
                 .withId(surgery.getId())
                 .withName(surgery.getName())
@@ -24,6 +29,11 @@ public class SurgeryMapper {
     }
 
     public DoctorSurgery entityToName(Surgery surgery) {
+
+        if (surgery == null) {
+            return null;
+        }
+
         return DoctorSurgery.builder()
                 .withId(surgery.getId())
                 .withName(surgery.getName())

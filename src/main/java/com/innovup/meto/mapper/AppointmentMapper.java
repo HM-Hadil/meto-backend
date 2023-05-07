@@ -12,8 +12,8 @@ public class AppointmentMapper {
 
     private final SurgeryMapper surgeryMapper;
     private final UserMapper userMapper;
-
     private final RendezVousMapper rendezVousMapper;
+    private final DevisMapper devisMapper;
 
     public AppointmentResult entityToResult(Appointment appointment) {
         if (appointment == null) {
@@ -40,6 +40,7 @@ public class AppointmentMapper {
                 .withDoctor(userMapper.entityToDoctor(appointment.getDoctor()))
                 .withAdministrator(userMapper.entityToAdministrator(appointment.getAdministrator()))
                 .withRendezVous(rendezVousMapper.entityToResult(appointment.getRendezVous()))
+                .withDevis(devisMapper.entityToResult(appointment.getDevis()))
                 .build();
     }
 }

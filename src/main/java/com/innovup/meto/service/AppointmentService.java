@@ -1,6 +1,7 @@
 package com.innovup.meto.service;
 
 import com.innovup.meto.entity.Appointment;
+import com.innovup.meto.entity.Devis;
 import com.innovup.meto.entity.RendezVous;
 import com.innovup.meto.enums.AppointmentStatus;
 import com.innovup.meto.enums.RendezVousStatus;
@@ -9,17 +10,22 @@ import com.innovup.meto.exception.AppointmentNotFoundException;
 import com.innovup.meto.exception.SurgeryNotFoundException;
 import com.innovup.meto.exception.UserNotFoundException;
 import com.innovup.meto.mapper.AppointmentMapper;
-import com.innovup.meto.pojo.Administrator;
+import com.innovup.meto.mapper.DevisMapper;
 import com.innovup.meto.repository.AppointmentRepository;
 import com.innovup.meto.repository.SurgeryRepository;
 import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.AppointmentRequest;
+import com.innovup.meto.request.DevisRequest;
 import com.innovup.meto.request.UpdateAppointmentRequest;
 import com.innovup.meto.result.AppointmentResult;
+import com.innovup.meto.result.DevisResult;
+import com.innovup.meto.security.service.CustomUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -33,6 +39,8 @@ public class AppointmentService {
     private final SurgeryRepository surgeryRepository;
     private final UserRepository userRepository;
     private final AppointmentMapper appointmentMapper;
+    private final DevisMapper devisMapper;
+    private final CustomUserDetailsServiceImpl customUserDetailsService;
 
     public List<AppointmentResult> findAllAppointments() {
         return appointmentRepository.findAll().stream()
@@ -112,5 +120,34 @@ public class AppointmentService {
         appointment.setAdministrator(admin);
         appointment.setStatus(AppointmentStatus.IN_PROGRESS);
         return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
+    }
+
+    public DevisResult createAppointmentDevis(UUID appointmentId, DevisRequest request) {
+        var appointment = appointmentRepository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
+        var devis = Devis.builder()
+                .withId(UUID.randomUUID())
+                .withCost(BigDecimal.valueOf(request.getCost()))
+                .withIsApproved(false)
+                .withCreatedOn(LocalDate.now())
+                .build();
+        appointment.setDevis(devis);
+        appointment = appointmentRepository.save(appointment);
+        return devisMapper.entityToResult(appointment.getDevis());
+    }
+
+    public DevisResult approveAppointmentDevis(UUID appointmentId, DevisRequest request) {
+        var appointment = appointmentRepository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
+        var devis = appointment.getDevis();
+        devis.setApproved(true);
+        devis.setCost(BigDecimal.valueOf(request.getCost()));
+        devis.setValidatedOn(LocalDate.now());
+        devis.setLastUpdatedBy(getCurrentUserName());
+        appointment = appointmentRepository.save(appointment);
+        return devisMapper.entityToResult(appointment.getDevis());
+    }
+
+    private String getCurrentUserName() {
+        var currentUser = customUserDetailsService.getCurrentUser();
+        return currentUser.getFirstname() + " " + currentUser.getLastname();
     }
 }

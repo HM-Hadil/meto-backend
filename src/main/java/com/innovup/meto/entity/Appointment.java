@@ -64,4 +64,8 @@ public class Appointment extends EntityWithSelfAssignedId<UUID> {
     @JoinColumn(name = ComSchemaColumnConstantName.RENDEZ_VOUS_ID)
     private RendezVous rendezVous;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = ComSchemaColumnConstantName.DEVIS_ID)
+    private Devis devis;
+
 }
