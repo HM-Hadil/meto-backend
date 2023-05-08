@@ -53,5 +53,7 @@ public class AppointmentResult {
     private final String AnalyseAncienOperation;
     private final String autreAnalyse;
 
+    private DevisResult devis;
+
 
 }

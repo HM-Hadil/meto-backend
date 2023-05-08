@@ -47,19 +47,15 @@ public class OpinionService {
     }
 
     public PatientOpinion accepter(UUID opinionId) {
-        var opinion = patientOpinionRepo.findById(opinionId);
-
-        if (opinion.isPresent() && opinion.get().isEnabled() == false) {
-            var op = opinion.get();
-            op.setEnabled((true));
-
-
-
-            return patientOpinionRepo.save(op);
-        } else {
-            throw new RuntimeException();
-        }
+        return patientOpinionRepo.findById(opinionId)
+                .filter(opinion -> !opinion.isEnabled())
+                .map(opinion -> {
+                    opinion.setEnabled(true);
+                    return patientOpinionRepo.save(opinion);
+                })
+                .orElseThrow(() -> new RuntimeException());
     }
+
     public void delete(UUID id ){
         patientOpinionRepo.deleteById(id);
     }

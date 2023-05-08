@@ -2,10 +2,12 @@ package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
 import com.innovup.meto.request.AppointmentRequest;
+import com.innovup.meto.request.DevisRequest;
 import com.innovup.meto.request.UpdateAppointmentPatient;
 import com.innovup.meto.request.UpdateAppointmentRequest;
 import com.innovup.meto.result.AppointmentResult;
 import com.innovup.meto.result.AppointmentStatsResult;
+import com.innovup.meto.result.DevisResult;
 import com.innovup.meto.result.DoctorResult;
 import com.innovup.meto.service.AppointmentService;
 import io.swagger.annotations.Api;
@@ -207,5 +209,18 @@ public ResponseEntity<RestResponse<AppointmentResult>> affecterDoctor(
         return ResponseEntity.ok(result);
     }
 
+
+    @PostMapping("/{appointmentId}/devis")
+    @ApiOperation(value = "create a quotation for surgery and appointment", response = DevisResult.class, tags = {"Appointment API"})
+    public ResponseEntity<RestResponse<DevisResult>> createDevis(
+            @NotNull @PathVariable UUID appointmentId,
+            @NotNull @RequestBody DevisRequest request
+    ) {
+        log.info("Endpoint '/appointments' (POST) called - request {}", request);
+
+
+        var response = appointmentService.createAppointmentDevis(appointmentId, request);
+        return ResponseEntity.ok(RestResponse.of(response, 200));
+    }
 }
 

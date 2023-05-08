@@ -78,5 +78,6 @@ public  final class  ComSchemaColumnConstantName {
     public static final String C_NomAncienOperation="NomAncienOperation";
     public static final String C_AnalyseAncienOperation="analyseAncienOperation";
     public static  final String C_AnalyseAutreMaladie="analyseAutreMaladie";
+    public static final String DEVIS_ID = "devis_id";
 
 }
