@@ -26,5 +26,19 @@ public class UpdateAppointmentPatient {
     private final String typeSang;
     private final String phone;
     private final String ville;
+    private final String alcoolique;
+    private final String tension;
+    private final String diabete;
+    private final String fumee;
+    private final String mesureTension;
+    private final String mesureDiabete;
+    private final String analyseDiabete;
+    private final String autreMaladie;
+    private final String DesAutreMaladie;
+    private final String analyseAutreMaladie;
+    private final String ancienOperation;
+    private final String NomAncienOperation;
+    private final String AnalyseAncienOperation;
+    private final String autreAnalyse;
 
 }

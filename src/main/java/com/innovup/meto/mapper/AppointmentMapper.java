@@ -31,6 +31,20 @@ public class AppointmentMapper {
                 .withVille(appointment.getVille())
                 .withTypeSang(appointment.getTypeSang())
                 .withCreatedOn(appointment.getCreatedOn())
+                .withAlcoolique(appointment.getAlcoolique())
+                .withFumee(appointment.getFumee())
+                .withDiabete(appointment.getDiabete())
+                .withTension(appointment.getTension())
+                .withAnalyseDiabete(appointment.getAnalyseDiabete())
+                .withAutreAnalyse(appointment.getAutreAnalyse())
+                .withAnalyseAncienOperation(appointment.getAnalyseAncienOperation())
+                .withAutreMaladie(appointment.getAutreMaladie())
+                .withAnalyseAutreMaladie(appointment.getAnalyseAutreMaladie())
+                .withAncienOperation(appointment.getAncienOperation())
+                .withDesAutreMaladie(appointment.getDesAutreMaladie())
+                .withMesureDiabete(appointment.getMesureDiabete())
+                .withMesureTension(appointment.getMesureTension())
+                .withNomAncienOperation(appointment.getNomAncienOperation())
 
                 .withLastUpdatedBy(
                         appointment.getLastUpdatedBy() != null ?

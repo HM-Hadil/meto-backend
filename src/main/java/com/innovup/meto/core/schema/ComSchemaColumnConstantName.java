@@ -64,4 +64,19 @@ public  final class  ComSchemaColumnConstantName {
 
     public static final String C_MESSAGE ="message" ;
     public static final String C_IS_ENABLED = "is_enabled" ;
+    public static final String C_ALCOOLIQUE = "alcoolique";
+    public static final String C_TENSION ="tension" ;
+    public static final String C_DIABETE = "diabete";
+    public static final String C_FUMEE = "fumee";
+    public static final String C_MesureTension="mesureTension";
+    public static final String C_MesureDiabete="mesureDiabete";
+    public static final String C_AnalyseDiabete="analyseDiabete";
+    public static final String C_AutreMaladie="autreMaladie";
+    public static final String C_AutreAnalyse="autreAnalyse";
+    public static final String C_DesAutreMaladie="DesAutreMaladie";
+    public static final String C_AncienOperation="ancienOperation";
+    public static final String C_NomAncienOperation="NomAncienOperation";
+    public static final String C_AnalyseAncienOperation="analyseAncienOperation";
+    public static  final String C_AnalyseAutreMaladie="analyseAutreMaladie";
+
 }

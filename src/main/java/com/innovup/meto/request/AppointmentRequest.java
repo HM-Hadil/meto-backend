@@ -15,21 +15,30 @@ import java.util.UUID;
 @Validated
 @ToString
 public class AppointmentRequest {
-
-
-    private final UUID surgeryId;
-
-
-    private final UUID doctorId;
-
     private final String note;
     private final String image;
     private final Double age;
+    private final UUID patientId;
+    private final String ville;
     private final Double weight;
     private final LocalDateTime dateRDV;
     private final String typeSang;
     private final String phone;
-    private final String ville;
-    private final UUID patientId;
+    private final UUID surgeryId;
+    private final UUID doctorId;
+    private final String alcoolique;
+    private final String tension;
+    private final String diabete;
+    private final String fumee;
+    private final String mesureTension;
+    private final String mesureDiabete;
+    private final String analyseDiabete;
+    private final String autreMaladie;
+    private final String DesAutreMaladie;
+    private final String analyseAutreMaladie;
+    private final String ancienOperation;
+    private final String NomAncienOperation;
+    private final String AnalyseAncienOperation;
+    private final String autreAnalyse;
 
 }

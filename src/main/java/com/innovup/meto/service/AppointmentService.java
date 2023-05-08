@@ -117,13 +117,27 @@ public class AppointmentService {
                 .withCreatedOn(LocalDateTime.now())
                 .withSurgery(surgery)
                 .withAge(request.getAge())
-
                 .withImage(request.getImage())
                 .withPhone(request.getPhone())
                 .withTypeSang(request.getTypeSang())
                 .withVille(request.getVille())
                 .withWeight(request.getWeight())
                 .withDateRDV(request.getDateRDV())
+                .withAlcoolique(request.getAlcoolique())
+                .withFumee(request.getFumee())
+                .withDiabete(request.getDiabete())
+                .withTension(request.getTension())
+                .withAnalyseDiabete(request.getAnalyseDiabete())
+                .withAutreAnalyse(request.getAutreAnalyse())
+                .withAnalyseAncienOperation(request.getAnalyseAncienOperation())
+                .withAutreMaladie(request.getAutreMaladie())
+                .withAnalyseAutreMaladie(request.getAnalyseAutreMaladie())
+                .withAncienOperation(request.getAncienOperation())
+                .withDesAutreMaladie(request.getDesAutreMaladie())
+                .withMesureDiabete(request.getMesureDiabete())
+                .withMesureTension(request.getMesureTension())
+                .withNomAncienOperation(request.getNomAncienOperation())
+
                 .withPatient(request.getPatientId() != null ? userRepository.findById(request.getPatientId()).orElseThrow(() -> new UserNotFoundException(Role.PATIENT)) : null
                 )
                 .withDoctor(
@@ -175,6 +189,21 @@ public class AppointmentService {
         appointment.setDescription(request.getNote());
         appointment.setLastUpdatedBy(patient);
         appointment.setLastUpdatedOn(LocalDateTime.now());
+        appointment.setAlcoolique(request.getAlcoolique());
+        appointment.setFumee(request.getFumee());
+        appointment.setDiabete(request.getDiabete());
+        appointment.setTension(request.getTension());
+        appointment.setAnalyseDiabete(request.getAnalyseDiabete());
+        appointment.setAutreAnalyse(request.getAutreAnalyse());
+        appointment.setAnalyseAncienOperation(request.getAnalyseAncienOperation());
+        appointment.setAutreMaladie(request.getAutreMaladie());
+        appointment.setAnalyseAutreMaladie(request.getAnalyseAutreMaladie());
+        appointment.setAncienOperation(request.getAncienOperation());
+        appointment.setDesAutreMaladie(request.getDesAutreMaladie());
+        appointment.setMesureDiabete(request.getMesureDiabete());
+        appointment.setMesureTension(request.getMesureTension());
+        appointment.setNomAncienOperation(request.getNomAncienOperation());
+
 
 
         return appointmentMapper.entityToResult(appointmentRepository.save(appointment));
