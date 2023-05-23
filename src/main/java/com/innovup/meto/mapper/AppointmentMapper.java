@@ -1,7 +1,6 @@
 package com.innovup.meto.mapper;
 
 import com.innovup.meto.entity.Appointment;
-import com.innovup.meto.pojo.Administrator;
 import com.innovup.meto.result.AppointmentResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -46,15 +45,6 @@ public class AppointmentMapper {
                 .withMesureTension(appointment.getMesureTension())
                 .withNomAncienOperation(appointment.getNomAncienOperation())
 
-                .withLastUpdatedBy(
-                        appointment.getLastUpdatedBy() != null ?
-                                Administrator.builder()
-                                        .withFirstname(appointment.getLastUpdatedBy().getFirstname())
-                                        .withLastname(appointment.getLastUpdatedBy().getLastname())
-                                        .withEmail(appointment.getLastUpdatedBy().getEmail())
-                                        .build()
-                                : null
-                )
 
                 .withLastUpdatedOn(appointment.getLastUpdatedOn() != null ? appointment.getLastUpdatedOn() : null)
 

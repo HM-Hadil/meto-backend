@@ -108,9 +108,7 @@ public class Appointment extends EntityWithSelfAssignedId<UUID> {
     @Column(name = ComSchemaColumnConstantName.LAST_UPDATED_ON)
     private LocalDateTime lastUpdatedOn;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = ComSchemaColumnConstantName.LAST_UPDATED_BY)
-    private User lastUpdatedBy;
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = ComSchemaColumnConstantName.SURGERY_ID)

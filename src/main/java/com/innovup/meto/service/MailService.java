@@ -17,9 +17,9 @@ public class MailService {
     public void send(ConfirmationToken confirmation) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(confirmation.getUser().getEmail());
-        message.setSubject("Medical Tourism Account Verification");
+        message.setSubject("Tourisme Medicale Verification de Compte");
         message.setText(
-                "To confirm your account, please click here: http://localhost:8800/register/confirm-account?token=" + confirmation.getToken()
+                "pour confirmer votre compte, cliquez sur ce lien: http://localhost:8800/register/confirm-account?token=" + confirmation.getToken()
         );
         javaMailSender.send(message);
     }

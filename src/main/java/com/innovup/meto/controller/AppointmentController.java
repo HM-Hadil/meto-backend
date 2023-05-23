@@ -1,6 +1,7 @@
 package com.innovup.meto.controller;
 
 import com.innovup.meto.core.web.RestResponse;
+import com.innovup.meto.entity.Appointment;
 import com.innovup.meto.request.AppointmentRequest;
 import com.innovup.meto.request.DevisRequest;
 import com.innovup.meto.request.UpdateAppointmentPatient;
@@ -61,6 +62,24 @@ public class AppointmentController {
         log.info("Endpoint '/appointments/{doctorId}' (GET) called");
 
         var data = appointmentService.findAllInProgressAppointmentsByDoctor(doctorId);
+
+        return ResponseEntity.ok(data);
+    }
+    @GetMapping("getAllAppointmentByDoctorAndStatus/{doctorId}")
+    @ApiOperation(value = "Find all appointments in progress of a doctor", response = AppointmentResult.class, tags = {"Appointment API"})
+    public ResponseEntity<List<Appointment>> findAllAppointmentsInStatusByDoctor(@PathVariable UUID doctorId) {
+        log.info("Endpoint '/appointments/{doctorId}' (GET) called");
+
+        var data = appointmentService.getAllAppointmentsByDoctorIdWithStatus(doctorId);
+
+        return ResponseEntity.ok(data);
+    }
+    @GetMapping("getAllAppointmentByChirurgieAndStatus/{chirurgieId}")
+    @ApiOperation(value = "Find all appointments by surgery with status", response = AppointmentResult.class, tags = {"Appointment API"})
+    public ResponseEntity<List<Appointment>> findAllAppointmentsInStatusByChirurgie(@PathVariable UUID chirurgieId) {
+        log.info("Endpoint '/appointments/{doctorId}' (GET) called");
+
+        var data = appointmentService.getAllAppointmentsByChirurgieIdWithStatus(chirurgieId);
 
         return ResponseEntity.ok(data);
     }
@@ -222,5 +241,85 @@ public ResponseEntity<RestResponse<AppointmentResult>> affecterDoctor(
         var response = appointmentService.createAppointmentDevis(appointmentId, request);
         return ResponseEntity.ok(RestResponse.of(response, 200));
     }
+    @PutMapping("/{appointmentId}/updateDevis")
+    @ApiOperation(value = "update devis by admin", response = DevisResult.class, tags = {"Appointment API"})
+    public ResponseEntity<RestResponse<DevisResult>> updateDevis(
+            @NotNull @PathVariable UUID appointmentId,
+            @NotNull @RequestBody DevisRequest request
+    ) {
+        log.info("Endpoint '/appointments' (POST) called - request {}", request);
+
+
+        var response = appointmentService.updateAppointmentDevis(appointmentId, request);
+        return ResponseEntity.ok(RestResponse.of(response, 200));
+    }
+    @PutMapping("/{appointmentId}/confirmeDevis")
+    @ApiOperation(value = "approve devis by patient", response = DevisResult.class, tags = {"Appointment API"})
+    public ResponseEntity<RestResponse<DevisResult>> confirmeDevis(
+            @NotNull @PathVariable UUID appointmentId
+    ) {
+        log.info("Endpoint '/appointments' (POST) called - request {}");
+
+
+        var response = appointmentService.approveAppointmentDevis(appointmentId);
+        return ResponseEntity.ok(RestResponse.of(response, 200));
+    }
+    @PutMapping("/{appointmentId}/rejectDevis")
+    @ApiOperation(value = "reject devis by patient", response = DevisResult.class, tags = {"Appointment API"})
+    public ResponseEntity<RestResponse<DevisResult>> rejectDevis(
+             @NotNull @PathVariable UUID appointmentId
+    ) {
+        log.info("Endpoint '/appointments' (POST) called - request {}");
+
+
+        var response = appointmentService.rejectAppointmentDevis(appointmentId);
+        return ResponseEntity.ok(RestResponse.of(response, 200));
+    }
+
+    @GetMapping("created-devis")
+    @ApiOperation(value = "get created devis by doctor", response = Appointment.class, tags = {"Appointment API"})
+
+    public ResponseEntity<List<Appointment>> getAppointmentsWithCreatedDevis() {
+        List<Appointment> appointments = appointmentService.getCreatedAppointments();
+        return ResponseEntity.ok(appointments);
+    }
+
+    @GetMapping("updated-devisByAdmin")
+    public ResponseEntity<List<Appointment>> getUpdatedDevisByAdmin() {
+        List<Appointment> appointments = appointmentService.getUpdateAppointmentsByAdmin();
+        return ResponseEntity.ok(appointments);
+    }
+    @GetMapping("approved-devisByPatient")
+    public ResponseEntity<List<Appointment>> getApprovedDEvisByPatient() {
+        List<Appointment> appointments = appointmentService.getApproveAppointmentsByPatient();
+        return ResponseEntity.ok(appointments);
+    }
+    @GetMapping("confirmed-devisByPatient/{patientId}")
+    public ResponseEntity<List<Appointment>> getConfirmedDEvisByPatientId(@PathVariable UUID patientId) {
+        List<Appointment> appointments = appointmentService.getConfirmedAppointmentsByPatientId(patientId);
+        return ResponseEntity.ok(appointments);
+    }
+    @GetMapping("confirmed-devisByDoctorId/{doctorId}")
+    public ResponseEntity<List<Appointment>> getConfirmedDEvisByDoctorId(@PathVariable UUID doctorId) {
+        List<Appointment> appointments = appointmentService.getConfirmedAppointmentsByDoctorId(doctorId);
+        return ResponseEntity.ok(appointments);
+    }
+
+    @GetMapping("getCreatedDevisById/{appointmentId}")
+    public ResponseEntity<Optional<Appointment>> getCreatedDevisById( @PathVariable UUID appointmentId) {
+        Optional<Appointment> appointments = appointmentService.getCreatedDevisById(appointmentId);
+        return ResponseEntity.ok(appointments);
+    }
+   @GetMapping("getChangeddDevisByAdmin/{appointmentId}")
+    public ResponseEntity<Optional<Appointment>> getChangedDevisByAdmin( @PathVariable UUID appointmentId) {
+        Optional<Appointment> appointments = appointmentService.getChangedDevisByAdminById(appointmentId);
+        return ResponseEntity.ok(appointments);
+    }
+
+    @DeleteMapping("deleteAppoibtment/{appointmentId}")
+    public void deleteappointment(@PathVariable UUID appointmentId){
+        this.appointmentService.deleteAppointment(appointmentId);
+    }
+
 }
 

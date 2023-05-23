@@ -1,5 +1,6 @@
 package com.innovup.meto.entity;
 import com.innovup.meto.core.data.EntityWithSelfAssignedId;
+import com.innovup.meto.enums.DevisStatus;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -29,6 +30,7 @@ public class Devis extends EntityWithSelfAssignedId<UUID> {
     private LocalDate createdOn;
 
     private boolean isApproved;
+    private DevisStatus status;
 
     private LocalDate validatedOn;
 

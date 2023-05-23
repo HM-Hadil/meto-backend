@@ -2,6 +2,7 @@ package com.innovup.meto.repository;
 
 import com.innovup.meto.entity.Appointment;
 import com.innovup.meto.enums.AppointmentStatus;
+import com.innovup.meto.enums.DevisStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -74,5 +75,15 @@ public interface AppointmentRepository  extends JpaRepository<Appointment, UUID>
     List<Object[]> findMostFrequentDoctorId();
 
     List<Appointment> findAppointmentByDoctorId(UUID doctorId);
+
+
+     List<Appointment> findByDevisStatus(DevisStatus status);
+     List<Appointment> findByDevisStatusAndPatientId(DevisStatus status,UUID patientId);
+     List<Appointment> findByDevisStatusAndDoctorId(DevisStatus status,UUID doctorId);
+    Optional<Appointment> findByDevisStatusAndId(DevisStatus status,UUID appointmentId);
+
+
+    List<Appointment> findAppointmentByDoctorIdAndStatusIn(UUID doctorId, List<AppointmentStatus> asList);
+    List<Appointment> findAppointmentBySurgeryIdAndStatusIn(UUID surgeryId, List<AppointmentStatus> asList);
 }
 

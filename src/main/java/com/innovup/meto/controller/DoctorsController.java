@@ -3,6 +3,7 @@ package com.innovup.meto.controller;
 import com.innovup.meto.core.web.RestResponse;
 import com.innovup.meto.entity.ChirurgieRequestDoctor;
 import com.innovup.meto.request.CreateDoctorRequest;
+import com.innovup.meto.request.UpdatePhotoReq;
 import com.innovup.meto.result.DoctorResult;
 import com.innovup.meto.service.ChirurgieRequestService;
 import com.innovup.meto.service.DoctorsService;
@@ -74,7 +75,7 @@ public class DoctorsController extends UserController<DoctorsService> {
 
     @PutMapping(value = "updatePhotoDoctor/{id}")
     @ApiOperation(value = "Updates photo Doctor", response = DoctorResult.class)
-    public ResponseEntity<DoctorResult> updatePhoto(@NotNull @PathVariable UUID id, @NotNull @RequestBody CreateDoctorRequest request) {
+    public ResponseEntity<DoctorResult> updatePhoto(@NotNull @PathVariable UUID id, @NotNull @RequestBody UpdatePhotoReq request) {
         log.info("Endpoint '/doctors/{id}' (PUT) called - id {}, doctor {}", id, request);
 
         var data = getService().updatePhoto(id, request);

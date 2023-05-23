@@ -16,4 +16,5 @@ public class AppointmentStatusConverter implements AttributeConverter<Appointmen
     public AppointmentStatus convertToEntityAttribute(String dbCode) {
         return AppointmentStatus.fromDbCode(dbCode);
     }
+
 }

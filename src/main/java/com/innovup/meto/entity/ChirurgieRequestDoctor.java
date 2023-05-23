@@ -40,4 +40,7 @@ public class ChirurgieRequestDoctor extends EntityWithSelfAssignedId<UUID> {
     @ManyToOne
     @JoinColumn(name = ComSchemaColumnConstantName.REQUESTER_ID)
     private User requester;
+
+    @Column(name = "status")
+    private String status;
 }

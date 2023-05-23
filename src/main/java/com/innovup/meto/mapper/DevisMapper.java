@@ -18,6 +18,7 @@ public class DevisMapper {
         return DevisResult.builder()
                 .withId(devis.getId())
                 .withCost(devis.getCost().doubleValue())
+                .withDevis_status(devis.getStatus())
                 .withCreatedOn(devis.getCreatedOn())
                 .withIsApproved(devis.isApproved())
                 .withValidatedOn(devis.isApproved() ? devis.getValidatedOn() : null)

@@ -7,10 +7,12 @@ import com.innovup.meto.enums.Role;
 import com.innovup.meto.exception.UserNotFoundException;
 import com.innovup.meto.mapper.UserMapper;
 import com.innovup.meto.repository.AppointmentRepository;
+import com.innovup.meto.repository.ChirurgieRepo;
 import com.innovup.meto.repository.UserRepository;
 import com.innovup.meto.request.CreateDoctorRequest;
 import com.innovup.meto.request.ExperienceRequest;
 import com.innovup.meto.request.ParcoursRequest;
+import com.innovup.meto.request.UpdatePhotoReq;
 import com.innovup.meto.result.DoctorResult;
 import org.springframework.stereotype.Service;
 
@@ -25,14 +27,16 @@ public  class DoctorsService extends UserService<DoctorResult> {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final AppointmentRepository appointmentRepository;
+    private final ChirurgieRepo chirurgieRepo;
 
     private final ChirurgieRequestService surgeriesRequestService;
 
-    protected DoctorsService(UserRepository repository, UserMapper userMapper, AppointmentRepository appointmentRepository, ChirurgieRequestService service) {
+    protected DoctorsService(UserRepository repository, UserMapper userMapper, AppointmentRepository appointmentRepository, ChirurgieRepo chirurgieRepo, ChirurgieRequestService service) {
         super(Role.DOCTOR, repository);
         this.userRepository = repository;
         this.userMapper = userMapper;
         this.appointmentRepository = appointmentRepository;
+        this.chirurgieRepo = chirurgieRepo;
         surgeriesRequestService = service;
     }
 
@@ -72,7 +76,7 @@ public  class DoctorsService extends UserService<DoctorResult> {
         }
     }
 
-    public DoctorResult updatePhoto(UUID id, CreateDoctorRequest request) {
+    public DoctorResult updatePhoto(UUID id, UpdatePhotoReq request) {
         var userOptional = userRepository.findById(id);
         if (userOptional.isPresent()) {
             var user = userOptional.get();
@@ -136,5 +140,7 @@ public  class DoctorsService extends UserService<DoctorResult> {
                 .withEstablishment(request.getEstablishment())
                 .build();
     }
+
+
 
 }

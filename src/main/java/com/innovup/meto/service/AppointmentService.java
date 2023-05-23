@@ -5,6 +5,7 @@ import com.innovup.meto.entity.Devis;
 import com.innovup.meto.entity.RendezVous;
 import com.innovup.meto.entity.User;
 import com.innovup.meto.enums.AppointmentStatus;
+import com.innovup.meto.enums.DevisStatus;
 import com.innovup.meto.enums.RendezVousStatus;
 import com.innovup.meto.enums.Role;
 import com.innovup.meto.exception.*;
@@ -92,17 +93,28 @@ public class AppointmentService {
                 .map(appointmentMapper::entityToResult);
     }
     public AppointmentResult createAppointment(AppointmentRequest request) {
-        var surgery = surgeryRepository.findById(request.getSurgeryId()).orElseThrow(SurgeryNotFoundException::new);
-        // Retrieve the appointments of the doctor with the given doctorId from the database.
-        List<Appointment> appointments = appointmentRepository.findAppointmentByDoctorId(request.getDoctorId());
+        var surgery = surgeryRepository.findById(request.getSurgeryId())
+                .orElseThrow(SurgeryNotFoundException::new);
+
+        // Retrieve the appointments of the doctor with the given doctorId and specific statuses from the database.
+        List<Appointment> appointments = appointmentRepository.findAppointmentByDoctorIdAndStatusIn(
+                request.getDoctorId(),
+                Arrays.asList(
+                        AppointmentStatus.IN_PROGRESS,
+                        AppointmentStatus.ACCEPTED,
+                        AppointmentStatus.WITH_DEVIS,
+                        AppointmentStatus.CREATED
+                )
+        );
 
         // Filter the appointments based on the dateRdv field to get only the appointments that have the same dateRdv as the request.getDateRDV().
         LocalDate requestedDate = request.getDateRDV().toLocalDate();
         List<Appointment> filteredAppointments = appointments.stream()
-                .filter(a -> a.getDateRDV().toLocalDate().isEqual(requestedDate)).toList();
+                .filter(a -> a.getDateRDV().toLocalDate().isEqual(requestedDate))
+                .collect(Collectors.toList());
 
         if (!filteredAppointments.isEmpty()) {
-            // If the filtered appointments list is not empty, it means that the doctor has already an appointment at the requested dateRdv.
+            // If the filtered appointments list is not empty, it means that the doctor already has an appointment at the requested dateRdv.
             log.info("Date already in use.");
             throw new AppointmentAlreadyExistsException();
         }
@@ -184,7 +196,6 @@ public class AppointmentService {
             rendezVous.setStatus(RendezVousStatus.UPDATED);
             rendezVous.setLastUpdatedOn(LocalDateTime.now());
             appointment.setRendezVous(rendezVous);
-            appointment.setLastUpdatedBy(patient);
 
         }
        appointment.setImage(request.getImage());
@@ -195,7 +206,6 @@ public class AppointmentService {
         appointment.setVille(request.getVille());
         appointment.setPhone(request.getPhone());
         appointment.setDescription(request.getNote());
-        appointment.setLastUpdatedBy(patient);
         appointment.setLastUpdatedOn(LocalDateTime.now());
         appointment.setAlcoolique(request.getAlcoolique());
         appointment.setFumee(request.getFumee());
@@ -323,19 +333,40 @@ public class AppointmentService {
                 .withCost(BigDecimal.valueOf(request.getCost()))
                 .withIsApproved(false)
                 .withCreatedOn(LocalDate.now())
+                .withStatus(DevisStatus.CREATED)
                 .build();
         appointment.setDevis(devis);
+        appointment.setStatus(AppointmentStatus.WITH_DEVIS);
         appointment = appointmentRepository.save(appointment);
         return devisMapper.entityToResult(appointment.getDevis());
     }
 
-    public DevisResult approveAppointmentDevis(UUID appointmentId, DevisRequest request) {
+    public DevisResult approveAppointmentDevis(UUID appointmentId) {
         var appointment = appointmentRepository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
         var devis = appointment.getDevis();
         devis.setApproved(true);
+        devis.setStatus(DevisStatus.CONFIRMED_BY_PATIENT);
+        devis.setValidatedOn(LocalDate.now());
+        appointment = appointmentRepository.save(appointment);
+        return devisMapper.entityToResult(appointment.getDevis());
+    }
+    public DevisResult rejectAppointmentDevis(UUID appointmentId) {
+        var appointment = appointmentRepository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
+        var devis = appointment.getDevis();
+        devis.setApproved(false);
+        devis.setStatus(DevisStatus.REJECTED_BY_PATIENT);
+        devis.setValidatedOn(LocalDate.now());
+        appointment = appointmentRepository.save(appointment);
+        return devisMapper.entityToResult(appointment.getDevis());
+    }
+
+    public DevisResult updateAppointmentDevis(UUID appointmentId, DevisRequest request) {
+        var appointment = appointmentRepository.findById(appointmentId).orElseThrow(AppointmentNotFoundException::new);
+        var devis = appointment.getDevis();
+        devis.setApproved(false);
+        devis.setStatus(DevisStatus.CHANGED_BY_ADMIN);
         devis.setCost(BigDecimal.valueOf(request.getCost()));
         devis.setValidatedOn(LocalDate.now());
-        devis.setLastUpdatedBy(getCurrentUserName());
         appointment = appointmentRepository.save(appointment);
         return devisMapper.entityToResult(appointment.getDevis());
     }
@@ -345,4 +376,59 @@ public class AppointmentService {
         return currentUser.getFirstname() + " " + currentUser.getLastname();
     }
 
+    public List<Appointment> getCreatedAppointments() {
+        return appointmentRepository.findByDevisStatus(DevisStatus.CREATED);
+
+    }
+    public Optional<Appointment> getCreatedDevisById(UUID appointmentId){
+        return appointmentRepository.findByDevisStatusAndId(DevisStatus.CREATED, appointmentId);
+    }
+    public Optional<Appointment> getChangedDevisByAdminById(UUID appointmentId){
+        return appointmentRepository.findByDevisStatusAndId(DevisStatus.CHANGED_BY_ADMIN, appointmentId);
+    }
+    public List<Appointment> getUpdateAppointmentsByAdmin() {
+        return appointmentRepository.findByDevisStatus(DevisStatus.CHANGED_BY_ADMIN);
+    }
+    public List<Appointment> getApproveAppointmentsByPatient() {
+        return appointmentRepository.findByDevisStatus(DevisStatus.CONFIRMED_BY_PATIENT);
+
+    }
+
+    public List<Appointment> getConfirmedAppointmentsByPatientId(UUID patientId) {
+        return appointmentRepository.findByDevisStatusAndPatientId(DevisStatus.CONFIRMED_BY_PATIENT,patientId);
+
+    }
+
+    public List<Appointment> getConfirmedAppointmentsByDoctorId(UUID doctorId) {
+        return appointmentRepository.findByDevisStatusAndDoctorId(DevisStatus.CONFIRMED_BY_PATIENT,doctorId);
+
+    }
+    public List<Appointment> getAllAppointmentsByDoctorIdWithStatus(UUID doctorId) {
+        return appointmentRepository.findAppointmentByDoctorIdAndStatusIn(
+                doctorId,
+                Arrays.asList(
+                        AppointmentStatus.IN_PROGRESS,
+                        AppointmentStatus.ACCEPTED,
+                        AppointmentStatus.WITH_DEVIS,
+                        AppointmentStatus.CREATED
+                )
+        );
+    }  public List<Appointment> getAllAppointmentsByChirurgieIdWithStatus(UUID chirurgieId) {
+        return appointmentRepository.findAppointmentBySurgeryIdAndStatusIn(
+                chirurgieId,
+                Arrays.asList(
+                        AppointmentStatus.IN_PROGRESS,
+                        AppointmentStatus.ACCEPTED,
+                        AppointmentStatus.WITH_DEVIS,
+                        AppointmentStatus.CREATED
+                )
+        );
+    }
+
+    public void deleteAppointment(UUID id){
+        this.appointmentRepository.deleteById(id);
+    }
+
+
 }
+

@@ -1,5 +1,6 @@
 package com.innovup.meto.result;
 
+import com.innovup.meto.enums.DevisStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,4 +23,5 @@ public class DevisResult {
     private final LocalDate validatedOn;
     private final LocalDate lastUpdatedOn;
     private final String lastUpdatedBy;
+    private final DevisStatus devis_status;
 }
