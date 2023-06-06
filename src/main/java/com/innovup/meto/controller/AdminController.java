@@ -11,6 +11,7 @@ import com.innovup.meto.result.AdministratorResult;
 import com.innovup.meto.result.AppointmentResult;
 import com.innovup.meto.result.SurgeryResult;
 import com.innovup.meto.service.AdminService;
+import com.innovup.meto.service.SurgeriesRequestService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +29,11 @@ import java.util.UUID;
 @Api(value = "Administrator API Controller", tags = "Admin API")
 public class AdminController extends UsersController<AdminService> {
 
-    protected AdminController(AdminService service) {
+    private final SurgeriesRequestService surgeriesRequestService;
+
+    protected AdminController(AdminService service, SurgeriesRequestService surgeriesRequestService) {
         super(service);
+        this.surgeriesRequestService = surgeriesRequestService;
     }
 
     @GetMapping(value = "")
@@ -119,12 +123,12 @@ public class AdminController extends UsersController<AdminService> {
 
     @PutMapping(value = "/surgeries/{surgeryId}/approve")
     @ApiOperation(value = "Approve a surgery request", response = SurgeryResult.class)
-    public ResponseEntity<RestResponse<SurgeryResult>> approveSurgery(@NotNull @PathVariable UUID surgeryId, @NotNull @RequestBody SurgeryRequest request) {
-        log.info("Endpoint '.../surgeries/{surgeryId}/approve' (PUT) called - id {}, request {}", surgeryId, request);
+    public ResponseEntity<RestResponse<SurgeryResult>> approveSurgery(@NotNull @PathVariable UUID surgeryId) {
+        log.info("Endpoint '.../surgeries/{surgeryId}/approve' (PUT) called - id {}", surgeryId);
 
-        var data = getService().approveSurgeryRequest(surgeryId, request);
+        var data = surgeriesRequestService.approveSurgeryRequest(surgeryId);
 
-        log.info("Endpoint '.../surgeries/{surgeryId}/approve' (PUT) finished - id {}, request {}", surgeryId, request);
+        log.info("Endpoint '.../surgeries/{surgeryId}/approve' (PUT) finished - id {}", surgeryId);
 
         return ResponseEntity.ok(RestResponse.of(data, 200));
     }

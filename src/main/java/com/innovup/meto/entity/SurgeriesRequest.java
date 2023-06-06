@@ -36,7 +36,7 @@ public class SurgeriesRequest extends EntityWithSelfAssignedId<UUID> {
     @Column(name = ComSchemaColumnConstantName.IMAGE)
     private String image;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = ComSchemaColumnConstantName.REQUESTER_ID)
     private User requester;
 }

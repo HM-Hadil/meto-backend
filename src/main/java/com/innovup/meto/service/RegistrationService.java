@@ -86,6 +86,7 @@ public class RegistrationService {
                 .withIsEnabled(false)
                 .withCreatedOn(LocalDate.now())
                 .build();
+
         user = userRepository.save(user);
         sendConfirmationToken(user.getEmail());
         return userMapper.entityToDoctor(user);

@@ -78,26 +78,4 @@ public class AdminService extends UserService<AdministratorResult> {
     public AppointmentResult validateAppointmentWithDoctorId(UUID adminId, UUID appointmentId, UUID doctorId) {
         return appointmentService.validateAppointment(adminId, appointmentId, doctorId);
     }
-
-    public SurgeryResult approveSurgeryRequest(UUID surgeryId, SurgeryRequest request) {
-        var surgeryRequest = surgeriesRequestRepository.findById(surgeryId).orElseThrow(SurgeryNotFoundException::new);
-        var surgery = Surgery.builder()
-                .withId(surgeryRequest.getId())
-                .withName(request.getName())
-                .withDescription(request.getDescription())
-                .withImage(request.getImage())
-                .withDuration(
-                        SurgeryDuration.builder()
-                                .withDays(request.getDuration().getDays())
-                                .withHours(request.getDuration().getHours())
-                                .withMinutes(request.getDuration().getMinutes())
-                                .withSeconds(request.getDuration().getSeconds())
-                                .build()
-                )
-                .withDurationInSeconds(DurationConverter.toSeconds(request.getDuration()))
-                .build();
-        surgeriesRequestRepository.delete(surgeryRequest);
-        surgery = surgeryRepository.save(surgery);
-        return surgeryMapper.entityToResult(surgery);
-    }
 }

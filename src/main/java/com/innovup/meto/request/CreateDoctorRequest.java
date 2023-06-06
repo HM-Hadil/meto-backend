@@ -24,7 +24,6 @@ public class CreateDoctorRequest extends CreateUserRequest {
 
     private final List<ExperienceRequest> experiences;
 
-    @NotNull
     private final List<UUID> surgeries;
 
 }
