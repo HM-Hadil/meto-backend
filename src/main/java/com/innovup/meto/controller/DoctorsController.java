@@ -81,19 +81,4 @@ public class DoctorsController extends UsersController<DoctorsService> {
 
         return ResponseEntity.ok(RestResponse.of(data, 200));
     }
-
-    @PostMapping(value = "/{doctorId}/surgery/requested")
-    @ApiOperation(value = "Create a surgery request", response = SurgeriesRequest.class)
-    public ResponseEntity<RestResponse<SurgeriesRequest>> requestSurgery(
-            @NotNull @PathVariable UUID doctorId,
-            @NotNull @RequestBody SurgeryRequest request
-    ) {
-        log.info("Endpoint '/doctors/{id}/surgery/request' (POST) called - doctorId {}, surgeryRequest {}", doctorId, request);
-
-        var data = getService().createSurgeryRequest(doctorId, request);
-
-        log.info("Endpoint '/doctors/{id}/surgery/request' (POST) finished - id {}, surgeryRequest {}", doctorId, request);
-
-        return ResponseEntity.ok(RestResponse.of(data, 201));
-    }
 }

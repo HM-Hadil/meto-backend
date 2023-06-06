@@ -29,11 +29,8 @@ import java.util.UUID;
 @Api(value = "Administrator API Controller", tags = "Admin API")
 public class AdminController extends UsersController<AdminService> {
 
-    private final SurgeriesRequestService surgeriesRequestService;
-
-    protected AdminController(AdminService service, SurgeriesRequestService surgeriesRequestService) {
+    protected AdminController(AdminService service) {
         super(service);
-        this.surgeriesRequestService = surgeriesRequestService;
     }
 
     @GetMapping(value = "")
@@ -117,18 +114,6 @@ public class AdminController extends UsersController<AdminService> {
         log.info("Endpoint '.../{id}/validate/{appointmentId}/{doctorId}' (PATCH) finished - id {}, appointmentId {}, doctorId {}",
                 id, appointmentId, doctorId
         );
-
-        return ResponseEntity.ok(RestResponse.of(data, 200));
-    }
-
-    @PutMapping(value = "/surgeries/{surgeryId}/approve")
-    @ApiOperation(value = "Approve a surgery request", response = SurgeryResult.class)
-    public ResponseEntity<RestResponse<SurgeryResult>> approveSurgery(@NotNull @PathVariable UUID surgeryId) {
-        log.info("Endpoint '.../surgeries/{surgeryId}/approve' (PUT) called - id {}", surgeryId);
-
-        var data = surgeriesRequestService.approveSurgeryRequest(surgeryId);
-
-        log.info("Endpoint '.../surgeries/{surgeryId}/approve' (PUT) finished - id {}", surgeryId);
 
         return ResponseEntity.ok(RestResponse.of(data, 200));
     }

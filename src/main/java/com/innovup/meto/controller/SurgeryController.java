@@ -25,7 +25,6 @@ import java.util.UUID;
 public class SurgeryController {
 
     private final SurgeryService surgeryService;
-    private final SurgeriesRequestService surgeriesRequestService;
 
     @GetMapping("")
     @ApiOperation(value = "Finds All Surgeries", response = SurgeryResult.class, tags = {"Surgery API"})
@@ -82,17 +81,4 @@ public class SurgeryController {
 
         return new ResponseEntity<>(RestResponse.empty(203, null), HttpStatus.OK);
     }
-    @GetMapping("/requested")
-    @ApiOperation(value = "Finds All Surgery requests", response = SurgeriesRequest.class, tags = {"Surgery API"})
-    public ResponseEntity<RestResponse<List<SurgeriesRequest>>> findAllRequestedSurgeries() {
-
-        log.info("Endpoint '/surgeries/requested' (GET) called");
-
-        var data = surgeriesRequestService.findAllRequestedSurgeries();
-
-        log.info("Endpoint '/surgeries/requested' (GET) finished");
-
-        return new ResponseEntity<>(RestResponse.of(data,  200), HttpStatus.OK);
-    }
-
 }
