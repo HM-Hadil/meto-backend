@@ -1,9 +1,6 @@
 package com.innovup.meto.service;
 
-import com.innovup.meto.entity.AcademicLevel;
-import com.innovup.meto.entity.ConfirmationToken;
-import com.innovup.meto.entity.Experience;
-import com.innovup.meto.entity.User;
+import com.innovup.meto.entity.*;
 import com.innovup.meto.enums.Role;
 import com.innovup.meto.exception.UserNotFoundException;
 import com.innovup.meto.mapper.UserMapper;
@@ -68,7 +65,10 @@ public class RegistrationService {
     }
 
     public DoctorResult createNewDoctor(CreateDoctorRequest request) {
-        var surgeries = surgeryService.findSurgeriesByIds(request.getSurgeries());
+        List<Surgery> surgeries = null;
+        if (request.getSurgeries() != null && !request.getSurgeries().isEmpty()) {
+            surgeries = surgeryService.findSurgeriesByIds(request.getSurgeries());
+        }
 
         var user = User.builder()
                 .withId(UUID.randomUUID())

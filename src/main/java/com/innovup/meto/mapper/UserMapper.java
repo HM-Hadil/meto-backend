@@ -6,6 +6,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Component
 public class UserMapper {
@@ -61,13 +63,16 @@ public class UserMapper {
                 .withCity(user.getCity())
                 .withAcademicLevels(user.getAcademicLevels())
                 .withExperiences(user.getExperiences())
-                .withSurgeries(
-                        user.getSpecialties().stream()
-                                .map(
-                                        surgeryMapper::entityToName
-                                )
-                                .toList()
-                )
+                .withSurgeries(getSpecialties(user))
                 .build();
+    }
+
+    private List<DoctorSurgery> getSpecialties(User user) {
+        if (user.getSpecialties() == null) {
+            return null;
+        }
+        return user.getSpecialties().stream()
+                .map(surgeryMapper::entityToName)
+                .toList();
     }
 }

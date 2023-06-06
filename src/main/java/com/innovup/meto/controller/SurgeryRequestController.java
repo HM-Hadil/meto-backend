@@ -29,11 +29,9 @@ public class SurgeryRequestController {
     private final SurgeriesRequestRepository surgeriesRequestRepository;
     private final SurgeriesRequestService surgeriesRequestService;
 
-
     @GetMapping("")
     @ApiOperation(value = "Finds All Surgery requests", response = SurgeriesRequest.class, tags = {"Surgery Requests API"})
     public ResponseEntity<RestResponse<List<SurgeriesRequest>>> findAllRequestedSurgeries() {
-
         log.info("Endpoint '/surgeries/requested' (GET) called");
         var data = surgeriesRequestService.findAllRequestedSurgeries();
         log.info("Endpoint '/surgeries/requested' (GET) finished");
@@ -49,25 +47,25 @@ public class SurgeryRequestController {
             @NotNull @PathVariable UUID doctorId,
             @NotNull @RequestBody SurgeryRequest request
     ) {
-        log.info("Endpoint '/surgeryRequests/{doctorsId}' (POST) called - doctorId {}, surgeryRequest {}", doctorId, request);
+        log.info("Endpoint '/{doctorId}/request' (POST) called - doctorId {}, surgeryRequest {}", doctorId, request);
         var data = surgeriesRequestService.createSurgeryRequest(doctorId, request);
-        log.info("Endpoint '/surgeryRequests/{doctorsId}' (POST) finished - id {}, surgeryRequest {}", doctorId, request);
+        log.info("Endpoint '/{doctorId}/request' (POST) finished - id {}, surgeryRequest {}", doctorId, request);
         return ResponseEntity.ok(RestResponse.of(data, 201));
     }
 
-    @PutMapping(value = "/{surgeryId}/approve")
+    @PutMapping(value = "/{surgeryRequestId}/approve")
     @ApiOperation(value = "Approve a surgery request with the specified surgeryId", response = SurgeryResult.class)
-    public ResponseEntity<RestResponse<SurgeryResult>> approveSurgery(@NotNull @PathVariable UUID surgeryId) {
-        log.info("Endpoint '.../{surgeryId}' (PUT) called - id {}", surgeryId);
-        var data = surgeriesRequestService.approveSurgeryRequest(surgeryId);
-        log.info("Endpoint '.../{surgeryId}' (PUT) finished - id {}", surgeryId);
+    public ResponseEntity<RestResponse<SurgeryResult>> approveSurgery(@NotNull @PathVariable UUID surgeryRequestId) {
+        log.info("Endpoint '.../{surgeryRequestId}/approve' (PUT) called - id {}", surgeryRequestId);
+        var data = surgeriesRequestService.approveAndAssignSurgeryRequest(surgeryRequestId);
+        log.info("Endpoint '.../{surgeryRequestId}/approve' (PUT) finished - id {}", surgeryRequestId);
         return ResponseEntity.ok(RestResponse.of(data, 200));
     }
 
-    @DeleteMapping(value = "/{surgeryId}")
+    @DeleteMapping(value = "/{surgeryRequestId}")
     @ApiOperation(value = "Delete a surgery request", response = SurgeriesRequest.class, tags = {"Surgery Requests API"})
-    public ResponseEntity<RestResponse<List<DoctorResult>>> testDelete(@PathVariable UUID surgeryId) {
-        surgeriesRequestRepository.deleteById(surgeryId);
-        return ResponseEntity.ok(RestResponse.empty(200, "deleted id = " + surgeryId));
+    public ResponseEntity<RestResponse<List<DoctorResult>>> testDelete(@PathVariable UUID surgeryRequestId) {
+        surgeriesRequestRepository.deleteById(surgeryRequestId);
+        return ResponseEntity.ok(RestResponse.empty(200, "deleted id = " + surgeryRequestId));
     }
 }

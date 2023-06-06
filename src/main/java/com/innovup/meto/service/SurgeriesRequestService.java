@@ -7,6 +7,7 @@ import com.innovup.meto.enums.Role;
 import com.innovup.meto.exception.SurgeryNotFoundException;
 import com.innovup.meto.exception.UserNotFoundException;
 import com.innovup.meto.mapper.SurgeryMapper;
+import com.innovup.meto.pojo.SurgeriesRequestData;
 import com.innovup.meto.repository.SurgeriesRequestRepository;
 import com.innovup.meto.repository.SurgeryRepository;
 import com.innovup.meto.repository.UserRepository;
@@ -17,7 +18,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -52,30 +55,47 @@ public class SurgeriesRequestService {
         return surgeryRequest;
     }
 
-    public SurgeryResult approveSurgeryRequest(UUID surgeryId) {
-        var surgeryRequest = surgeriesRequestRepository.findById(surgeryId).orElseThrow(SurgeryNotFoundException::new);
-        log.info("Surgery request found - surgeryRequest = {}", surgeryRequest.toString());
-        var surgery = Surgery.builder()
-                .withId(surgeryRequest.getId())
-                .withName(surgeryRequest.getName())
-                .withDescription(surgeryRequest.getDescription())
-                .withImage(surgeryRequest.getImage())
-                .withDuration(
-                        SurgeryDuration.builder()
-                                .withDays(surgeryRequest.getDuration().getDays())
-                                .withHours(surgeryRequest.getDuration().getHours())
-                                .withMinutes(surgeryRequest.getDuration().getMinutes())
-                                .withSeconds(surgeryRequest.getDuration().getSeconds())
-                                .build()
-                )
-                .withDurationInSeconds(DurationConverter.toSeconds(surgeryRequest.getDuration()))
-                .build();
-        surgeriesRequestRepository.deleteById(surgeryId);
-        surgery = surgeryRepository.save(surgery);
-        return surgeryMapper.entityToResult(surgery);
+    public SurgeryResult approveAndAssignSurgeryRequest(UUID surgeryRequestId) {
+        var surgeryRequestApprovalData = approveSurgeryRequest(surgeryRequestId);
+        assignSurgery(surgeryRequestApprovalData.getSurgeriesRequest().getRequester().getId(), surgeryRequestApprovalData.getSurgery());
+        return surgeryMapper.entityToResult(surgeryRequestApprovalData.getSurgery());
     }
 
     public List<SurgeriesRequest> findAllRequestedSurgeries() {
         return surgeriesRequestRepository.findAll();
+    }
+
+
+    private void assignSurgery(UUID doctorId, Surgery surgery) {
+        var doctor = userRepository.findById(doctorId).orElseThrow(() -> new UserNotFoundException(Role.DOCTOR));
+        doctor.getSpecialties().add(surgery);
+        userRepository.save(doctor);
+    }
+
+    private SurgeriesRequestData approveSurgeryRequest(UUID surgeryRequestId) {
+        var surgeriesRequest = surgeriesRequestRepository.findById(surgeryRequestId).orElseThrow(SurgeryNotFoundException::new);
+        var surgery = Surgery.builder()
+                .withId(surgeriesRequest.getId())
+                .withName(surgeriesRequest.getName())
+                .withDescription(surgeriesRequest.getDescription())
+                .withImage(surgeriesRequest.getImage())
+                .withDuration(
+                        SurgeryDuration.builder()
+                                .withDays(surgeriesRequest.getDuration().getDays())
+                                .withHours(surgeriesRequest.getDuration().getHours())
+                                .withMinutes(surgeriesRequest.getDuration().getMinutes())
+                                .withSeconds(surgeriesRequest.getDuration().getSeconds())
+                                .build()
+                )
+                .withDurationInSeconds(DurationConverter.toSeconds(surgeriesRequest.getDuration()))
+                .build();
+
+        surgeriesRequestRepository.deleteById(surgeryRequestId);
+        surgery = surgeryRepository.save(surgery);
+
+        return SurgeriesRequestData.builder()
+                .withSurgeriesRequest(surgeriesRequest)
+                .withSurgery(surgery)
+                .build();
     }
 }
